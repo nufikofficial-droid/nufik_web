@@ -266,17 +266,14 @@
     }
     .nav-links a:hover { color: var(--accent); }
 
-    /* ── main gallery: 전체화면 스크롤, center 이미지는 그리드 중앙 셀에 ── */
+    /* ── main gallery: 중앙 컬럼, 전체 높이, 이미지 리스트 전체 화면에 보임 ── */
     #main-gallery {
       position: fixed;
       left: calc(27px + (100% - 54px) / 3);
-      top: calc(100% / 3);
+      top: 0; bottom: 0;
       width: calc((100% - 54px) / 3);
-      height: calc(100% / 3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      overflow-y: scroll;
+      overflow-x: visible;
       scrollbar-width: none;
       -ms-overflow-style: none;
       z-index: 54;
@@ -287,44 +284,48 @@
     #gallery-track {
       display: flex; flex-direction: column;
       align-items: center; gap: 12px;
-      overflow-y: scroll;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      height: 100%;
       width: 100%;
-      scroll-snap-type: y mandatory;
+      overflow: visible;
     }
-    #gallery-track::-webkit-scrollbar { display: none; }
-    .g-item { scroll-snap-align: center; }
-    /* center 이미지: 그리드 중앙 셀에 정확히 위치하도록 translateX */
-    .g-item.center {
-      transform: translateX(0);
-    }
+
+    /* g-item: 기본 블러/반투명, center는 숨김(fixed 레이어가 대신 표시) */
     .g-item {
       position: relative; flex-shrink: 0; cursor: pointer;
-      transition: filter 400ms ease, opacity 400ms ease, width 400ms ease, height 400ms ease;
-    }
-    .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .g-item {
+      overflow: visible;
       transition: width 500ms cubic-bezier(0.22,1,0.36,1),
                   height 500ms cubic-bezier(0.22,1,0.36,1),
-                  transform 500ms cubic-bezier(0.22,1,0.36,1),
                   filter 400ms ease,
                   opacity 400ms ease;
     }
-    .g-item.center {
-      overflow: hidden;
-      border: 1px solid rgba(149,52,52,0.4);
-    }
-    .g-item.center img { mix-blend-mode: normal; filter: none; opacity: 1; }
+    .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .g-item:not(.center) {
-      filter: blur(2px); overflow: visible; opacity: 0.2;
+      filter: blur(2px); opacity: 0.25;
     }
     .g-item:not(.center) img { mix-blend-mode: darken; }
     .g-item:not(.center)::after {
       content: ''; position: absolute; inset: 0;
       background: var(--ink); mix-blend-mode: color-burn;
       opacity: 0.2; pointer-events: none;
+    }
+    /* center g-item은 숨김 — fixed #center-frame이 대신 표시 */
+    .g-item.center { opacity: 0; pointer-events: none; }
+
+    /* ── center-frame: 중앙 그리드 셀에 고정된 이미지 레이어 ── */
+    #center-frame {
+      position: fixed;
+      left: calc(27px + (100% - 54px) / 3);
+      top: calc(100% / 3);
+      width: calc((100% - 54px) / 3);
+      height: calc(100% / 3);
+      z-index: 55;
+      overflow: hidden;
+      pointer-events: none;
+      border: 1px solid rgba(149,52,52,0.4);
+      transition: opacity 300ms ease;
+    }
+    #center-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
     }
 
     /* ── 이미지 정보: 가운데 그리드 오른쪽 셀 ── */
@@ -447,6 +448,8 @@
       #project-info { display: none; }
       #contact-block { display: none; }
       #theme-toggle { display: none; }
+      #center-frame { display: none; }
+      .g-item.center { opacity: 1 !important; pointer-events: auto !important; }
       #main-gallery {
         position: fixed; inset: 0;
         width: 100%; height: 100%;
@@ -627,9 +630,14 @@
     </ul>
   </nav>
 
-  <!-- gallery: 가운데 그리드 -->
+  <!-- gallery: 가운데 컬럼 스크롤 -->
   <div id="main-gallery">
     <div id="gallery-track"></div>
+  </div>
+
+  <!-- center-frame: 중앙 그리드 셀에 고정된 이미지 (스크롤 무관) -->
+  <div id="center-frame">
+    <img id="center-img" src="" alt="">
   </div>
 
   <!-- 프로젝트 정보: 가운데 오른쪽 -->
@@ -699,30 +707,36 @@ const rightData = [
 
 /* ── buildMainGallery ── */
 function buildMainGallery() {
-  const gallery = document.getElementById('main-gallery');
-  const track   = document.getElementById('gallery-track');
-  const imgs    = [...leftData, ...rightData];
+  const gallery    = document.getElementById('main-gallery');
+  const track      = document.getElementById('gallery-track');
+  const centerFrame = document.getElementById('center-frame');
+  const centerImg  = document.getElementById('center-img');
+  const allImgs    = [...leftData, ...rightData];
 
-  const _vw = window.innerWidth;
-  const _isMobile = _vw <= 768;
-  const _sideW    = _isMobile ? 0 : 27;
-  const _cellW    = _isMobile ? _vw : Math.floor((_vw - _sideW * 2) / 3);
-  const _cellH    = Math.floor(window.innerHeight / 3);
-  const baseW     = _isMobile ? Math.round(_vw * 0.80) : _cellW;
-  const baseH     = _isMobile ? Math.round(baseW * 9 / 16) : _cellH;
+  const vw       = window.innerWidth;
+  const isMobile = vw <= 768;
+  const sideW    = isMobile ? 0 : 27;
+  const cellW    = isMobile ? vw : Math.floor((vw - sideW * 2) / 3);
+  const cellH    = Math.floor(window.innerHeight / 3);
+  const vh       = window.innerHeight;
 
-  // padding to allow first/last items to center
-  const halfCell = Math.floor(_cellH / 2);
-  track.style.paddingTop    = halfCell + 'px';
-  track.style.paddingBottom = halfCell + 'px';
-  track.style.scrollPaddingTop = halfCell + 'px';
+  // 비-center 아이템 기본 크기
+  const nearW = Math.round(cellW * 0.65);
+  const nearH = Math.round(nearW * 9 / 16);
 
-  imgs.forEach((item, i) => {
+  // 스크롤 padding: gallery 중앙(vh/2)이 첫/마지막 아이템 중앙과 일치하도록
+  const padTop    = Math.round(vh / 2 - nearH / 2);
+  const padBottom = Math.round(vh / 2 - nearH / 2);
+  track.style.paddingTop    = padTop + 'px';
+  track.style.paddingBottom = padBottom + 'px';
+
+  allImgs.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'g-item';
     div.dataset.index = i;
-    div.style.width  = baseW + 'px';
-    div.style.height = baseH + 'px';
+    // 초기 크기: near 크기로 시작 (center는 JS가 opacity:0 처리)
+    div.style.width  = nearW + 'px';
+    div.style.height = nearH + 'px';
 
     const img = document.createElement('img');
     img.src = item.img;
@@ -737,25 +751,32 @@ function buildMainGallery() {
     track.appendChild(div);
   });
 
+  let lastCenterIdx = -1;
+
   function updateCenter() {
-    const galleryRect = gallery.getBoundingClientRect();
-    const galCenterY  = galleryRect.top + galleryRect.height / 2;
-    // track 스크롤
-    const itemsArr    = Array.from(track.children);
+    const galRect    = gallery.getBoundingClientRect();
+    const galCenterY = galRect.top + galRect.height / 2;
+    const itemsArr   = Array.from(track.children);
+
+    // 화면 중앙에 가장 가까운 아이템 찾기
     let closestEl = null, minDist = Infinity;
     itemsArr.forEach(el => {
       const r = el.getBoundingClientRect();
-      const d = Math.abs(r.top + r.height/2 - galCenterY);
+      const d = Math.abs(r.top + r.height / 2 - galCenterY);
       if (d < minDist) { minDist = d; closestEl = el; }
     });
     const centerIdx = closestEl ? parseInt(closestEl.dataset.index) : 0;
 
-    // 프로젝트 정보 업데이트
-    const infoEl = document.getElementById('project-info');
-    if (infoEl && closestEl) {
-      const allImgs = [...leftData, ...rightData];
+    // center-frame 이미지 업데이트
+    if (centerIdx !== lastCenterIdx) {
+      lastCenterIdx = centerIdx;
       const d = allImgs[centerIdx];
-      if (d) {
+      if (d && centerImg) {
+        centerImg.src = d.img;
+      }
+      // 프로젝트 정보 업데이트
+      const infoEl = document.getElementById('project-info');
+      if (infoEl && d) {
         document.getElementById('pi-name').textContent = d.name || '';
         document.getElementById('pi-cat').textContent  = d.category || '';
         document.getElementById('pi-year').textContent = d.year || '';
@@ -763,60 +784,46 @@ function buildMainGallery() {
       }
     }
 
-    const vw = window.innerWidth;
-    const isMobile = vw <= 768;
-    const isTablet = vw <= 1024 && vw > 768;
-    const cW2 = isMobile ? vw : Math.floor(vw / 3);
-
-    // 그리드 계산
-    const sidePanelW = isMobile ? 0 : 27;
-    const gridInnerW = vw - sidePanelW * 2;
-    const cellW3     = Math.floor(gridInnerW / 3);
-    const cellH3     = Math.floor(window.innerHeight / 3);
-    // 중앙 셀: sidePanelW + cellW3 ~ sidePanelW + cellW3*2
-    const cellCenterX = sidePanelW + cellW3 + cellW3 / 2;
+    const _vw      = window.innerWidth;
+    const _mobile  = _vw <= 768;
+    const _sideW   = _mobile ? 0 : 27;
+    const _cellW   = _mobile ? _vw : Math.floor((_vw - _sideW * 2) / 3);
 
     itemsArr.forEach((el, i) => {
       const dist = Math.abs(i - centerIdx);
       el.classList.toggle('center', i === centerIdx);
-      el.classList.toggle('near',   dist === 1);
-      el.classList.toggle('far',    dist === 2);
-      el.classList.toggle('edge',   dist >= 3);
 
       let w, h;
-      if (isMobile) {
-        w = Math.round(vw * 0.80);
-        if (dist === 1) w = Math.round(vw * 0.65);
-        if (dist === 2) w = Math.round(vw * 0.50);
-        if (dist >= 3)  w = Math.round(vw * 0.38);
+      if (_mobile) {
+        if (dist === 0)      w = Math.round(_vw * 0.80);
+        else if (dist === 1) w = Math.round(_vw * 0.65);
+        else if (dist === 2) w = Math.round(_vw * 0.50);
+        else                 w = Math.round(_vw * 0.38);
         h = Math.round(w * 9 / 16);
-        el.style.transform = '';
-      } else if (dist === 0) {
-        // center: 갤러리 셀에 꽉 차게
-        w = cellW3;
-        h = cellH3;
-        el.style.transform = '';
       } else {
-        if (dist === 1) w = Math.round(cellW3 * 0.65);
-        else if (dist === 2) w = Math.round(cellW3 * 0.50);
-        else w = Math.round(cellW3 * 0.38);
-        h = Math.round(w * 9 / 16);
-        el.style.transform = '';
+        if (dist === 0)      { w = _cellW; h = Math.floor(window.innerHeight / 3); }
+        else if (dist === 1) { w = Math.round(_cellW * 0.65); h = Math.round(w * 9 / 16); }
+        else if (dist === 2) { w = Math.round(_cellW * 0.50); h = Math.round(w * 9 / 16); }
+        else                 { w = Math.round(_cellW * 0.38); h = Math.round(w * 9 / 16); }
       }
       el.style.width  = w + 'px';
       el.style.height = h + 'px';
     });
   }
 
-  track.addEventListener('click', e => {
+  // 클릭 → 해당 아이템을 갤러리 중앙으로 스크롤
+  gallery.addEventListener('click', e => {
     const item = e.target.closest('.g-item');
     if (!item) return;
-    const galleryRect = gallery.getBoundingClientRect();
-    const itemRect    = item.getBoundingClientRect();
-    track.scrollBy({ top: itemRect.top + itemRect.height/2 - galleryRect.top - galleryRect.height/2, behavior: 'smooth' });
+    const galRect  = gallery.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    gallery.scrollBy({
+      top: itemRect.top + itemRect.height / 2 - galRect.top - galRect.height / 2,
+      behavior: 'smooth'
+    });
   });
 
-  track.addEventListener('scroll', updateCenter, { passive: true });
+  gallery.addEventListener('scroll', updateCenter, { passive: true });
   window.addEventListener('resize', updateCenter, { passive: true });
   updateCenter();
 }

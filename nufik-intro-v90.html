@@ -222,9 +222,11 @@ html, body {
   margin: 0;
 }
 .nav-links a {
-  font-family: "argent-pixel-cf", monospace;
-  font-size: 10px;
-  letter-spacing: 0.28em;
+  font-family: acumin-pro-wide, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 13px;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.8);
   text-decoration: none;
@@ -584,7 +586,7 @@ html, body {
 
     /* 메뉴 폰트 축소 */
     .site-nav { padding: 1.5rem; }
-    .nav-links a { font-size: 8px; letter-spacing: 0.1em; }
+    .nav-links a { font-size: 11px; letter-spacing: 0.1em; }
     .nav-logo svg { width: 100px; }
 
     /* 404 */
@@ -697,16 +699,16 @@ html, body {
   /* ── 프로젝트 정보 패널 (데스크탑: 이미지 우측) ── */
   #project-info {
     position: fixed;
-    left: 50%;
+    left: calc(50% + 210px);
     top: 50%;
-    transform: translate(200px, -50%);
+    transform: translateY(-50%);
     z-index: 60;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 250ms ease, transform 250ms ease;
+    transition: opacity 300ms ease;
   }
   #project-info.visible {
     opacity: 1;
@@ -1273,11 +1275,19 @@ function buildMainGallery() {
       const itemsArr = Array.from(items);
       const centerIdx = itemsArr.indexOf(closestEl);
 
-      // 데스크탑: 호버 시 project-info 표시
-      const infoEl  = document.getElementById('project-info');
-      const piName  = document.getElementById('pi-name');
-      const piCat   = document.getElementById('pi-cat');
-      const piYear  = document.getElementById('pi-year');
+      // 데스크탑: 포커스 이미지 기준 project-info 업데이트
+      const infoEl = document.getElementById('project-info');
+      if (infoEl && closestEl) {
+        const idx  = parseInt(closestEl.dataset.index);
+        const imgs = [...leftData, ...rightData];
+        const d    = imgs[idx];
+        if (d) {
+          document.getElementById('pi-name').textContent = d.name || '';
+          document.getElementById('pi-cat').textContent  = d.category || '';
+          document.getElementById('pi-year').textContent = d.year || '';
+          infoEl.classList.add('visible');
+        }
+      }
 
       itemsArr.forEach((el, i) => {
         const dist = Math.abs(i - centerIdx);
@@ -1313,30 +1323,7 @@ function buildMainGallery() {
     // 스크롤 이벤트로 center 업데이트
     gallery.addEventListener('scroll', updateCenter, { passive: true });
 
-    // 데스크탑: 호버로 project-info 표시
-    const infoPanel = document.getElementById('project-info');
-    if (infoPanel) {
-      track.addEventListener('mouseover', e => {
-        const item = e.target.closest('.g-item');
-        if (!item) return;
-        const idx   = parseInt(item.dataset.index);
-        const imgs  = [...leftData, ...rightData];
-        const d     = imgs[idx];
-        if (!d) return;
-        document.getElementById('pi-name').textContent = d.name || '';
-        document.getElementById('pi-cat').textContent  = d.category || '';
-        document.getElementById('pi-year').textContent = d.year || '';
-        // 이미지 오른쪽에 위치 계산
-        const rect = item.getBoundingClientRect();
-        infoPanel.style.left = (rect.right + 32) + 'px';
-        infoPanel.style.top  = (rect.top + rect.height / 2) + 'px';
-        infoPanel.style.transform = 'translateY(-50%)';
-        infoPanel.classList.add('visible');
-      });
-      track.addEventListener('mouseleave', () => {
-        infoPanel.classList.remove('visible');
-      });
-    }
+
 
     // 초기 중앙 이미지 설정 (중앙 인덱스로 스크롤)
     requestAnimationFrame(() => {

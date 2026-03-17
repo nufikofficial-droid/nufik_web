@@ -451,7 +451,7 @@ html, body {
   }
   /* 중앙 이미지: 효과 없음 */
   .g-item.center {
-    width: 350px;
+    width: clamp(560px, 55vw, 900px);
     overflow: hidden;
     border: 1px solid rgba(255,255,255,0.5);
     transition: filter 400ms ease, opacity 400ms ease, transform 400ms ease, width 400ms ease, height 400ms ease;
@@ -462,9 +462,9 @@ html, body {
     opacity: 1;
   }
   /* 나머지: darken + blur */
-  .g-item.near  { width: 280px; background: var(--ink); }
-  .g-item.far   { width: 220px; background: var(--ink); }
-  .g-item.edge  { width: 180px; background: var(--ink); }
+  .g-item.near  { width: clamp(420px, 42vw, 680px); background: var(--ink); }
+  .g-item.far   { width: clamp(320px, 32vw, 520px); background: var(--ink); }
+  .g-item.edge  { width: clamp(240px, 24vw, 400px); background: var(--ink); }
   /* 비중앙 이미지: g-item 전체에 blur → 테두리까지 자연스럽게 번짐 */
   .g-item:not(.center) {
     filter: blur(2px);
@@ -699,7 +699,6 @@ html, body {
   /* ── 프로젝트 정보 패널 (데스크탑: 이미지 우측) ── */
   #project-info {
     position: fixed;
-    left: calc(50% + 210px);
     top: 50%;
     transform: translateY(-50%);
     z-index: 60;
@@ -1208,6 +1207,8 @@ async function runIntro() {
   // ── Defocus → Focus 전환 ──
   // 메인은 blur+zoom 상태에서 시작, 포커스 맞춰지며 등장
   preloader.style.display = 'none';
+  introLeft.style.display  = 'none';
+  introRight.style.display = 'none';
 
   // 약간의 딜레이 후 포커스 인 (슬라이딩 완료 직후 자연스럽게)
   await wait(80);
@@ -1228,10 +1229,17 @@ function buildMainGallery() {
     const track   = document.getElementById('gallery-track');
     const imgs    = [...leftData, ...rightData];
 
-    // 모든 이미지 사용, 기본 너비 250px
+    // 기본 사이즈: vw 기반으로 반응형
+    const _vw = window.innerWidth;
+    const _isMobile = _vw <= 768;
+    const _isTablet = _vw <= 1024 && _vw > 768;
+    const baseW = _isMobile  ? Math.round(_vw * 0.80)
+                : _isTablet  ? Math.round(_vw * 0.55)
+                :              Math.round(Math.min(_vw * 0.36, 560));
+    const baseH = Math.round(baseW * 9 / 16);
     imgs.forEach((item, i) => {
-      const w = 250;
-      const h = Math.round(w * 9 / 16);
+      const w = baseW;
+      const h = baseH;
       const div = document.createElement('div');
       div.className = 'g-item';
       div.dataset.index = i;
@@ -1285,6 +1293,8 @@ function buildMainGallery() {
           document.getElementById('pi-name').textContent = d.name || '';
           document.getElementById('pi-cat').textContent  = d.category || '';
           document.getElementById('pi-year').textContent = d.year || '';
+          const rect = closestEl.getBoundingClientRect();
+          infoEl.style.left = (rect.right + 32) + 'px';
           infoEl.classList.add('visible');
         }
       }
@@ -1296,12 +1306,27 @@ function buildMainGallery() {
         el.classList.toggle('far',    dist === 2);
         el.classList.toggle('edge',   dist >= 3);
 
-        // 거리별 크기: center=350, ±1=300, ±2=240, 나머지=200
+        // 거리별 크기: vw 기반 반응형
+        const vw = window.innerWidth;
+        const isMobile = vw <= 768;
+        const isTablet = vw <= 1024 && vw > 768;
         let w;
-        if (dist === 0)      w = 350;
-        else if (dist === 1) w = 300;
-        else if (dist === 2) w = 240;
-        else                 w = 200;
+        if (isMobile) {
+          if (dist === 0)      w = Math.round(vw * 0.80);
+          else if (dist === 1) w = Math.round(vw * 0.65);
+          else if (dist === 2) w = Math.round(vw * 0.50);
+          else                 w = Math.round(vw * 0.38);
+        } else if (isTablet) {
+          if (dist === 0)      w = Math.round(vw * 0.55);
+          else if (dist === 1) w = Math.round(vw * 0.42);
+          else if (dist === 2) w = Math.round(vw * 0.32);
+          else                 w = Math.round(vw * 0.24);
+        } else {
+          if (dist === 0)      w = Math.round(Math.min(vw * 0.36, 560));
+          else if (dist === 1) w = Math.round(Math.min(vw * 0.28, 420));
+          else if (dist === 2) w = Math.round(Math.min(vw * 0.22, 340));
+          else                 w = Math.round(Math.min(vw * 0.18, 260));
+        }
 
         const h = Math.round(w * 9 / 16);
         el.style.width  = w + 'px';
@@ -1322,6 +1347,7 @@ function buildMainGallery() {
 
     // 스크롤 이벤트로 center 업데이트
     gallery.addEventListener('scroll', updateCenter, { passive: true });
+    window.addEventListener('resize', updateCenter, { passive: true });
 
 
 
@@ -1475,6 +1501,7 @@ window.addEventListener('load', () => {
     // 인트로 스킵 — 바로 메인으로
     document.getElementById('preloader').style.display = 'none';
     document.getElementById('mobile-preloader').style.display = 'none';
+    document.getElementById('intro-center').style.display = 'none';
     const mainSite = document.getElementById('main-site');
     mainSite.style.transition = 'none';
     mainSite.style.opacity    = '1';

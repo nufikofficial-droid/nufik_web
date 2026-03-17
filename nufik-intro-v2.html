@@ -179,11 +179,11 @@
       grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: 1fr 1fr 1fr;
       pointer-events: none;
-      mix-blend-mode: overlay;
+      opacity: 0.5;
     }
     .grid-cell {
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--txt);
+      border-bottom: 1px solid var(--txt);
     }
     .grid-cell:nth-child(3n)   { border-right: none; }
     .grid-cell:nth-last-child(-n+3) { border-bottom: none; }
@@ -193,7 +193,7 @@
       position: fixed; top: 0; bottom: 0;
       z-index: 53; display: flex; align-items: stretch;
       pointer-events: none;
-      mix-blend-mode: overlay;
+      opacity: 0.5;
     }
     .side-panel.left  { left: 0;  flex-direction: row; }
     .side-panel.right { right: 0; flex-direction: row-reverse; }

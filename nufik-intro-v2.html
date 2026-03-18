@@ -36,8 +36,8 @@
       background-size: 280px;
       background-position: center;
       background-repeat: repeat;
-      mix-blend-mode: soft-light;
-      opacity: 0.9;
+      mix-blend-mode: multiply;
+      opacity: 0.4;
       pointer-events: none;
     }
 
@@ -600,13 +600,13 @@
   </div>
 
   <!-- side panels -->
-  <div class="side-panel left">
+  <div class="side-panel left" id="panelLeft">
     <div class="sp-txt">
       <span>Branding</span><span>Defined</span><span>by</span><span>Sensibility</span>
     </div>
     <div class="sp-line"></div>
   </div>
-  <div class="side-panel right">
+  <div class="side-panel right" id="panelRight">
     <div class="sp-txt">
       <span>Shaped</span><span>by</span><span>instinct</span><span>Sharpened</span><span>by</span><span>intent</span>
     </div>
@@ -830,62 +830,166 @@ function buildMainGallery() {
   updateCenter();
 }
 
+/* ── strip setup ── */
+const VH = window.innerHeight;
+const VW = window.innerWidth;
+const ITEM_H = Math.round(VW * 0.18 * 9 / 16);
+
+function buildStrip(stripEl, data, fromBottom) {
+  data.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'img-item';
+    div.style.height = ITEM_H + 'px';
+    div.style.marginBottom = ITEM_H + 'px';
+    const wrap = document.createElement('div');
+    wrap.className = 'img-wrap';
+    const img = document.createElement('img');
+    img.src = item.img;
+    img.loading = 'eager';
+    wrap.appendChild(img);
+    div.appendChild(wrap);
+    stripEl.appendChild(div);
+  });
+  const totalH = ITEM_H * 2 * data.length;
+  stripEl.style.height = totalH + 'px';
+  if (fromBottom) {
+    stripEl.style.top = VH + 'px';
+  } else {
+    stripEl.style.top = (-totalH) + 'px';
+  }
+}
+
+const stripL = document.getElementById('strip-l');
+const stripR = document.getElementById('strip-r');
+if (stripL) buildStrip(stripL, leftData, false);
+if (stripR) buildStrip(stripR, rightData, true);
+
+const isMobileSetup = window.innerWidth <= 768;
+if (isMobileSetup) {
+  const leftTxts  = document.querySelectorAll('#intro-left  .col-txt');
+  const rightTxts = document.querySelectorAll('#intro-right .col-txt');
+  if (leftTxts[1])  leftTxts[1].remove();
+  if (rightTxts[1]) rightTxts[1].remove();
+}
+
+const TOTAL_H = ITEM_H * 2 * leftData.length;
+
+function runStrips(duration) {
+  const TRAVEL = TOTAL_H + VH;
+  const mStrip = window._mobileStrip || null;
+  return new Promise(resolve => {
+    let startTs = null;
+    function step(ts) {
+      if (!startTs) startTs = ts;
+      const t = Math.min((ts - startTs) / duration, 1);
+      const e = customEase(t);
+      if (isMobileSetup && mStrip) {
+        mStrip.style.transform = `translateY(${TRAVEL * e}px)`;
+      } else {
+        if (stripL) stripL.style.transform = `translateY(${TRAVEL * e}px)`;
+        if (stripR) stripR.style.transform = `translateY(${-TRAVEL * e}px)`;
+      }
+      if (t < 1) requestAnimationFrame(step);
+      else resolve();
+    }
+    requestAnimationFrame(step);
+  });
+}
+
 /* ── showNavHero ── */
 async function showNavHero() {
-  const nav    = document.getElementById('siteNav');
-  const logo   = document.getElementById('navLogo');
+  const nav     = document.getElementById('siteNav');
+  const logo    = document.getElementById('navLogo');
   const contact = document.getElementById('contact-block');
   const toggle  = document.getElementById('theme-toggle');
+  if (nav) {
+    nav.style.transition = 'opacity 460ms ease, transform 500ms cubic-bezier(0.22,1,0.36,1)';
+    nav.classList.add('visible');
+    nav.style.opacity = '1';
+    nav.style.transform = 'translateY(0)';
+  }
   if (logo)    { logo.classList.add('visible'); }
-  if (nav)     { nav.classList.add('visible'); nav.style.opacity = '1'; }
   if (contact) { contact.classList.add('visible'); }
   if (toggle)  { toggle.classList.add('visible'); }
 }
 
 /* ── runIntro (desktop) ── */
 async function runIntro() {
+  await wait(80);
+
+  const line1     = document.getElementById('line1');
+  const line2     = document.getElementById('line2');
+  const stageLogo = document.getElementById('stage-logo');
+  const logoInner = document.getElementById('logoInner');
+  const colL      = document.getElementById('col-l');
+  const colR      = document.getElementById('col-r');
+
+  // 텍스트 reveal
+  line1.style.transition = 'transform 1000ms cubic-bezier(0.16,1,0.3,1)';
+  line1.style.transform  = 'translateY(0)';
+  await wait(80);
+  line2.style.transition = 'transform 1000ms cubic-bezier(0.16,1,0.3,1)';
+  line2.style.transform  = 'translateY(0)';
+
+  // 스트립 + 텍스트 아웃 + 로고 인 동시 진행
+  const TOTAL_DUR = 4800;
+  const TEXT_OUT  = TOTAL_DUR * 0.30;
+  const LOGO_IN   = TOTAL_DUR * 0.42;
+
+  setTimeout(() => {
+    line1.style.transition = 'transform 450ms cubic-bezier(0.4,0,1,1)';
+    line1.style.transform  = 'translateY(-110%)';
+    line2.style.transition = 'transform 450ms cubic-bezier(0.4,0,1,1)';
+    line2.style.transform  = 'translateY(110%)';
+  }, TEXT_OUT);
+
+  setTimeout(() => {
+    stageLogo.style.opacity    = '1';
+    if (logoInner) {
+      logoInner.style.transition = 'transform 750ms cubic-bezier(0.16,1,0.3,1)';
+      logoInner.style.transform  = 'translateY(0)';
+    }
+  }, LOGO_IN);
+
+  await runStrips(TOTAL_DUR);
+
+  // 스트립 fade out
+  if (colL) { colL.style.transition = 'opacity 400ms ease'; colL.style.opacity = '0'; }
+  if (colR) { colR.style.transition = 'opacity 400ms ease'; colR.style.opacity = '0'; }
+
   const introLeft   = document.getElementById('intro-left');
   const introRight  = document.getElementById('intro-right');
   const introCenter = document.getElementById('intro-center');
   const preloader   = document.getElementById('preloader');
   const mainSite    = document.getElementById('main-site');
-  const line1 = document.getElementById('line1');
-  const line2 = document.getElementById('line2');
-  const logoInner = document.getElementById('logoInner');
-  const stageLogo = document.getElementById('stage-logo');
+  const panelLeft   = document.getElementById('panelLeft');
+  const panelRight  = document.getElementById('panelRight');
 
-  await wait(400);
-
-  // 텍스트 인
-  await animate(600, e => { line1.style.transform = `translateY(${110 - 110*e}%)`; });
-  await wait(80);
-  await animate(600, e => { line2.style.transform = `translateY(${110 - 110*e}%)`; });
-  await wait(1000);
-
-  // 텍스트 아웃
-  await Promise.all([
-    animate(400, e => { line1.style.transform = `translateY(${-110*e}%)`; }),
-    animate(400, e => { line2.style.transform = `translateY(${-110*e}%)`; })
-  ]);
-
-  // 로고 인
-  stageLogo.style.transition = 'opacity 500ms ease';
-  stageLogo.style.opacity = '1';
-  await wait(600);
-
-  // 슬라이드 아웃
-  const panelW  = 27;
+  const panelW  = panelLeft ? panelLeft.getBoundingClientRect().width : 27;
   const introLW = introLeft.getBoundingClientRect().width;
   const introRW = introRight.getBoundingClientRect().width;
-  const slide   = Math.max(introLW, introRW) - panelW;
+  const isMobile = window.innerWidth <= 768;
+  const slide = Math.max(introLW, introRW) - panelW;
 
+  await wait(150);
+
+  const snap = 'cubic-bezier(0.34,1.4,0.64,1)';
   introCenter.style.transition = 'opacity 400ms ease';
   introCenter.style.opacity    = '0';
 
-  introLeft.style.transition  = 'transform 650ms cubic-bezier(0.34,1.4,0.64,1)';
-  introRight.style.transition = 'transform 650ms cubic-bezier(0.34,1.4,0.64,1)';
-  introLeft.style.transform   = `translateX(-${slide}px)`;
-  introRight.style.transform  = `translateX(${slide}px)`;
+  if (!isMobile) {
+    introLeft.style.willChange  = 'transform';
+    introRight.style.willChange = 'transform';
+    introLeft.style.transition  = `transform 650ms ${snap}`;
+    introRight.style.transition = `transform 650ms ${snap}`;
+    introLeft.style.transform   = `translateX(-${slide}px)`;
+    introRight.style.transform  = `translateX(${slide}px)`;
+  } else {
+    introLeft.style.transition  = 'transform 600ms cubic-bezier(0.4,0,0.6,1)';
+    introRight.style.transition = 'transform 600ms cubic-bezier(0.4,0,0.6,1)';
+    introLeft.style.transform   = 'translateX(-100%)';
+    introRight.style.transform  = 'translateX(100%)';
+  }
 
   await wait(650);
 
@@ -899,7 +1003,6 @@ async function runIntro() {
   mainSite.style.filter     = 'blur(0px)';
   mainSite.style.transform  = 'scale(1)';
 
-  await wait(300);
   buildMainGallery();
   document.body.style.overflow = 'auto';
   await showNavHero();

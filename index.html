@@ -1181,6 +1181,7 @@ async function runMobileIntro() {
   // 페이드아웃
   await animate(400, e => { mPreloader.style.opacity = `${1 - e}`; });
   mPreloader.style.display = 'none';
+  document.body.classList.remove('intro-active');
 
   const mainSite = document.getElementById('main-site');
   mainSite.style.transition = 'none';

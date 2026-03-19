@@ -465,10 +465,10 @@
       #main-site::before { top: calc(100% / 3); }
       #main-site::after  { top: calc(100% / 3 * 2); }
 
-      /* ── side panels: 모바일에서도 표시 ── */
-      .side-panel { display: flex; z-index: 130; }
+      /* ── side panels: 모바일에서 숨김 ── */
+      .side-panel { display: none !important; }
 
-      /* ── nav-logo + nav: 상단 1/3 중앙 정렬, 세로 배치 ── */
+      /* ── nav-logo: 상단 고정 ── */
       .nav-logo {
         position: fixed;
         top: 0; left: 0;
@@ -479,16 +479,19 @@
       }
       .nav-logo svg { width: 80px; }
 
+      /* ── site-nav: 하단 고정, space-between ── */
       .site-nav {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: calc(100% / 3);
-        padding: 30px;
+        bottom: 0; left: 0;
+        top: auto;
+        width: 100%; height: auto;
+        padding: 24px 30px 36px;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
-        gap: 0.4rem;
+        z-index: 200;
+        background: linear-gradient(transparent, var(--ink));
       }
       .nav-links { flex-direction: row; gap: 1rem; }
       .nav-links a { font-size: 11px; }
@@ -535,16 +538,16 @@
       .nav-logo { z-index: 200; }
       .site-nav  { z-index: 200; }
 
-      /* ── contact: 하단 고정 오버레이 ── */
-      #contact-block {
-        position: fixed;
-        left: 0; bottom: 0;
-        width: 100%;
-        height: auto;
-        padding: 30px 27px;
-        z-index: 200;
-        background: linear-gradient(transparent, var(--ink));
-      }
+      /* ── contact: 모바일에서 숨김 ── */
+      #contact-block { display: none !important; }
+
+      /* ── 스튜디오 설명글 숨김 ── */
+      .cb-line:last-child { display: none; }
+
+      /* ── intro 흰색선/텍스트 모바일 숨김 ── */
+      #intro-left .col-line, #intro-right .col-line,
+      #intro-left .col-txt, #intro-right .col-txt { display: none; }
+      .side-panel .sp-line, .side-panel .sp-txt { display: none; }
     }
 
     /* ── mobile preloader ── */

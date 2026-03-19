@@ -520,20 +520,22 @@
       .nav-links { flex-direction: row; gap: 1rem; }
       .nav-links a { font-size: 11px; }
 
-      /* ── center-frame: 중앙 1/3 고정 오버레이 ── */
+      /* ── center-frame: 사이드패널 안쪽 ── */
       #center-frame {
         position: fixed;
-        left: 0; top: calc(100% / 3);
-        width: 100%; height: calc(100% / 3);
+        left: 21px; right: 21px;
+        top: calc(100% / 3);
+        width: auto; height: calc(100% / 3);
         z-index: 150;
         pointer-events: none;
       }
 
-      /* ── gallery: 전체 화면 세로 스크롤 ── */
+      /* ── gallery: 사이드패널 안쪽으로 ── */
       #main-gallery {
         position: fixed;
-        inset: 0;
-        width: 100%; height: 100%;
+        top: 0; bottom: 0;
+        left: 21px; right: 21px;
+        width: auto; height: 100%;
         overflow-y: scroll;
         overflow-x: hidden;
       }

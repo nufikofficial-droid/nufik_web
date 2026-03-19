@@ -467,7 +467,21 @@
 
       /* ── side panels: 인트로 중 숨김, 메인에서 표시 ── */
       body.intro-active .side-panel { display: none !important; }
-      .side-panel { display: flex; z-index: 130; }
+      .side-panel {
+        display: flex;
+        z-index: 130;
+        opacity: 0.5;
+      }
+      .side-panel.left  { left: 0; }
+      .side-panel.right { right: 0; }
+      .side-panel .sp-txt {
+        width: 20px;
+        padding: 20px 0;
+      }
+      .side-panel .sp-line {
+        width: 1px;
+        height: 100%;
+      }
 
       /* ── nav-logo: 상단 고정 ── */
       .nav-logo {

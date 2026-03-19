@@ -469,17 +469,26 @@
       body.intro-active .side-panel { display: none !important; }
       .side-panel {
         display: flex;
-        z-index: 130;
+        z-index: 210;
         opacity: 0.5;
+        pointer-events: none;
       }
-      .side-panel.left  { left: 0; }
-      .side-panel.right { right: 0; }
+      .side-panel.left  { left: 0; flex-direction: row; }
+      .side-panel.right { right: 0; flex-direction: row; }
       .side-panel .sp-txt {
         width: 20px;
         padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .side-panel .sp-txt span {
+        color: var(--txt);
       }
       .side-panel .sp-line {
         width: 1px;
+        background: var(--txt);
         height: 100%;
       }
 

@@ -470,26 +470,30 @@
       .side-panel {
         display: flex;
         z-index: 210;
-        opacity: 0.5;
+        opacity: 1;
         pointer-events: none;
       }
       .side-panel.left  { left: 0; flex-direction: row; }
       .side-panel.right { right: 0; flex-direction: row; }
       .side-panel .sp-txt {
-        width: 20px;
-        padding: 20px 0;
+        width: 30px;
+        padding: 28px 0;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
       }
       .side-panel .sp-txt span {
+        font-size: 7px;
+        letter-spacing: 0.18em;
         color: var(--txt);
+        opacity: 0.8;
       }
       .side-panel .sp-line {
         width: 1px;
         background: var(--txt);
         height: 100%;
+        opacity: 0.8;
       }
 
       /* ── nav-logo: 상단 고정 ── */
@@ -528,7 +532,7 @@
       /* ── center-frame: 사이드패널 안쪽 ── */
       #center-frame {
         position: fixed;
-        left: 21px; right: 21px;
+        left: 31px; right: 31px;
         top: calc(100% / 3);
         width: auto; height: calc(100% / 3);
         z-index: 150;
@@ -539,7 +543,7 @@
       #main-gallery {
         position: fixed;
         top: 0; bottom: 0;
-        left: 21px; right: 21px;
+        left: 31px; right: 31px;
         width: auto; height: 100%;
         overflow-y: scroll;
         overflow-x: hidden;

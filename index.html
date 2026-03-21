@@ -452,7 +452,11 @@
     }
 
     @media (max-width: 768px) {
-      #theme-toggle { display: none; }
+      #theme-toggle {
+        position: static;
+        opacity: 1;
+        pointer-events: auto;
+      }
       .grid-overlay { display: none; }
 
       /* ── 가로 그리드선 ── */
@@ -742,6 +746,10 @@
       <li><a href="#">About</a></li>
       <li><a href="#">Contact</a></li>
     </ul>
+    <div id="theme-toggle">
+      <div class="toggle-dot"></div>
+      <span>Denim Gray</span>
+    </div>
   </nav>
 
   <!-- gallery: 가운데 컬럼 스크롤 -->
@@ -768,11 +776,6 @@
     <div class="cb-line">Let's make a boundless possibility!</div>
   </div>
 
-  <!-- 테마 전환: 오른쪽 하단 -->
-  <div id="theme-toggle">
-    <div class="toggle-dot"></div>
-    <span>Denim Gray</span>
-  </div>
 
 </div><!-- /main-site -->
 

@@ -1,0 +1,116 @@
+/* ============================================================
+   NŪFIK DESIGN SYSTEM — theme.css
+   원본 헥스값은 이 파일에만 존재합니다.
+   모든 UI 작업은 아래 토큰을 기반으로 합니다. 예외 없음.
+   ============================================================ */
+
+
+/* ── 1. COLOR TOKENS ──────────────────────────────────────── */
+
+:root {
+  /* Denim (기본 테마) */
+  --color-bg:       #73a4b6;   /* 배경 */
+  --color-line:     #73a4b6;   /* 그리드선 / 사이드패널 선·텍스트 */
+  --color-txt:      #953434;   /* 로고, 메뉴, 본문 텍스트 */
+  --color-point:    #D4EBF9;   /* 포인트 / 하이라이트 */
+  --color-accent:   #953434;   /* 호버 등 강조 */
+
+  /* CSS 변수 별칭 (코드에서 실제 참조하는 이름) */
+  --ink:     var(--color-bg);
+  --line:    var(--color-line);
+  --txt:     var(--color-txt);
+  --point:   var(--color-point);
+  --accent:  var(--color-accent);
+}
+
+/* Denim Gray 테마 */
+body.theme-crimson {
+  --color-bg:     #E7E7E7;
+  --color-line:   #BBBBBB;
+  --color-txt:    #7B7B7B;
+  --color-point:  #BBBBBB;
+  --color-accent: #7B7B7B;
+}
+
+
+/* ── 2. TYPOGRAPHY TOKENS ─────────────────────────────────── */
+
+:root {
+  /* Font families */
+  --font-display:  acumin-pro-wide, sans-serif;   /* 헤드라인, 메뉴 */
+  --font-mono:     "trapix", monospace;            /* 레이블, 사이드패널, 캡션 */
+
+  /* Scale — desktop */
+  --text-h1:       clamp(28px, 3.5vw, 56px);      /* 인트로 헤드라인 */
+  --text-h2:       18px;                           /* 프로젝트명 */
+  --text-nav:      11px;                           /* 네비게이션 링크 */
+  --text-label:    9px;                            /* 사이드패널, 테마 토글 */
+  --text-caption:  10px;                           /* 프로젝트 캡션 */
+  --text-body:     11px;                           /* 컨택 본문 */
+  --text-tag:      8px;                            /* 갤러리 태그 */
+
+  /* Scale — mobile override */
+  --text-h1-mob:   clamp(18px, 5vw, 32px);
+  --text-label-mob: 7px;
+  --text-nav-mob:  11px;
+
+  /* Letter spacing */
+  --tracking-wide:   0.2em;    /* 사이드패널, 레이블 */
+  --tracking-nav:    0.15em;   /* 네비게이션 */
+  --tracking-mono:   0.18em;   /* 모바일 레이블 */
+  --tracking-body:   0.05em;   /* 본문 mono */
+
+  /* Font weights */
+  --weight-bold:   700;
+  --weight-normal: 400;
+
+  /* Line height */
+  --leading-tight: 1.18;
+  --leading-body:  1.2;
+}
+
+
+/* ── 3. SPACING TOKENS ────────────────────────────────────── */
+
+:root {
+  /* 사이드패널 */
+  --panel-width:        30px;    /* 사이드패널 총 너비 (인트로와 동일) */
+  --panel-line-width:   1px;
+  --panel-padding-y:    28px;
+
+  /* 네비게이션 */
+  --nav-padding-x:      30px;    /* 데스크탑 */
+  --nav-padding-x-mob:  50px;    /* 모바일 (사이드패널 안쪽 여백) */
+  --nav-padding-bottom: 36px;
+
+  /* 갤러리 */
+  --gallery-gap:        8px;
+  --gallery-inset:      21px;    /* 모바일: 사이드패널 폭만큼 안쪽 여백 */
+}
+
+
+/* ── 4. Z-INDEX STACK ─────────────────────────────────────── */
+
+:root {
+  --z-gallery:    10;
+  --z-grid:       50;
+  --z-center:     150;
+  --z-panel:      210;
+  --z-nav:        200;
+  --z-preloader:  300;
+}
+
+
+/* ── 5. ANIMATION TOKENS ──────────────────────────────────── */
+
+:root {
+  --ease-snap:    cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-out:     cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:      cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring:  cubic-bezier(0.16, 1, 0.3, 1);
+
+  --dur-fast:     300ms;
+  --dur-mid:      500ms;
+  --dur-slow:     900ms;
+  --dur-intro:    4800ms;
+}

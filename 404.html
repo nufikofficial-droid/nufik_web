@@ -133,7 +133,10 @@
       pointer-events: none;
       transition: opacity 460ms ease;
     }
-    .site-nav.visible { opacity: 1; }
+    .site-nav.visible {
+      opacity: 1;
+      pointer-events: none;
+    }
     .site-nav.visible .nav-links { pointer-events: auto; }
     .nav-links {
       display: flex;
@@ -320,7 +323,7 @@
   document.getElementById('theme-toggle').addEventListener('click', () => {
     document.body.classList.toggle('theme-crimson');
     const isCrimson = document.body.classList.contains('theme-crimson');
-    document.getElementById('toggle-label').textContent = isCrimson ? 'Denim Gray' : 'Crimson Red';
+    document.getElementById('toggle-label').textContent = isCrimson ? 'Crimson Red' : 'Denim Gray';
   });
 </script>
 <script>

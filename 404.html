@@ -9,17 +9,19 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --ink:   #73A4B6;
-      --point: #D4EBF9;
-      --txt:   #fff;
-      --line:  rgba(255,255,255,0.8);
+      --ink:    #73a4b6;
+      --point:  #D4EBF9;
+      --line:   rgba(149,52,52,0.8);
+      --accent: #953434;
+      --txt:    #953434;
     }
 
-    body.theme-denim {
-      --ink:   #E7E7E7;
-      --point: #BBBBBB;
-      --txt:   #7B7B7B;
-      --line:  #BBBBBB;
+    body.theme-crimson {
+      --ink:    #E7E7E7;
+      --point:  #BBBBBB;
+      --line:   #BBBBBB;
+      --accent: #7B7B7B;
+      --txt:    #7B7B7B;
     }
 
     html, body {
@@ -69,6 +71,7 @@
       display: flex;
       align-items: stretch;
       pointer-events: none;
+      opacity: 0.5;
     }
     .side-panel.left  { left: 0;  flex-direction: row; }
     .side-panel.right { right: 0; flex-direction: row-reverse; }
@@ -81,7 +84,7 @@
       padding: 28px 0;
     }
     .side-panel .sp-txt span {
-      font-family: "argent-pixel-cf", monospace;
+      font-family: "trapix", monospace;
       font-size: 9px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -146,11 +149,11 @@
       font-size: 11px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--line);
+      color: var(--txt);
       text-decoration: none;
       transition: color 0.3s;
     }
-    .nav-links a:hover { color: var(--txt); }
+    .nav-links a:hover { color: var(--accent); }
 
     /* ── center content ── */
     .content {
@@ -192,7 +195,7 @@
       text-transform: uppercase;
     }
     .error-sub {
-      font-family: "argent-pixel-cf", monospace;
+      font-family: "trapix", monospace;
       font-size: 10px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -206,7 +209,7 @@
       margin-top: 1rem;
       padding: 0.75rem 1.8rem;
       border: 1px solid var(--line);
-      font-family: "argent-pixel-cf", monospace;
+      font-family: "trapix", monospace;
       font-size: 9px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -291,11 +294,12 @@
     <li><a href="404.html">About</a></li>
     <li><a href="404.html">Contact</a></li>
   </ul>
-  <div id="theme-toggle">
-    <div class="toggle-dot"></div>
-    <span id="toggle-label">Denim Gray</span>
-  </div>
 </nav>
+
+<div id="theme-toggle">
+  <div class="toggle-dot"></div>
+  <span id="toggle-label">Denim Gray</span>
+</div>
 
 <!-- center 404 content -->
 <div class="content" id="content">
@@ -314,9 +318,9 @@
   });
 
   document.getElementById('theme-toggle').addEventListener('click', () => {
-    document.body.classList.toggle('theme-denim');
-    const isDenim = document.body.classList.contains('theme-denim');
-    document.getElementById('toggle-label').textContent = isDenim ? 'Denim Blue' : 'Denim Gray';
+    document.body.classList.toggle('theme-crimson');
+    const isCrimson = document.body.classList.contains('theme-crimson');
+    document.getElementById('toggle-label').textContent = isCrimson ? 'Denim Gray' : 'Crimson Red';
   });
 </script>
 <script>

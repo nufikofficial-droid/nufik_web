@@ -255,10 +255,81 @@
 
     /* ── mobile ── */
     @media (max-width: 768px) {
-      .site-nav { padding: 1.5rem; }
-      .nav-logo svg { width: 100px; }
+      #theme-toggle {
+        position: fixed;
+        right: auto;
+        left: 50%;
+        bottom: 62px;
+        transform: translateX(-50%);
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 201;
+      }
+
+      /* side panels: 모바일에서 표시 */
+      .side-panel {
+        display: flex;
+        z-index: 210;
+        opacity: 1;
+        pointer-events: none;
+      }
+      .side-panel.left  { left: 0; flex-direction: row; }
+      .side-panel.right { right: 0; flex-direction: row; }
+      .side-panel .sp-txt {
+        width: 30px;
+        flex-shrink: 0;
+        overflow: hidden;
+        padding: 28px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .side-panel .sp-txt span {
+        font-size: 7px;
+        letter-spacing: 0.18em;
+        color: var(--line);
+        opacity: 0.8;
+      }
+      .side-panel .sp-line {
+        width: 1px;
+        background: var(--line);
+        height: 100%;
+        opacity: 0.8;
+      }
+
+      /* nav-logo: 상단 중앙 고정 */
+      .nav-logo {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: auto;
+        padding: 30px 30px 0;
+        display: flex; justify-content: center; align-items: center;
+        z-index: 200;
+      }
+      .nav-logo svg { width: 80px; }
+
+      /* site-nav: 하단 고정 */
+      .site-nav {
+        position: fixed;
+        bottom: 0; left: 0;
+        top: auto;
+        width: 100%; height: auto;
+        padding: 16px 50px 36px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        z-index: 200;
+        background: linear-gradient(transparent, var(--ink));
+      }
+      .nav-links {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        gap: 0;
+      }
       .nav-links a { font-size: 11px; letter-spacing: 0.1em; }
-      .side-panel { display: none; }
     }
   </style>
 </head>

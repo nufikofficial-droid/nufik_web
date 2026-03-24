@@ -1240,12 +1240,19 @@ async function runMobileIntro() {
 
 /* ── 테마 전환 ── */
 document.addEventListener('DOMContentLoaded', () => {
+  // 저장된 테마 복원
+  if (localStorage.getItem('theme') === 'crimson') {
+    document.body.classList.add('theme-crimson');
+  }
   const toggle = document.getElementById('theme-toggle');
   if (toggle) {
+    const label = toggle.querySelector('span');
+    label.textContent = document.body.classList.contains('theme-crimson') ? 'Crimson Red' : 'Denim Gray';
     toggle.addEventListener('click', () => {
       document.body.classList.toggle('theme-crimson');
       const isCrimson = document.body.classList.contains('theme-crimson');
-      toggle.querySelector('span').textContent = isCrimson ? 'Denim Gray' : 'Crimson Red';
+      label.textContent = isCrimson ? 'Crimson Red' : 'Denim Gray';
+      localStorage.setItem('theme', isCrimson ? 'crimson' : 'default');
     });
   }
 });

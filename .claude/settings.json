@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "agent",
+            "prompt": "An HTML file was just modified in this project. The tool input was: $ARGUMENTS\n\nExtract the file_path from the tool input. If it ends with .html and is NOT index.html itself, compare it against /Users/nura/Documents/nufik_web/index.html (the design reference) and check for these consistency issues:\n1. Logo position (should be fixed, top-left at left: 27px)\n2. Nav/menu position (should be fixed, top-right grid)\n3. Theme toggle position (should be fixed, bottom-right at right: calc(27px + 30px); bottom: 30px)\n4. Color variables used (--ink, --txt, --line should match)\n5. Font families (acumin-pro-wide for headings/nav, trapix for labels)\n\nIf the file is NOT an .html file, or if it IS index.html, do nothing and return immediately.\n\nIf issues are found, report them clearly with specific line numbers and what needs to change. If everything is consistent, say '✓ 디자인 일관성 확인 완료'.",
+            "statusMessage": "디자인 일관성 검토 중...",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}

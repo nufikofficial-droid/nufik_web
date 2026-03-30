@@ -1,0 +1,8 @@
+# Claude Code local settings
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+
+# Node modules (if added later)
+node_modules/

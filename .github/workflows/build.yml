@@ -1,0 +1,41 @@
+name: Sync Notion → projects.json
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'data/projects.json'
+  schedule:
+    - cron: '0 */6 * * *'  # every 6 hours
+  workflow_dispatch:        # manual trigger from GitHub UI
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run sync
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATA_SOURCE_ID: ${{ secrets.NOTION_DATA_SOURCE_ID }}
+        run: node scripts/sync-notion.mjs
+
+      - name: Commit changes if any
+        run: |
+          if [[ -n "$(git status --porcelain data/projects.json)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add data/projects.json
+            git commit -m "chore: sync projects.json from Notion"
+            git push
+          else
+            echo "No changes"
+          fi

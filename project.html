@@ -25,9 +25,9 @@
     }
 
     html, body {
-      width: 100%; height: 100%;
+      width: 100%;
+      min-height: 100%;
       background: var(--ink);
-      overflow: hidden;
       color: var(--txt);
     }
 
@@ -160,8 +160,8 @@
 
     /* ── project content layout ── */
     .content {
-      position: fixed;
-      inset: 0;
+      position: relative;
+      height: 100vh;
       display: grid;
       grid-template-columns: calc((100% - 54px) / 3) 1fr calc((100% - 54px) / 3.5);
       padding: 0 27px;
@@ -169,6 +169,86 @@
       opacity: 0;
       transform: translateY(14px);
       transition: opacity 540ms ease, transform 540ms cubic-bezier(0.22,1,0.36,1);
+    }
+
+    /* ── project body (case study blocks) ── */
+    .proj-body {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 60px 24px 160px;
+      opacity: 0;
+      transition: opacity 540ms ease;
+    }
+    .proj-body.visible { opacity: 1; }
+    .pb-heading {
+      font-family: acumin-pro-wide, sans-serif;
+      font-weight: 700;
+      font-size: clamp(18px, 1.6vw, 26px);
+      letter-spacing: 0.04em;
+      color: var(--txt);
+      margin: 3rem 0 1.2rem;
+    }
+    .pb-heading.lvl-3 { font-size: clamp(14px, 1.2vw, 18px); }
+    .pb-paragraph {
+      font-family: "trapix", monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      line-height: 1.95;
+      color: color-mix(in srgb, var(--txt) 75%, transparent);
+      margin: 0 0 1.4rem;
+    }
+    .pb-quote {
+      border-left: 2px solid var(--accent);
+      padding: 0.6rem 0 0.6rem 1.4rem;
+      margin: 2rem 0;
+      font-family: "trapix", monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--txt);
+    }
+    .pb-list {
+      margin: 0 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .pb-list li {
+      font-family: "trapix", monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      line-height: 1.95;
+      color: color-mix(in srgb, var(--txt) 75%, transparent);
+      margin-bottom: 0.5rem;
+    }
+    .pb-divider {
+      border: 0;
+      border-top: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
+      margin: 3rem 0;
+    }
+    .pb-media {
+      margin: 2rem 0;
+    }
+    .pb-media img,
+    .pb-media video {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: var(--ink);
+    }
+    .pb-caption {
+      font-family: "trapix", monospace;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--line) 55%, transparent);
+      margin-top: 0.6rem;
+    }
+    .pb-empty {
+      font-family: "trapix", monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--line) 55%, transparent);
+      text-align: center;
+      padding: 60px 0;
     }
     .content.visible {
       opacity: 1;
@@ -385,9 +465,13 @@
       .content {
         display: flex;
         flex-direction: column;
-        overflow-y: auto;
+        height: auto;
+        min-height: 100vh;
         padding: 90px 36px 120px;
         gap: 0;
+      }
+      .proj-body {
+        padding: 40px 24px 100px;
       }
       .proj-left {
         padding: 0 0 20px;
@@ -465,8 +549,9 @@
     <div class="proj-title" id="projTitle">Project</div>
   </div>
   <div class="proj-center">
-    <div class="proj-img-placeholder">
-      <span class="proj-img-label">Image</span>
+    <div class="proj-img-placeholder" id="projCoverWrap">
+      <img id="projCover" alt="" style="width:100%;height:100%;object-fit:cover;display:none;">
+      <span class="proj-img-label" id="projCoverLabel">Image</span>
     </div>
   </div>
   <div class="proj-right">
@@ -486,6 +571,9 @@
   </div>
 </div>
 
+<!-- project body (case study content blocks) -->
+<section class="proj-body" id="projBody"></section>
+
 <script>
   // Restore saved theme
   if (localStorage.getItem('theme') === 'crimson') {
@@ -501,19 +589,148 @@
     localStorage.setItem('theme', isCrimson ? 'crimson' : 'default');
   });
 
-  // Read URL params and populate project info
-  (function () {
+  // Load project from data/projects.json by slug param
+  (async function loadProject() {
     const params = new URLSearchParams(window.location.search);
-    const name     = params.get('name');
-    const category = params.get('category');
-    const year     = params.get('year');
-    const desc     = params.get('desc');
+    const slug = params.get('slug');
+    if (!slug) {
+      document.getElementById('projTitle').textContent = 'Project not found';
+      return;
+    }
+    let project;
+    try {
+      const res = await fetch('data/projects.json', { cache: 'no-cache' });
+      const projects = await res.json();
+      project = projects.find(p => p.slug === slug);
+    } catch (e) {
+      console.error('Failed to load projects.json:', e);
+      document.getElementById('projTitle').textContent = 'Failed to load';
+      return;
+    }
+    if (!project) {
+      document.getElementById('projTitle').textContent = 'Project not found';
+      return;
+    }
 
-    if (name)     document.getElementById('projTitle').textContent    = name;
-    if (category) document.getElementById('projCategory').textContent = category;
-    if (year)     document.getElementById('projYear').textContent     = year;
-    if (desc)     document.getElementById('projDesc').textContent     = desc;
+    // Hero (title, cover, meta)
+    document.title = `${project.name} — Nūfik`;
+    document.getElementById('projTitle').textContent    = project.name || '';
+    document.getElementById('projCategory').textContent = project.category || '—';
+    document.getElementById('projYear').textContent     = project.year || '—';
+    document.getElementById('projDesc').textContent     = project.description || '';
+
+    if (project.cover) {
+      const coverImg = document.getElementById('projCover');
+      coverImg.src = project.cover;
+      coverImg.alt = project.name || '';
+      coverImg.style.display = 'block';
+      document.getElementById('projCoverLabel').style.display = 'none';
+    }
+
+    // Body blocks
+    renderBody(project.content || []);
   })();
+
+  function renderBody(blocks) {
+    const root = document.getElementById('projBody');
+    if (!blocks.length) {
+      root.innerHTML = '<div class="pb-empty">No additional content.</div>';
+      requestAnimationFrame(() => root.classList.add('visible'));
+      return;
+    }
+    const frag = document.createDocumentFragment();
+    for (const b of blocks) {
+      frag.appendChild(renderBlock(b));
+    }
+    root.appendChild(frag);
+    requestAnimationFrame(() => root.classList.add('visible'));
+  }
+
+  function renderBlock(b) {
+    switch (b.type) {
+      case 'heading': {
+        const el = document.createElement('h2');
+        el.className = 'pb-heading' + (b.level === 3 ? ' lvl-3' : '');
+        el.textContent = b.text || '';
+        return el;
+      }
+      case 'paragraph': {
+        const el = document.createElement('p');
+        el.className = 'pb-paragraph';
+        el.textContent = b.text || '';
+        return el;
+      }
+      case 'quote': {
+        const el = document.createElement('blockquote');
+        el.className = 'pb-quote';
+        el.textContent = b.text || '';
+        return el;
+      }
+      case 'list': {
+        const el = document.createElement(b.style === 'numbered' ? 'ol' : 'ul');
+        el.className = 'pb-list';
+        for (const item of (b.items || [])) {
+          const li = document.createElement('li');
+          li.textContent = item;
+          el.appendChild(li);
+        }
+        return el;
+      }
+      case 'divider': {
+        const el = document.createElement('hr');
+        el.className = 'pb-divider';
+        return el;
+      }
+      case 'image': {
+        const wrap = document.createElement('figure');
+        wrap.className = 'pb-media';
+        const img = document.createElement('img');
+        img.src = b.src;
+        img.alt = b.caption || '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        wrap.appendChild(img);
+        if (b.caption) {
+          const cap = document.createElement('figcaption');
+          cap.className = 'pb-caption';
+          cap.textContent = b.caption;
+          wrap.appendChild(cap);
+        }
+        return wrap;
+      }
+      case 'video': {
+        const wrap = document.createElement('figure');
+        wrap.className = 'pb-media';
+        const v = document.createElement('video');
+        v.src = b.src;
+        v.muted = b.muted !== false;
+        v.loop = b.loop !== false;
+        v.playsInline = true;
+        v.autoplay = true;
+        v.preload = 'metadata';
+        // Pause when off-screen to save battery/bandwidth
+        const io = new IntersectionObserver(entries => {
+          for (const e of entries) {
+            if (e.isIntersecting) v.play().catch(() => {});
+            else v.pause();
+          }
+        }, { threshold: 0.25 });
+        io.observe(v);
+        wrap.appendChild(v);
+        if (b.caption) {
+          const cap = document.createElement('figcaption');
+          cap.className = 'pb-caption';
+          cap.textContent = b.caption;
+          wrap.appendChild(cap);
+        }
+        return wrap;
+      }
+      default: {
+        const el = document.createElement('div');
+        return el;
+      }
+    }
+  }
 
   // Fade-in animation
   requestAnimationFrame(() => {

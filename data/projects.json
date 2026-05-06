@@ -1,1 +1,67 @@
-[]
+[
+  {
+    "slug": "proof-of-retreat",
+    "name": "Proof of Retreat",
+    "category": "Web",
+    "year": "2025",
+    "client": "Thou Ārt™",
+    "description": "이 페이지는 템플릿입니다. 새 프로젝트 만들 때 복제(Duplicate)해서 사용하세요.",
+    "cover": "images/projects/proof-of-retreat/por_01.jpg",
+    "tags": [
+      "identity",
+      "digital"
+    ],
+    "order": 999,
+    "content": [
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_01.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "A pop-up village where you heal, focus, and do your best work by ocean."
+      },
+      {
+        "type": "paragraph",
+        "text": "A pop-up village where you heal focus and do your best work by the ocean.\nThe design draws from the feeling of slow travel. The quiet excitement of arriving somewhere new. Days that unfold without urgency. Film grain and paper textures bring that analog warmth to the screen. Turning a landing page into something that feels less like a website and more like a memory worth keeping."
+      },
+      {
+        "type": "paragraph",
+        "text": "WEB : https://proofofretreat.me/\n"
+      },
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_02.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_03.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_02.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_03.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "\nCredit"
+      },
+      {
+        "type": "paragraph",
+        "text": "Design: Nura, Jimin by Thou Ārt Creative Studio"
+      },
+      {
+        "type": "paragraph",
+        "text": "Year: 2025"
+      }
+    ]
+  }
+]

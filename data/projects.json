@@ -1,11 +1,161 @@
 [
   {
+    "slug": "cha-cha-cha",
+    "name": "Cha Cha Cha",
+    "category": "Brand Identity",
+    "year": "2024",
+    "client": "Cha Cha Cha",
+    "description": "The traditional culture of Matcha with a modern sensibility, offering not only an experience of inner peace and relaxation.",
+    "cover": "images/projects/cha-cha-cha/cha_01.jpg",
+    "tags": [
+      "identity",
+      "branding",
+      "print",
+      "packaging",
+      "digital"
+    ],
+    "order": 999,
+    "content": [
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_01.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "Cha Cha Cha is a brand that reinterprets the traditional culture of Matcha with a modern sensibility, offering not only an experience of inner peace and relaxation amidst the hustle and bustle of urban life, but also a spiritual journey of renewal, meditation, and awakening toward the inner self.\n"
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_02.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_03.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_04.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_05.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_06.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_07.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_08.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_09.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/cha-cha-cha/cha_10.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "\nCredit"
+      },
+      {
+        "type": "paragraph",
+        "text": "Design: Nura"
+      },
+      {
+        "type": "paragraph",
+        "text": "Year: 2024"
+      }
+    ]
+  },
+  {
+    "slug": "herhis",
+    "name": "HerHis",
+    "category": "Brand Identity",
+    "year": "2024",
+    "client": "HerHis lab Ltd.",
+    "description": "HerHis is a clean skincare brand that values simplicity and healthy skin habits, inspiring genuine beauty in everyday life.",
+    "cover": "images/projects/herhis/herhis_01.jpg",
+    "tags": [
+      "identity",
+      "branding",
+      "print",
+      "packaging",
+      "digital"
+    ],
+    "order": 999,
+    "content": [
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_01.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "HerHis is a clean skincare brand that values simplicity and healthy skin habits, inspiring genuine beauty in everyday life.\n"
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_02.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_03.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_04.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_05.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_06.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "\nCredit"
+      },
+      {
+        "type": "paragraph",
+        "text": "Design: Nura by HerHis lab Ltd."
+      },
+      {
+        "type": "paragraph",
+        "text": "Year: 2024"
+      }
+    ]
+  },
+  {
     "slug": "proof-of-retreat",
     "name": "Proof of Retreat",
     "category": "Web",
     "year": "2025",
     "client": "Thou Ārt™",
-    "description": "이 페이지는 템플릿입니다. 새 프로젝트 만들 때 복제(Duplicate)해서 사용하세요.",
+    "description": "Pop-up village landing page",
     "cover": "images/projects/proof-of-retreat/por_01.jpg",
     "tags": [
       "identity",
@@ -24,7 +174,7 @@
       },
       {
         "type": "paragraph",
-        "text": "A pop-up village where you heal focus and do your best work by the ocean.\nThe design draws from the feeling of slow travel. The quiet excitement of arriving somewhere new. Days that unfold without urgency. Film grain and paper textures bring that analog warmth to the screen. Turning a landing page into something that feels less like a website and more like a memory worth keeping."
+        "text": "\nThe design draws from the feeling of slow travel. The quiet excitement of arriving somewhere new. Days that unfold without urgency. Film grain and paper textures bring that analog warmth to the screen. Turning a landing page into something that feels less like a website and more like a memory worth keeping."
       },
       {
         "type": "paragraph",
@@ -42,12 +192,7 @@
       },
       {
         "type": "image",
-        "src": "images/projects/proof-of-retreat/por_02.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/proof-of-retreat/por_03.jpg",
+        "src": "images/projects/proof-of-retreat/por_04.jpg",
         "caption": ""
       },
       {

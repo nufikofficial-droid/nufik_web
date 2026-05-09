@@ -29,7 +29,7 @@
       justify-content: space-between;
       align-items: flex-start;
       padding-bottom: 60px;
-      border-bottom: 1px solid color-mix(in srgb, var(--line) 30%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--txt) 30%, transparent);
       margin-bottom: 60px;
     }
     .sg-eyebrow {
@@ -37,7 +37,7 @@
       font-size: var(--text-label);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
-      color: color-mix(in srgb, var(--line) 70%, transparent);
+      color: color-mix(in srgb, var(--txt) 70%, transparent);
       margin-bottom: 0.6rem;
     }
     .sg-title {
@@ -65,11 +65,12 @@
       align-items: center;
       gap: 10px;
       padding: 10px 16px;
-      border: 1px solid color-mix(in srgb, var(--line) 40%, transparent);
+      border: 1px solid color-mix(in srgb, var(--txt) 40%, transparent);
       border-radius: 999px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: var(--tracking-wide);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--txt);
       transition: border-color 200ms ease;
@@ -84,7 +85,7 @@
     /* ── section layout ─────────────────────────────────────── */
     .sg-section {
       padding: 60px 0;
-      border-bottom: 1px solid color-mix(in srgb, var(--line) 20%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--txt) 20%, transparent);
     }
     .sg-section:last-child { border-bottom: none; }
     .sg-section-head {
@@ -101,7 +102,7 @@
       font-size: var(--text-label);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
-      color: color-mix(in srgb, var(--line) 70%, transparent);
+      color: color-mix(in srgb, var(--txt) 70%, transparent);
       padding-top: 8px;
     }
     .sg-section-title {
@@ -127,7 +128,7 @@
       gap: 40px;
       align-items: baseline;
       padding: 24px 0;
-      border-top: 1px dashed color-mix(in srgb, var(--line) 25%, transparent);
+      border-top: 1px dashed color-mix(in srgb, var(--txt) 25%, transparent);
     }
     @media (max-width: 768px) {
       .sg-type-row { grid-template-columns: 1fr; gap: 8px; padding: 20px 0; }
@@ -137,7 +138,7 @@
       font-size: 10px;
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
-      color: color-mix(in srgb, var(--line) 70%, transparent);
+      color: color-mix(in srgb, var(--txt) 70%, transparent);
     }
     .sg-type-spec {
       font-family: var(--font-mono);
@@ -154,11 +155,11 @@
     .t-h1         { font-family: var(--font-display); font-weight: 700; font-size: var(--text-h1); }
     .t-h2         { font-family: var(--font-display); font-weight: 700; font-size: clamp(20px, 2vw, 28px); }
     .t-h3         { font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 1.4vw, 20px); letter-spacing: 0.04em; }
-    .t-body       { font-family: var(--font-mono); font-weight: 400; font-size: 15px; line-height: 1.7; letter-spacing: 0.06em; }
-    .t-meta       { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-body); letter-spacing: var(--tracking-body); }
-    .t-caption    { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-caption); letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--line) 55%, transparent); }
+    .t-body       { font-family: var(--font-mono); font-weight: 400; font-size: 17px; line-height: 1.7; letter-spacing: 0.06em; }
+    .t-meta       { font-family: var(--font-mono); font-weight: 400; font-size: 15px; letter-spacing: var(--tracking-body); }
+    .t-caption    { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-caption); letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--txt) 55%, transparent); }
     .t-label      { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-label); letter-spacing: var(--tracking-wide); text-transform: uppercase; }
-    .t-tag        { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-tag); letter-spacing: 0.28em; text-transform: uppercase; }
+    .t-tag        { font-family: var(--font-mono); font-weight: 400; font-size: 15px; letter-spacing: 0.28em; text-transform: uppercase; }
 
     /* ── color section ──────────────────────────────────────── */
     .sg-swatches {
@@ -167,7 +168,7 @@
       gap: 16px;
     }
     .sg-swatch {
-      border: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
+      border: 1px solid color-mix(in srgb, var(--txt) 25%, transparent);
       overflow: hidden;
     }
     .sg-swatch-color {
@@ -195,7 +196,7 @@
       font-family: var(--font-mono);
       font-size: 10px;
       letter-spacing: 0.05em;
-      color: color-mix(in srgb, var(--line) 70%, transparent);
+      color: color-mix(in srgb, var(--txt) 70%, transparent);
       margin-top: 8px;
       line-height: 1.5;
     }
@@ -220,7 +221,7 @@
       gap: 24px;
     }
     .sg-logo-card {
-      border: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
+      border: 1px solid color-mix(in srgb, var(--txt) 25%, transparent);
       padding: 60px 40px 24px;
       text-align: center;
     }
@@ -238,7 +239,7 @@
       font-size: 9px;
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
-      color: color-mix(in srgb, var(--line) 65%, transparent);
+      color: color-mix(in srgb, var(--txt) 65%, transparent);
     }
 
     /* ── tokens table ──────────────────────────────────────── */
@@ -252,7 +253,7 @@
       justify-content: space-between;
       gap: 16px;
       padding: 12px 16px;
-      border: 1px solid color-mix(in srgb, var(--line) 20%, transparent);
+      border: 1px solid color-mix(in srgb, var(--txt) 20%, transparent);
       font-family: var(--font-mono);
       font-size: 11px;
       letter-spacing: 0.03em;
@@ -266,7 +267,7 @@
     /* ── components section ────────────────────────────────── */
     .sg-component {
       padding: 32px 28px;
-      border: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
+      border: 1px solid color-mix(in srgb, var(--txt) 25%, transparent);
       margin-bottom: 16px;
     }
     .sg-component-label {
@@ -274,7 +275,7 @@
       font-size: 9px;
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
-      color: color-mix(in srgb, var(--line) 70%, transparent);
+      color: color-mix(in srgb, var(--txt) 70%, transparent);
       margin-bottom: 16px;
     }
 
@@ -291,17 +292,30 @@
     }
     .sample-meta-key {
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.28em;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 15px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: color-mix(in srgb, var(--line) 65%, transparent);
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+      color: color-mix(in srgb, var(--txt) 80%, transparent);
     }
     .sample-meta-val {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: clamp(11px, 1vw, 14px);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-style: normal;
+      font-size: 15px;
+      letter-spacing: 0.05em;
+      color: var(--txt);
+    }
+    .sample-meta-desc {
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-style: normal;
+      font-size: 15px;
+      letter-spacing: 0.05em;
+      line-height: 1.7;
       color: var(--txt);
     }
 
@@ -310,9 +324,10 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: var(--tracking-wide);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--txt);
       text-decoration: none;
@@ -373,13 +388,13 @@
     <div class="sg-type-row">
       <div class="sg-type-label">Body</div>
       <div class="t-body">A pop-up village where you heal, focus, and do your best work by the ocean. The design draws from the feeling of slow travel — quiet excitement, days that unfold without urgency.</div>
-      <div class="sg-type-spec">lumios · 400 · 15px · 1.7</div>
+      <div class="sg-type-spec">lumios · 400 · 17px · 1.7</div>
     </div>
 
     <div class="sg-type-row">
       <div class="sg-type-label">Meta · Body</div>
       <div class="t-meta">Brand identity — print &amp; digital, 2024</div>
-      <div class="sg-type-spec">lumios · 400 · 11px</div>
+      <div class="sg-type-spec">lumios · 400 · 15px</div>
     </div>
 
     <div class="sg-type-row">
@@ -397,7 +412,7 @@
     <div class="sg-type-row">
       <div class="sg-type-label">Tag</div>
       <div class="t-tag">Branding · 2024</div>
-      <div class="sg-type-spec">lumios · 400 · 8px · 0.28em · UPPER</div>
+      <div class="sg-type-spec">lumios · 400 · 15px · 0.28em · UPPER</div>
     </div>
   </section>
 
@@ -476,7 +491,7 @@
         </div>
         <div class="sample-meta-group">
           <div class="sample-meta-key">Description</div>
-          <div class="t-body">A pop-up village where you heal, focus, and do your best work by the ocean.</div>
+          <div class="sample-meta-desc">A pop-up village where you heal, focus, and do your best work by the ocean.</div>
         </div>
       </div>
     </div>
@@ -588,7 +603,7 @@
       if (t.group !== lastGroup) {
         const head = document.createElement('div');
         head.style.gridColumn = '1 / -1';
-        head.style.cssText = 'grid-column:1/-1;font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:color-mix(in srgb, var(--line) 70%, transparent);margin:16px 0 4px';
+        head.style.cssText = 'grid-column:1/-1;font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:color-mix(in srgb, var(--txt) 70%, transparent);margin:16px 0 4px';
         head.textContent = t.group;
         tkRoot.appendChild(head);
         lastGroup = t.group;

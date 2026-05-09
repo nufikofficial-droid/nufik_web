@@ -193,7 +193,7 @@
       font-family: lumios-typewriter-used, sans-serif;
       font-weight: 400;
       font-style: normal;
-      font-size: 15px;
+      font-size: 17px;
       letter-spacing: 0.06em;
       line-height: 1.7;
       color: var(--txt);
@@ -316,26 +316,31 @@
     }
     .proj-meta-label {
       font-family: lumios-typewriter-used, sans-serif;
-      font-size: 8px;
-      letter-spacing: 0.28em;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 15px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: color-mix(in srgb, var(--line) 65%, transparent);
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+      color: color-mix(in srgb, var(--txt) 70%, transparent);
     }
     .proj-meta-value {
-      font-family: acumin-pro-wide, sans-serif;
-      font-weight: 700;
-      font-size: clamp(11px, 1vw, 14px);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-family: lumios-typewriter-used, sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 15px;
+      letter-spacing: 0.05em;
       color: var(--txt);
     }
     .proj-desc {
       font-family: lumios-typewriter-used, sans-serif;
-      font-size: 9px;
-      letter-spacing: 0.1em;
-      line-height: 1.9;
-      color: color-mix(in srgb, var(--txt) 65%, transparent);
-      text-transform: none;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 15px;
+      letter-spacing: 0.05em;
+      line-height: 1.7;
+      color: var(--txt);
     }
     .back-btn {
       display: inline-flex;
@@ -343,9 +348,10 @@
       gap: 0.5rem;
       padding: 0.65rem 1.4rem;
       border: 1px solid var(--line);
-      font-family: lumios-typewriter-used, sans-serif;
-      font-size: 9px;
-      letter-spacing: 0.2em;
+      font-family: acumin-pro-wide, sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--line);
       text-decoration: none;
@@ -371,8 +377,9 @@
     }
     #theme-toggle.visible { opacity: 1; }
     #theme-toggle span {
-      font-family: lumios-typewriter-used, sans-serif;
-      font-size: 9px; letter-spacing: 0.2em;
+      font-family: acumin-pro-wide, sans-serif;
+      font-weight: 700;
+      font-size: 15px; letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--txt);
       transition: color 0.3s;

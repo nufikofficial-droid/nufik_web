@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /style-guide.html
+Disallow: /style-guide

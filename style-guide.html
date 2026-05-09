@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Brand Style Guide — Nūfik (private)</title>
+  <link rel="stylesheet" href="https://use.typekit.net/bvc3fac.css">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      background: var(--ink);
+      color: var(--txt);
+      min-height: 100vh;
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    body {
+      padding: 80px clamp(24px, 6vw, 80px) 160px;
+    }
+
+    /* ── header ─────────────────────────────────────────────── */
+    .sg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 60px;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 30%, transparent);
+      margin-bottom: 60px;
+    }
+    .sg-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--line) 70%, transparent);
+      margin-bottom: 0.6rem;
+    }
+    .sg-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(32px, 4vw, 56px);
+      letter-spacing: 0.02em;
+      color: var(--txt);
+    }
+    .sg-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: color-mix(in srgb, var(--txt) 65%, transparent);
+      margin-top: 0.6rem;
+      max-width: 420px;
+      line-height: 1.6;
+    }
+
+    /* theme toggle */
+    .sg-toggle {
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border: 1px solid color-mix(in srgb, var(--line) 40%, transparent);
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: var(--txt);
+      transition: border-color 200ms ease;
+    }
+    .sg-toggle:hover { border-color: var(--accent); }
+    .sg-toggle .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* ── section layout ─────────────────────────────────────── */
+    .sg-section {
+      padding: 60px 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 20%, transparent);
+    }
+    .sg-section:last-child { border-bottom: none; }
+    .sg-section-head {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 768px) {
+      .sg-section-head { grid-template-columns: 1fr; gap: 20px; }
+    }
+    .sg-section-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--line) 70%, transparent);
+      padding-top: 8px;
+    }
+    .sg-section-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(20px, 2vw, 28px);
+      letter-spacing: 0.03em;
+      color: var(--txt);
+    }
+    .sg-section-desc {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      color: color-mix(in srgb, var(--txt) 70%, transparent);
+      margin-top: 0.6rem;
+      max-width: 540px;
+    }
+
+    /* ── typography section ─────────────────────────────────── */
+    .sg-type-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 200px;
+      gap: 40px;
+      align-items: baseline;
+      padding: 24px 0;
+      border-top: 1px dashed color-mix(in srgb, var(--line) 25%, transparent);
+    }
+    @media (max-width: 768px) {
+      .sg-type-row { grid-template-columns: 1fr; gap: 8px; padding: 20px 0; }
+    }
+    .sg-type-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--line) 70%, transparent);
+    }
+    .sg-type-spec {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      color: color-mix(in srgb, var(--txt) 55%, transparent);
+      text-align: right;
+    }
+    @media (max-width: 768px) {
+      .sg-type-spec { text-align: left; }
+    }
+
+    .t-display    { font-family: var(--font-display); font-weight: 700; font-size: clamp(40px, 5vw, 72px); letter-spacing: 0.02em; }
+    .t-h1         { font-family: var(--font-display); font-weight: 700; font-size: var(--text-h1); }
+    .t-h2         { font-family: var(--font-display); font-weight: 700; font-size: clamp(20px, 2vw, 28px); }
+    .t-h3         { font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 1.4vw, 20px); letter-spacing: 0.04em; }
+    .t-body       { font-family: var(--font-mono); font-weight: 400; font-size: 15px; line-height: 1.7; letter-spacing: 0.06em; }
+    .t-meta       { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-body); letter-spacing: var(--tracking-body); }
+    .t-caption    { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-caption); letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--line) 55%, transparent); }
+    .t-label      { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-label); letter-spacing: var(--tracking-wide); text-transform: uppercase; }
+    .t-tag        { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-tag); letter-spacing: 0.28em; text-transform: uppercase; }
+
+    /* ── color section ──────────────────────────────────────── */
+    .sg-swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .sg-swatch {
+      border: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
+      overflow: hidden;
+    }
+    .sg-swatch-color {
+      height: 140px;
+      width: 100%;
+    }
+    .sg-swatch-meta {
+      padding: 14px 16px 16px;
+    }
+    .sg-swatch-token {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      color: var(--txt);
+    }
+    .sg-swatch-hex {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--txt) 60%, transparent);
+      margin-top: 4px;
+    }
+    .sg-swatch-role {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      color: color-mix(in srgb, var(--line) 70%, transparent);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .sg-theme-block {
+      margin-bottom: 40px;
+    }
+    .sg-theme-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      color: var(--txt);
+    }
+
+    /* ── logo section ──────────────────────────────────────── */
+    .sg-logo-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .sg-logo-card {
+      border: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
+      padding: 60px 40px 24px;
+      text-align: center;
+    }
+    .sg-logo-card svg {
+      max-width: 220px;
+      width: 100%;
+      height: auto;
+    }
+    .sg-logo-card.dark { background: #2c2c2c; }
+    .sg-logo-card.dark .st0 { fill: #ffffff !important; }
+    .sg-logo-card.light { background: #f0e6d8; }
+    .sg-logo-caption {
+      margin-top: 24px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--line) 65%, transparent);
+    }
+
+    /* ── tokens table ──────────────────────────────────────── */
+    .sg-tokens {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .sg-token {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 16px;
+      border: 1px solid color-mix(in srgb, var(--line) 20%, transparent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.03em;
+    }
+    .sg-token-name { color: var(--txt); }
+    .sg-token-value {
+      color: color-mix(in srgb, var(--txt) 55%, transparent);
+      text-align: right;
+    }
+
+    /* ── components section ────────────────────────────────── */
+    .sg-component {
+      padding: 32px 28px;
+      border: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
+      margin-bottom: 16px;
+    }
+    .sg-component-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--line) 70%, transparent);
+      margin-bottom: 16px;
+    }
+
+    /* sample meta block (matches project.html proj-right) */
+    .sample-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+    .sample-meta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .sample-meta-key {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--line) 65%, transparent);
+    }
+    .sample-meta-val {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(11px, 1vw, 14px);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--txt);
+    }
+
+    /* sample link/button (back-btn style) */
+    .sample-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: var(--txt);
+      text-decoration: none;
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+    }
+    .sample-back:hover { background: var(--accent); color: var(--ink); }
+  </style>
+</head>
+<body>
+
+  <header class="sg-header">
+    <div>
+      <div class="sg-eyebrow">Brand Style Guide · private</div>
+      <h1 class="sg-title">Nūfik</h1>
+      <p class="sg-meta">Internal reference for typography, color, and design tokens. Pulled from <code>theme.css</code>. Do not link from the public navigation.</p>
+    </div>
+    <div class="sg-toggle" id="themeToggle" title="Toggle theme">
+      <span class="dot"></span>
+      <span id="themeLabel">Denim Gray</span>
+    </div>
+  </header>
+
+  <!-- ─── Typography ───────────────────────────────────────── -->
+  <section class="sg-section">
+    <div class="sg-section-head">
+      <div class="sg-section-label">01 · Typography</div>
+      <div>
+        <div class="sg-section-title">Type system</div>
+        <p class="sg-section-desc">Two families: <strong>acumin-pro-wide</strong> for display/headings (Adobe Typekit) and <strong>lumios-typewriter-used</strong> for body, labels, captions. Loaded via Typekit kit <code>bvc3fac</code>.</p>
+      </div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Display</div>
+      <div class="t-display">Nūfik</div>
+      <div class="sg-type-spec">acumin-pro-wide · 700 · clamp(40,5vw,72)</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Heading 1</div>
+      <div class="t-h1">A pop-up village</div>
+      <div class="sg-type-spec">acumin-pro-wide · 700 · clamp(28,3.5vw,56)</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Heading 2</div>
+      <div class="t-h2">Selected works · 2024</div>
+      <div class="sg-type-spec">acumin-pro-wide · 700 · clamp(20,2vw,28)</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Heading 3</div>
+      <div class="t-h3">Section heading</div>
+      <div class="sg-type-spec">acumin-pro-wide · 700 · clamp(16,1.4vw,20)</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Body</div>
+      <div class="t-body">A pop-up village where you heal, focus, and do your best work by the ocean. The design draws from the feeling of slow travel — quiet excitement, days that unfold without urgency.</div>
+      <div class="sg-type-spec">lumios · 400 · 15px · 1.7</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Meta · Body</div>
+      <div class="t-meta">Brand identity — print &amp; digital, 2024</div>
+      <div class="sg-type-spec">lumios · 400 · 11px</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Caption</div>
+      <div class="t-caption">Color palette &amp; typography system</div>
+      <div class="sg-type-spec">lumios · 400 · 10px · 0.18em · UPPER</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">UI Label</div>
+      <div class="t-label">Side panel · 9px</div>
+      <div class="sg-type-spec">lumios · 400 · 9px · 0.2em · UPPER</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Tag</div>
+      <div class="t-tag">Branding · 2024</div>
+      <div class="sg-type-spec">lumios · 400 · 8px · 0.28em · UPPER</div>
+    </div>
+  </section>
+
+  <!-- ─── Color ───────────────────────────────────────────── -->
+  <section class="sg-section">
+    <div class="sg-section-head">
+      <div class="sg-section-label">02 · Color</div>
+      <div>
+        <div class="sg-section-title">Palette</div>
+        <p class="sg-section-desc">Two themes share the same token names. Toggle the switch in the header to preview both. Hex values live only in <code>theme.css</code>; everything else references the alias variables (<code>--ink</code>, <code>--line</code>, <code>--txt</code>, <code>--point</code>, <code>--accent</code>).</p>
+      </div>
+    </div>
+
+    <div class="sg-swatches" id="swatches"></div>
+  </section>
+
+  <!-- ─── Logo ────────────────────────────────────────────── -->
+  <section class="sg-section">
+    <div class="sg-section-head">
+      <div class="sg-section-label">03 · Logo</div>
+      <div>
+        <div class="sg-section-title">Wordmark</div>
+        <p class="sg-section-desc">Single mark, used across nav and intro. Always render in <code>--txt</code> on <code>--ink</code> backgrounds. Maintain at least 24px clear space at small sizes.</p>
+      </div>
+    </div>
+
+    <div class="sg-logo-row">
+      <div class="sg-logo-card">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 437.45 177.23"><path class="st0" style="fill: var(--txt);" d="M91.4,5.22h29.7v114.25h-22.03L32.8,48.31h-3.1v71.16H0V5.22h32.32l59.08,63.49V5.22ZM194.3,75.08c0,4.24-.79,7.94-2.37,11.1-1.58,3.16-3.73,5.58-6.45,7.26-2.72,1.69-5.77,2.53-9.14,2.53-4.68,0-8.27-1.44-10.77-4.33-2.5-2.88-3.75-7.1-3.75-12.65v-41.13h-27.09v47c0,11.21,2.86,20.05,8.57,26.52,5.71,6.47,13.41,9.71,23.09,9.71,6.31,0,11.91-1.44,16.81-4.32,4.67-2.75,8.36-6.7,11.1-11.82v14.51s27.09,0,27.09,0V37.87h-27.09v37.21ZM207.19,5.22h-57.61v18.93h57.61V5.22ZM437.32,119.47l-39.97-42.39,36.55-39.21h-33.46l-37.03,35.21V5.22h-27.26v114.25h27.26v-37.05l39.15,37.05h34.76ZM308.89,65.12h-13.63v-13.63h13.63v-13.63h-39.09v-2.77c0-4.02,1.28-7.15,3.83-9.38,2.56-2.23,6.88-3.35,12.98-3.35,4.79,0,9.79.46,15.02,1.39,5.22.93,10.34,2.26,15.34,4h.49V4.57c-4.14-1.31-9.14-2.39-15.02-3.26-5.88-.87-11.32-1.31-16.32-1.31-9.79,0-17.95,1.44-24.48,4.33-6.53,2.88-11.34,6.94-14.44,12.16-3.1,5.22-4.65,11.37-4.65,18.44v2.94h-10.93v27.28h10.93v54.33h27.26v-54.33h25.46v54.33h27.26V51.49h-13.63v13.63Z"/></svg>
+        <div class="sg-logo-caption">on theme background</div>
+      </div>
+      <div class="sg-logo-card dark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 437.45 177.23"><path class="st0" d="M91.4,5.22h29.7v114.25h-22.03L32.8,48.31h-3.1v71.16H0V5.22h32.32l59.08,63.49V5.22ZM194.3,75.08c0,4.24-.79,7.94-2.37,11.1-1.58,3.16-3.73,5.58-6.45,7.26-2.72,1.69-5.77,2.53-9.14,2.53-4.68,0-8.27-1.44-10.77-4.33-2.5-2.88-3.75-7.1-3.75-12.65v-41.13h-27.09v47c0,11.21,2.86,20.05,8.57,26.52,5.71,6.47,13.41,9.71,23.09,9.71,6.31,0,11.91-1.44,16.81-4.32,4.67-2.75,8.36-6.7,11.1-11.82v14.51s27.09,0,27.09,0V37.87h-27.09v37.21ZM207.19,5.22h-57.61v18.93h57.61V5.22ZM437.32,119.47l-39.97-42.39,36.55-39.21h-33.46l-37.03,35.21V5.22h-27.26v114.25h27.26v-37.05l39.15,37.05h34.76ZM308.89,65.12h-13.63v-13.63h13.63v-13.63h-39.09v-2.77c0-4.02,1.28-7.15,3.83-9.38,2.56-2.23,6.88-3.35,12.98-3.35,4.79,0,9.79.46,15.02,1.39,5.22.93,10.34,2.26,15.34,4h.49V4.57c-4.14-1.31-9.14-2.39-15.02-3.26-5.88-.87-11.32-1.31-16.32-1.31-9.79,0-17.95,1.44-24.48,4.33-6.53,2.88-11.34,6.94-14.44,12.16-3.1,5.22-4.65,11.37-4.65,18.44v2.94h-10.93v27.28h10.93v54.33h27.26v-54.33h25.46v54.33h27.26V51.49h-13.63v13.63Z"/></svg>
+        <div class="sg-logo-caption">on dark · #2c2c2c</div>
+      </div>
+      <div class="sg-logo-card light">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 437.45 177.23"><path class="st0" style="fill: #2c2c2c;" d="M91.4,5.22h29.7v114.25h-22.03L32.8,48.31h-3.1v71.16H0V5.22h32.32l59.08,63.49V5.22ZM194.3,75.08c0,4.24-.79,7.94-2.37,11.1-1.58,3.16-3.73,5.58-6.45,7.26-2.72,1.69-5.77,2.53-9.14,2.53-4.68,0-8.27-1.44-10.77-4.33-2.5-2.88-3.75-7.1-3.75-12.65v-41.13h-27.09v47c0,11.21,2.86,20.05,8.57,26.52,5.71,6.47,13.41,9.71,23.09,9.71,6.31,0,11.91-1.44,16.81-4.32,4.67-2.75,8.36-6.7,11.1-11.82v14.51s27.09,0,27.09,0V37.87h-27.09v37.21ZM207.19,5.22h-57.61v18.93h57.61V5.22ZM437.32,119.47l-39.97-42.39,36.55-39.21h-33.46l-37.03,35.21V5.22h-27.26v114.25h27.26v-37.05l39.15,37.05h34.76ZM308.89,65.12h-13.63v-13.63h13.63v-13.63h-39.09v-2.77c0-4.02,1.28-7.15,3.83-9.38,2.56-2.23,6.88-3.35,12.98-3.35,4.79,0,9.79.46,15.02,1.39,5.22.93,10.34,2.26,15.34,4h.49V4.57c-4.14-1.31-9.14-2.39-15.02-3.26-5.88-.87-11.32-1.31-16.32-1.31-9.79,0-17.95,1.44-24.48,4.33-6.53,2.88-11.34,6.94-14.44,12.16-3.1,5.22-4.65,11.37-4.65,18.44v2.94h-10.93v27.28h10.93v54.33h27.26v-54.33h25.46v54.33h27.26V51.49h-13.63v13.63Z"/></svg>
+        <div class="sg-logo-caption">on warm light · #f0e6d8</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Tokens ──────────────────────────────────────────── -->
+  <section class="sg-section">
+    <div class="sg-section-head">
+      <div class="sg-section-label">04 · Tokens</div>
+      <div>
+        <div class="sg-section-title">Spacing, motion, scale</div>
+        <p class="sg-section-desc">Single source of truth in <code>theme.css</code>. Touch hex/numeric values only there — UI code references aliases.</p>
+      </div>
+    </div>
+
+    <div class="sg-tokens" id="tokens"></div>
+  </section>
+
+  <!-- ─── Components ──────────────────────────────────────── -->
+  <section class="sg-section">
+    <div class="sg-section-head">
+      <div class="sg-section-label">05 · Components</div>
+      <div>
+        <div class="sg-section-title">Patterns in use</div>
+        <p class="sg-section-desc">Live samples of recurring UI elements. Hover the back link to see accent state.</p>
+      </div>
+    </div>
+
+    <div class="sg-component">
+      <div class="sg-component-label">Project meta block · used on detail page right column</div>
+      <div class="sample-meta">
+        <div class="sample-meta-group">
+          <div class="sample-meta-key">Category</div>
+          <div class="sample-meta-val">Brand Identity</div>
+        </div>
+        <div class="sample-meta-group">
+          <div class="sample-meta-key">Year</div>
+          <div class="sample-meta-val">2024</div>
+        </div>
+        <div class="sample-meta-group">
+          <div class="sample-meta-key">Description</div>
+          <div class="t-body">A pop-up village where you heal, focus, and do your best work by the ocean.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sg-component">
+      <div class="sg-component-label">Back link / button</div>
+      <a class="sample-back" href="#">← Back</a>
+    </div>
+
+    <div class="sg-component">
+      <div class="sg-component-label">Theme toggle pill (gallery + project pages)</div>
+      <div class="sg-toggle"><span class="dot"></span><span>Denim Gray</span></div>
+    </div>
+  </section>
+
+  <script>
+    // theme toggle
+    const toggle = document.getElementById('themeToggle');
+    const label = document.getElementById('themeLabel');
+    function applyThemeFromStorage() {
+      if (localStorage.getItem('theme') === 'crimson') document.body.classList.add('theme-crimson');
+      label.textContent = document.body.classList.contains('theme-crimson') ? 'Crimson Red' : 'Denim Gray';
+    }
+    applyThemeFromStorage();
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('theme-crimson');
+      const isCrimson = document.body.classList.contains('theme-crimson');
+      label.textContent = isCrimson ? 'Crimson Red' : 'Denim Gray';
+      localStorage.setItem('theme', isCrimson ? 'crimson' : 'default');
+    });
+
+    // build color swatches from theme.css tokens
+    const themes = [
+      {
+        name: 'Denim (default)',
+        bodyClass: '',
+        colors: [
+          { token: '--ink',     hex: '#73a4b6', role: 'Background of every page' },
+          { token: '--line',    hex: '#73a4b6', role: 'Side panel borders, grid lines' },
+          { token: '--txt',     hex: '#953434', role: 'Headlines, body text, logo' },
+          { token: '--point',   hex: '#D4EBF9', role: 'Highlights, soft accents' },
+          { token: '--accent',  hex: '#953434', role: 'Hover states, active borders' },
+        ],
+      },
+      {
+        name: 'Crimson Red theme (alt)',
+        bodyClass: 'theme-crimson',
+        colors: [
+          { token: '--ink',     hex: '#E7E7E7', role: 'Background' },
+          { token: '--line',    hex: '#BBBBBB', role: 'Borders' },
+          { token: '--txt',     hex: '#7B7B7B', role: 'Text' },
+          { token: '--point',   hex: '#BBBBBB', role: 'Highlights' },
+          { token: '--accent',  hex: '#7B7B7B', role: 'Accent' },
+        ],
+      },
+    ];
+
+    const swRoot = document.getElementById('swatches');
+    for (const t of themes) {
+      const block = document.createElement('div');
+      block.className = 'sg-theme-block';
+      block.style.gridColumn = '1 / -1';
+      block.innerHTML = `<div class="sg-theme-name">${t.name}</div><div class="sg-swatches" style="margin-bottom:0"></div>`;
+      const inner = block.querySelector('.sg-swatches');
+      for (const c of t.colors) {
+        const sw = document.createElement('div');
+        sw.className = 'sg-swatch';
+        sw.innerHTML = `
+          <div class="sg-swatch-color" style="background:${c.hex}"></div>
+          <div class="sg-swatch-meta">
+            <div class="sg-swatch-token">${c.token}</div>
+            <div class="sg-swatch-hex">${c.hex}</div>
+            <div class="sg-swatch-role">${c.role}</div>
+          </div>`;
+        inner.appendChild(sw);
+      }
+      swRoot.appendChild(block);
+    }
+
+    // build token list (typography scale + spacing + motion)
+    const tokens = [
+      { group: 'Type · scale',   name: '--text-h1',       value: 'clamp(28px, 3.5vw, 56px)' },
+      { group: 'Type · scale',   name: '--text-h2',       value: '18px' },
+      { group: 'Type · scale',   name: '--text-nav',      value: '11px' },
+      { group: 'Type · scale',   name: '--text-label',    value: '9px' },
+      { group: 'Type · scale',   name: '--text-caption',  value: '10px' },
+      { group: 'Type · scale',   name: '--text-body',     value: '11px' },
+      { group: 'Type · scale',   name: '--text-tag',      value: '8px' },
+      { group: 'Type · tracking',name: '--tracking-wide', value: '0.2em' },
+      { group: 'Type · tracking',name: '--tracking-nav',  value: '0.15em' },
+      { group: 'Type · tracking',name: '--tracking-mono', value: '0.18em' },
+      { group: 'Type · tracking',name: '--tracking-body', value: '0.05em' },
+      { group: 'Spacing',        name: '--panel-width',   value: '30px' },
+      { group: 'Spacing',        name: '--panel-padding-y', value: '28px' },
+      { group: 'Spacing',        name: '--nav-padding-x', value: '30px' },
+      { group: 'Spacing',        name: '--nav-padding-bottom', value: '36px' },
+      { group: 'Spacing',        name: '--gallery-gap',   value: '8px' },
+      { group: 'Motion · easing',name: '--ease-snap',     value: 'cubic-bezier(0.34, 1.4, 0.64, 1)' },
+      { group: 'Motion · easing',name: '--ease-out',      value: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+      { group: 'Motion · easing',name: '--ease-spring',   value: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      { group: 'Motion · duration',name: '--dur-fast',    value: '300ms' },
+      { group: 'Motion · duration',name: '--dur-mid',     value: '500ms' },
+      { group: 'Motion · duration',name: '--dur-slow',    value: '900ms' },
+      { group: 'Motion · duration',name: '--dur-intro',   value: '4800ms' },
+    ];
+    const tkRoot = document.getElementById('tokens');
+    let lastGroup = '';
+    for (const t of tokens) {
+      if (t.group !== lastGroup) {
+        const head = document.createElement('div');
+        head.style.gridColumn = '1 / -1';
+        head.style.cssText = 'grid-column:1/-1;font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:color-mix(in srgb, var(--line) 70%, transparent);margin:16px 0 4px';
+        head.textContent = t.group;
+        tkRoot.appendChild(head);
+        lastGroup = t.group;
+      }
+      const row = document.createElement('div');
+      row.className = 'sg-token';
+      row.innerHTML = `<span class="sg-token-name">${t.name}</span><span class="sg-token-value">${t.value}</span>`;
+      tkRoot.appendChild(row);
+    }
+  </script>
+</body>
+</html>

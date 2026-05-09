@@ -38,7 +38,7 @@ body.theme-crimson {
 :root {
   /* Font families */
   --font-display:  acumin-pro-wide, sans-serif;   /* 헤드라인, 메뉴 */
-  --font-mono:     "trapix", monospace;            /* 레이블, 사이드패널, 캡션 */
+  --font-mono:     lumios-typewriter-used, sans-serif;            /* 레이블, 사이드패널, 캡션 */
 
   /* Scale — desktop */
   --text-h1:       clamp(28px, 3.5vw, 56px);      /* 인트로 헤드라인 */

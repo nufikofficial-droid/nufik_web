@@ -37,7 +37,7 @@ body.theme-crimson {
 
 :root {
   /* Font families */
-  --font-display:  acumin-pro-wide, sans-serif;   /* 헤드라인, 메뉴 */
+  --font-display:  "acumin-pro-condensed-black", sans-serif;   /* 헤드라인, 메뉴 */
   --font-mono:     lumios-typewriter-used, sans-serif;            /* 레이블, 사이드패널, 캡션 */
 
   /* Scale — desktop */

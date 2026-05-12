@@ -45,7 +45,7 @@
     }
     .sg-title {
       font-family: var(--font-display);
-      font-weight: 700;
+      font-weight: 800;
       font-size: clamp(32px, 4vw, 56px);
       letter-spacing: 0.02em;
       color: var(--txt);
@@ -71,7 +71,7 @@
       border: 1px solid color-mix(in srgb, var(--txt) 40%, transparent);
       border-radius: 999px;
       font-family: var(--font-display);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 15px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -103,14 +103,14 @@
     .sg-section-label {
       /* Heading 2 style */
       font-family: var(--font-display);
-      font-weight: 700;
+      font-weight: 800;
       font-size: clamp(20px, 2vw, 28px);
       color: var(--txt);
       padding-top: 8px;
     }
     .sg-section-title {
       font-family: var(--font-display);
-      font-weight: 700;
+      font-weight: 800;
       font-size: clamp(20px, 2vw, 28px);
       letter-spacing: 0.03em;
       color: var(--txt);
@@ -161,15 +161,21 @@
       .sg-type-spec { text-align: left; }
     }
 
-    .t-display    { font-family: var(--font-display); font-weight: 700; font-size: clamp(40px, 5vw, 72px); letter-spacing: 0.02em; }
-    .t-h1         { font-family: var(--font-display); font-weight: 700; font-size: var(--text-h1); }
-    .t-h2         { font-family: var(--font-display); font-weight: 700; font-size: clamp(20px, 2vw, 28px); }
-    .t-h3         { font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 1.4vw, 20px); letter-spacing: 0.04em; }
+    .t-display    { font-family: var(--font-display); font-weight: 800; font-size: clamp(40px, 5vw, 72px); letter-spacing: 0.02em; }
+    .t-h1         { font-family: var(--font-display); font-weight: 800; font-size: var(--text-h1); }
+    .t-h2         { font-family: var(--font-display); font-weight: 800; font-size: clamp(20px, 2vw, 28px); }
+    .t-h3         { font-family: var(--font-display); font-weight: 800; font-size: clamp(16px, 1.4vw, 20px); letter-spacing: 0.04em; }
+    .t-h4-l       { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .t-h4         { font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .t-h5         { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; }
     .t-body       { font-family: var(--font-mono); font-weight: 400; font-size: 17px; line-height: 1.7; letter-spacing: 0.06em; }
+    .t-body-xs    { font-family: var(--font-mono); font-weight: 400; font-size: 11px; line-height: 1.5; letter-spacing: 0.05em; }
     .t-meta       { font-family: var(--font-mono); font-weight: 400; font-size: 15px; letter-spacing: var(--tracking-body); }
     .t-caption    { font-family: var(--font-mono); font-weight: 400; font-size: 15px; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--txt) 55%, transparent); }
+    .t-caption-xs { font-family: var(--font-mono); font-weight: 400; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--txt) 55%, transparent); }
     .t-label      { font-family: var(--font-mono); font-weight: 400; font-size: var(--text-label); letter-spacing: var(--tracking-wide); text-transform: uppercase; }
     .t-tag        { font-family: var(--font-mono); font-weight: 400; font-size: 15px; letter-spacing: 0.28em; text-transform: uppercase; }
+    .t-control    { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
 
     /* ── color section ──────────────────────────────────────── */
     .sg-swatches {
@@ -216,7 +222,7 @@
     }
     .sg-theme-name {
       font-family: var(--font-display);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 14px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -335,7 +341,7 @@
       align-items: center;
       gap: 0.5rem;
       font-family: var(--font-display);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 15px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -345,6 +351,26 @@
       border: 1px solid var(--accent);
     }
     .sample-back:hover { background: var(--accent); color: var(--ink); }
+
+    .sample-back--sm {
+      font-size: 12px;
+      gap: 0.4rem;
+      padding: 6px 12px;
+    }
+
+    .sg-button-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .sg-button-spec {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      color: var(--txt);
+      opacity: 0.6;
+    }
   </style>
 </head>
 <body>
@@ -367,32 +393,50 @@
       <div class="sg-section-label">01 · Typography</div>
       <div>
         <div class="sg-section-title">Type system</div>
-        <p class="sg-section-desc">Two families: <strong>acumin-pro-wide</strong> for display/headings (Adobe Typekit) and <strong>lumios-typewriter-used</strong> for body, labels, captions. Loaded via Typekit kit <code>bvc3fac</code>.</p>
+        <p class="sg-section-desc">Two families: <strong>acumin-pro-condensed-black</strong> for display/headings (Adobe Typekit) and <strong>lumios-typewriter-used</strong> for body, labels, captions. Loaded via Typekit kit <code>bvc3fac</code>.</p>
       </div>
     </div>
 
     <div class="sg-type-row">
       <div class="sg-type-label">Display</div>
       <div class="t-display">Nūfik</div>
-      <div class="sg-type-spec">acumin-pro-wide · 700 · clamp(40,5vw,72)</div>
+      <div class="sg-type-spec">acumin-pro-condensed-black · 800 · clamp(40,5vw,72)</div>
     </div>
 
     <div class="sg-type-row">
       <div class="sg-type-label">Heading 1</div>
       <div class="t-h1">A pop-up village</div>
-      <div class="sg-type-spec">acumin-pro-wide · 700 · clamp(28,3.5vw,56)</div>
+      <div class="sg-type-spec">acumin-pro-condensed-black · 800 · clamp(28,3.5vw,56)</div>
     </div>
 
     <div class="sg-type-row">
       <div class="sg-type-label">Heading 2</div>
       <div class="t-h2">Selected works · 2024</div>
-      <div class="sg-type-spec">acumin-pro-wide · 700 · clamp(20,2vw,28)</div>
+      <div class="sg-type-spec">acumin-pro-condensed-black · 800 · clamp(20,2vw,28)</div>
     </div>
 
     <div class="sg-type-row">
       <div class="sg-type-label">Heading 3</div>
       <div class="t-h3">Section heading</div>
-      <div class="sg-type-spec">acumin-pro-wide · 700 · clamp(16,1.4vw,20)</div>
+      <div class="sg-type-spec">acumin-pro-condensed-black · 800 · clamp(16,1.4vw,20)</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Heading 4 · L</div>
+      <div class="t-h4-l">Project Title — Desktop</div>
+      <div class="sg-type-spec">acumin-pro-condensed-black · 800 · 18px · 0.04em · UPPER</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Heading 4</div>
+      <div class="t-h4">Project Title — Mobile</div>
+      <div class="sg-type-spec">acumin-pro-condensed-black · 800 · 13px · 0.06em · UPPER</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Heading 5</div>
+      <div class="t-h5">Navigation</div>
+      <div class="sg-type-spec">acumin-pro-condensed-black · 800 · 12px · 0.15em · UPPER</div>
     </div>
 
     <div class="sg-type-row">
@@ -402,7 +446,13 @@
     </div>
 
     <div class="sg-type-row">
-      <div class="sg-type-label">Meta · Body</div>
+      <div class="sg-type-label">Body XS</div>
+      <div class="t-body-xs">Based in Singapore, Korea — hello@nufik.com</div>
+      <div class="sg-type-spec">lumios · 400 · 11px · 1.5</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Body S</div>
       <div class="t-meta">Brand identity — print &amp; digital, 2024</div>
       <div class="sg-type-spec">lumios · 400 · 15px</div>
     </div>
@@ -411,6 +461,12 @@
       <div class="sg-type-label">Caption</div>
       <div class="t-caption">Color palette &amp; typography system</div>
       <div class="sg-type-spec">lumios · 400 · 15px · 0.18em · UPPER</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Caption XS</div>
+      <div class="t-caption-xs">Side panel · gallery hover meta</div>
+      <div class="sg-type-spec">lumios · 400 · 9px · 0.18em · UPPER</div>
     </div>
 
     <div class="sg-type-row">
@@ -423,6 +479,12 @@
       <div class="sg-type-label">Tag</div>
       <div class="t-tag">Branding · 2024</div>
       <div class="sg-type-spec">lumios · 400 · 15px · 0.28em · UPPER</div>
+    </div>
+
+    <div class="sg-type-row">
+      <div class="sg-type-label">Control Label</div>
+      <div class="t-control">Denim Gray</div>
+      <div class="sg-type-spec">acumin-pro-condensed-black · 800 · 12px · 0.08em · UPPER</div>
     </div>
   </section>
 
@@ -507,8 +569,19 @@
     </div>
 
     <div class="sg-component">
-      <div class="sg-component-label">Back link / button</div>
-      <a class="sample-back" href="#">← Back</a>
+      <div class="sg-component-label">Back link / button — Default · used on project detail page</div>
+      <div class="sg-button-row">
+        <a class="sample-back" href="#">← Back</a>
+        <span class="sg-button-spec">15px · padding 10×16 · border 1px</span>
+      </div>
+    </div>
+
+    <div class="sg-component">
+      <div class="sg-component-label">Back link / button — Small · for inline / dense areas</div>
+      <div class="sg-button-row">
+        <a class="sample-back sample-back--sm" href="#">← Back</a>
+        <span class="sg-button-spec">12px · padding 6×12 · border 1px</span>
+      </div>
     </div>
 
     <div class="sg-component">

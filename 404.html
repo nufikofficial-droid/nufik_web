@@ -9,11 +9,24 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --ink:    #73a4b6;
+      --ink:    #C4DAE2;
       --point:  #D4EBF9;
       --line:   rgba(149,52,52,0.8);
       --accent: #953434;
       --txt:    #953434;
+    }
+
+    /* 배경 블러 레이어 (하단 중앙, x=-116) — viewport보다 크게 해서 가장자리가 안 보이게 */
+    .bg-blur {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translate(calc(-50% - 116px), 0);
+      width: calc(100vw + 400px);
+      min-width: 1280px;
+      height: auto;
+      pointer-events: none;
+      z-index: 2;
     }
 
     body.theme-crimson {
@@ -337,6 +350,7 @@
 <body>
 
 <div class="bg-img"></div>
+<img class="bg-blur" src="src/bg_blur.svg" alt="" aria-hidden="true">
 <div class="grain"></div>
 
 <!-- side panels -->

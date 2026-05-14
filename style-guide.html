@@ -494,7 +494,7 @@
       <div class="sg-section-label">02 · Color</div>
       <div>
         <div class="sg-section-title">Palette</div>
-        <p class="sg-section-desc">Two themes share the same token names. Toggle the switch in the header to preview both. Hex values live only in <code>theme.css</code>; everything else references the alias variables (<code>--ink</code>, <code>--line</code>, <code>--txt</code>, <code>--point</code>, <code>--accent</code>).</p>
+        <p class="sg-section-desc">Two themes share the same token names. <strong>#C4DAE2</strong> is the new background color (<code>--ink</code>) and <strong>#73a4b6</strong> stays as the main brand color (<code>--line</code>), used for grid lines, side panels, and the bottom blur layer. Toggle the switch in the header to preview both themes. Hex values live only in <code>theme.css</code>; everything else references the alias variables.</p>
       </div>
     </div>
 
@@ -612,8 +612,8 @@
         name: 'Denim (default)',
         bodyClass: '',
         colors: [
-          { token: '--ink',     hex: '#73a4b6', role: 'Background of every page' },
-          { token: '--line',    hex: '#73a4b6', role: 'Side panel borders, grid lines' },
+          { token: '--ink',     hex: '#C4DAE2', role: 'Background color · 페이지 배경' },
+          { token: '--line',    hex: '#73a4b6', role: 'Main color · 메인 (블러/그리드/사이드패널)' },
           { token: '--txt',     hex: '#953434', role: 'Headlines, body text, logo' },
           { token: '--point',   hex: '#D4EBF9', role: 'Highlights, soft accents' },
           { token: '--accent',  hex: '#953434', role: 'Hover states, active borders' },

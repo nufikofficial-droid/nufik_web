@@ -9,8 +9,8 @@
 
 :root {
   /* Denim (기본 테마) */
-  --color-bg:       #73a4b6;   /* 배경 */
-  --color-line:     #73a4b6;   /* 그리드선 / 사이드패널 선·텍스트 */
+  --color-bg:       #C4DAE2;   /* 배경 / Background color */
+  --color-line:     #73a4b6;   /* 메인 / Main brand color (그리드선 / 사이드패널 / 블러 배경) */
   --color-txt:      #953434;   /* 로고, 메뉴, 본문 텍스트 */
   --color-point:    #D4EBF9;   /* 포인트 / 하이라이트 */
   --color-accent:   #953434;   /* 호버 등 강조 */

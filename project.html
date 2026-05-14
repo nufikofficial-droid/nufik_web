@@ -175,8 +175,9 @@
     .content {
       position: relative;
       height: 100vh;
+      box-sizing: border-box;
       display: grid;
-      grid-template-columns: calc((100% - 54px) / 3) 1fr calc((100% - 54px) / 3.5);
+      grid-template-columns: calc(100% / 3.5) 1fr calc(100% / 3.5);
       padding: 0 27px;
       z-index: 10;
       opacity: 0;
@@ -270,7 +271,7 @@
       transform: translateY(0);
     }
 
-    /* left column: project title */
+    /* left column: empty spacer (was rotated title) */
     .proj-left {
       display: flex;
       flex-direction: column;
@@ -281,14 +282,12 @@
     .proj-title {
       font-family: "acumin-pro-condensed-black", sans-serif;
       font-weight: 800;
-      font-size: clamp(16px, 1.8vw, 28px);
-      line-height: 1.05;
-      letter-spacing: 0.05em;
+      font-size: clamp(20px, 2vw, 28px);
+      line-height: 1.1;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: var(--txt);
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      transform: rotate(180deg);
+      margin: 0 0 1.4rem;
     }
 
     /* center column: image placeholder */
@@ -555,9 +554,9 @@
 
 <nav class="site-nav" id="siteNav">
   <ul class="nav-links">
-    <li><a href="404.html">Work</a></li>
-    <li><a href="404.html">About</a></li>
-    <li><a href="404.html">Contact</a></li>
+    <li><a href="index.html">Work</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
   </ul>
 </nav>
 
@@ -568,9 +567,7 @@
 
 <!-- project detail content -->
 <div class="content" id="content">
-  <div class="proj-left">
-    <div class="proj-title" id="projTitle">Project</div>
-  </div>
+  <div class="proj-left"></div>
   <div class="proj-center">
     <div class="proj-img-placeholder" id="projCoverWrap">
       <img id="projCover" alt="" style="width:100%;height:100%;object-fit:cover;display:none;">
@@ -578,6 +575,7 @@
     </div>
   </div>
   <div class="proj-right">
+    <h1 class="proj-title" id="projTitle">Project</h1>
     <div class="proj-meta-group">
       <div class="proj-meta-label">Category</div>
       <div class="proj-meta-value" id="projCategory">—</div>

@@ -49,6 +49,15 @@
       background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
       background-size: 32px 32px;
       background-position: 0 0;
+      transform: scale(1);
+      filter: blur(0px);
+      transition: transform 520ms cubic-bezier(0.22,1,0.36,1),
+                  filter 520ms cubic-bezier(0.22,1,0.36,1);
+      will-change: transform, filter;
+    }
+    .dot-grid.is-scrolling {
+      transform: scale(1.18);
+      filter: blur(2px);
     }
 
     /* ── Gallery viewport: full-screen scroller, only images move ── */
@@ -152,6 +161,14 @@
     /* Meta cross-fade transition */
     .slide-meta.fade-out { opacity: 0; transition: opacity 220ms ease; }
     .slide-meta.fade-in  { opacity: 1; transition: opacity 320ms ease; }
+
+    /* Meta blur on scroll — mirrors the dot-grid pulse */
+    .slide-meta {
+      filter: blur(0px);
+      transition: opacity 320ms ease, filter 520ms cubic-bezier(0.22,1,0.36,1);
+      will-change: filter;
+    }
+    .slide-meta.is-scrolling { filter: blur(2px); }
 
     /* ── Nav capsule (top center on desktop) ── */
     .nav-capsule {
@@ -401,9 +418,20 @@
     updateCenter();
   }
 
-  // Throttle via rAF
+  // Throttle via rAF; pulse the dot grid + meta text while scrolling, release on idle
+  const dotGrid = document.querySelector('.dot-grid');
+  const scrollPulseTargets = [dotGrid, metaEl].filter(Boolean);
   let ticking = false;
+  let idleTimer = null;
   gallery.addEventListener('scroll', () => {
+    scrollPulseTargets.forEach(el => {
+      if (!el.classList.contains('is-scrolling')) el.classList.add('is-scrolling');
+    });
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      scrollPulseTargets.forEach(el => el.classList.remove('is-scrolling'));
+    }, 140);
+
     if (!ticking) {
       requestAnimationFrame(() => {
         updateCenter();

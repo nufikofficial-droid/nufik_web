@@ -9,19 +9,19 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --ink:    #C4DAE2;
-      --point:  #D4EBF9;
-      --line:   rgba(149,52,52,0.8);
-      --accent: #953434;
-      --txt:    #953434;
-    }
-
-    body.theme-crimson {
       --ink:    #E7E7E7;
       --point:  #BBBBBB;
       --line:   #BBBBBB;
       --accent: #7B7B7B;
       --txt:    #7B7B7B;
+    }
+
+    body.theme-denim {
+      --ink:    #C4DAE2;
+      --point:  #D4EBF9;
+      --line:   rgba(149,52,52,0.8);
+      --accent: #953434;
+      --txt:    #953434;
     }
 
     html, body {
@@ -409,17 +409,17 @@
 
 <script>
   // Restore saved theme
-  if (localStorage.getItem('theme') === 'crimson') {
-    document.body.classList.add('theme-crimson');
+  if (localStorage.getItem('theme') === 'denim') {
+    document.body.classList.add('theme-denim');
   }
   const toggleLabel = document.getElementById('toggle-label');
-  toggleLabel.textContent = document.body.classList.contains('theme-crimson') ? 'Crimson Red' : 'Denim Gray';
+  toggleLabel.textContent = document.body.classList.contains('theme-denim') ? 'Denim Blue' : 'Denim Gray';
 
   document.getElementById('theme-toggle').addEventListener('click', () => {
-    document.body.classList.toggle('theme-crimson');
-    const isCrimson = document.body.classList.contains('theme-crimson');
-    toggleLabel.textContent = isCrimson ? 'Crimson Red' : 'Denim Gray';
-    localStorage.setItem('theme', isCrimson ? 'crimson' : 'default');
+    document.body.classList.toggle('theme-denim');
+    const isDenim = document.body.classList.contains('theme-denim');
+    toggleLabel.textContent = isDenim ? 'Denim Blue' : 'Denim Gray';
+    localStorage.setItem('theme', isDenim ? 'denim' : 'default');
   });
 
   // Reveal on load

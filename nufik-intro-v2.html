@@ -415,7 +415,7 @@
     #theme-toggle:hover .toggle-dot { opacity: 1; }
 
     /* ── Crimson Red 테마 ── */
-    body.theme-crimson {
+    body.theme-denim {
       --ink:    #953434;
       --point:  #f5c0c0;
       --line:   rgba(149,52,52,0.8);
@@ -1165,8 +1165,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.getElementById('theme-toggle');
   if (toggle) {
     toggle.addEventListener('click', () => {
-      document.body.classList.toggle('theme-crimson');
-      const isCrimson = document.body.classList.contains('theme-crimson');
+      document.body.classList.toggle('theme-denim');
+      const isCrimson = document.body.classList.contains('theme-denim');
       toggle.querySelector('span').textContent = isCrimson ? 'Denim Gray' : 'Crimson Red';
     });
   }

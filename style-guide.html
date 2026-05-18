@@ -595,13 +595,13 @@
     const toggle = document.getElementById('themeToggle');
     const label = document.getElementById('themeLabel');
     function applyThemeFromStorage() {
-      if (localStorage.getItem('theme') === 'crimson') document.body.classList.add('theme-crimson');
-      label.textContent = document.body.classList.contains('theme-crimson') ? 'Crimson Red' : 'Denim Gray';
+      if (localStorage.getItem('theme') === 'crimson') document.body.classList.add('theme-denim');
+      label.textContent = document.body.classList.contains('theme-denim') ? 'Crimson Red' : 'Denim Gray';
     }
     applyThemeFromStorage();
     toggle.addEventListener('click', () => {
-      document.body.classList.toggle('theme-crimson');
-      const isCrimson = document.body.classList.contains('theme-crimson');
+      document.body.classList.toggle('theme-denim');
+      const isCrimson = document.body.classList.contains('theme-denim');
       label.textContent = isCrimson ? 'Crimson Red' : 'Denim Gray';
       localStorage.setItem('theme', isCrimson ? 'crimson' : 'default');
     });
@@ -621,7 +621,7 @@
       },
       {
         name: 'Crimson Red theme (alt)',
-        bodyClass: 'theme-crimson',
+        bodyClass: 'theme-denim',
         colors: [
           { token: '--ink',     hex: '#E7E7E7', role: 'Background' },
           { token: '--line',    hex: '#BBBBBB', role: 'Borders' },

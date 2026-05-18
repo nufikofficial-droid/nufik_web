@@ -8,12 +8,12 @@
 /* ── 1. COLOR TOKENS ──────────────────────────────────────── */
 
 :root {
-  /* Denim (기본 테마) */
-  --color-bg:       #C4DAE2;   /* 배경 / Background color */
-  --color-line:     #73a4b6;   /* 메인 / Main brand color (그리드선 / 사이드패널 / 블러 배경) */
-  --color-txt:      #953434;   /* 로고, 메뉴, 본문 텍스트 */
-  --color-point:    #D4EBF9;   /* 포인트 / 하이라이트 */
-  --color-accent:   #953434;   /* 호버 등 강조 */
+  /* Denim Gray (기본 테마) */
+  --color-bg:       #E7E7E7;   /* 배경 / Background color */
+  --color-line:     #BBBBBB;   /* 메인 / Main brand color (그리드선 / 사이드패널 / 블러 배경) */
+  --color-txt:      #7B7B7B;   /* 로고, 메뉴, 본문 텍스트 */
+  --color-point:    #BBBBBB;   /* 포인트 / 하이라이트 */
+  --color-accent:   #7B7B7B;   /* 호버 등 강조 */
 
   /* CSS 변수 별칭 (코드에서 실제 참조하는 이름) */
   --ink:     var(--color-bg);
@@ -23,13 +23,13 @@
   --accent:  var(--color-accent);
 }
 
-/* Denim Gray 테마 */
-body.theme-crimson {
-  --color-bg:     #E7E7E7;
-  --color-line:   #BBBBBB;
-  --color-txt:    #7B7B7B;
-  --color-point:  #BBBBBB;
-  --color-accent: #7B7B7B;
+/* Denim Blue 테마 (옵션) */
+body.theme-denim {
+  --color-bg:     #C4DAE2;
+  --color-line:   #73a4b6;
+  --color-txt:    #953434;
+  --color-point:  #D4EBF9;
+  --color-accent: #953434;
 }
 
 

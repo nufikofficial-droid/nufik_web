@@ -57,9 +57,9 @@ const theme = {
   },
 
   /* ── Theme helpers ── */
-  isDenimGray: () => document.body.classList.contains('theme-crimson'),
+  isDenimBlue: () => document.body.classList.contains('theme-denim'),
   toggle() {
-    document.body.classList.toggle('theme-crimson');
+    document.body.classList.toggle('theme-denim');
   },
 };
 

@@ -17,6 +17,12 @@
       --line:   #BBBBBB;
       --accent: #7B7B7B;
       --txt:    #7B7B7B;
+
+      --capsule-fill: rgba(255,255,255,0.4);
+      --capsule-line: rgba(255,255,255,1);
+      --dot:          rgba(123,123,123,0.18);
+      --txt-strong:   #090909;
+      --radius:       10px;
     }
 
     html, body {
@@ -27,27 +33,44 @@
       overflow-x: hidden;
     }
 
-    /* 배경 블러 레이어 */
-    :root {
-      --capsule-fill: rgba(255,255,255,0.4);
-      --capsule-line: rgba(255,255,255,1);
-      --dot:          rgba(123,123,123,0.18);
-      --txt-strong:   #090909;
-      --radius:       10px;
-    }
-
-    /* Background dot grid (shared with index) */
-    .dot-grid {
+    /* Denim fabric texture (Figma: seamless tile, mix-blend soft-light) */
+    .denim-texture {
       position: fixed;
       inset: 0;
       z-index: 1;
+      pointer-events: none;
+      background-image: url("src/denim_texture.jpg");
+      background-size: 256px 256px;
+      background-repeat: repeat;
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+    }
+
+    .dot-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
       pointer-events: none;
       background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
       background-size: 32px 32px;
       background-position: 0 0;
     }
 
-    /* Nav capsule (shared with index) */
+    /* Bottom blur SVG (used across pages, fixed bottom-center) */
+    .bg-blur {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translate(calc(-50% - 116px), 0);
+      width: calc(100vw + 400px);
+      min-width: 1280px;
+      height: auto;
+      pointer-events: none;
+      opacity: 0.7;
+      z-index: 3;
+    }
+
+    /* Nav capsule */
     .nav-capsule {
       position: fixed;
       top: 28px;
@@ -66,11 +89,7 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
     }
-    .nav-logo {
-      display: inline-flex;
-      align-items: center;
-      text-decoration: none;
-    }
+    .nav-logo { display: inline-flex; align-items: center; text-decoration: none; }
     .nav-logo svg { width: 72px; height: auto; display: block; }
     .nav-logo svg .st0 { fill: var(--txt); }
     .nav-links {
@@ -88,19 +107,16 @@
       text-transform: uppercase;
       color: var(--txt);
       text-decoration: none;
-      transition: opacity 200ms ease, color 200ms ease;
+      transition: color 200ms ease;
     }
     .nav-links a.active { color: var(--txt-strong); font-weight: 900; }
     .nav-links a:not(.active):hover { color: var(--txt-strong); }
 
-    /* ── contact content layout ── */
+    /* ── content wrapper ── */
     .content {
       position: relative;
       min-height: 100vh;
-      box-sizing: border-box;
-      display: grid;
-      grid-template-columns: calc(100% / 3.5) 1fr calc(100% / 3.5);
-      padding: 0 27px;
+      padding: 100px 24px 100px;
       z-index: 10;
       opacity: 0;
       transform: translateY(14px);
@@ -108,177 +124,112 @@
     }
     .content.visible { opacity: 1; transform: translateY(0); }
 
-    .contact-left {
+    /* ── Business card hero ── */
+    /* Figma spec: Biz_01 447×262 −6.64°, Biz_02 447×262 +3.06° */
+    .biz-hero {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      height: clamp(280px, 30vw, 400px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .biz-card {
+      position: absolute;
+      width: clamp(300px, 32vw, 447px);
+      aspect-ratio: 447 / 262;
+      height: auto;
+      border-radius: 1px;
+      box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+      transition: transform 600ms cubic-bezier(0.22,1,0.36,1);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .biz-card-front {
+      transform: translate(-34%, -8%) rotate(-6.64deg);
+      z-index: 1;
+    }
+    .biz-card-back {
+      transform: translate(34%, 8%) rotate(3.06deg);
+      z-index: 2;
+    }
+    @media (hover: hover) {
+      .biz-hero:hover .biz-card-front { transform: translate(-36%, -9%) rotate(-7.5deg); }
+      .biz-hero:hover .biz-card-back  { transform: translate(36%, 9%) rotate(4.2deg); }
+    }
+
+    /* ── Contact info blocks ── */
+    /* Figma spec: 389×93 white blocks, ±48.5px stagger, opacity 100/80/60, slight vertical overlap */
+    .contact-blocks {
+      position: relative;
+      width: 389px;
+      max-width: 100%;
+      margin: 36px auto 0;
+    }
+    .contact-block {
+      position: relative;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 100px 30px 80px;
-      gap: 1.8rem;
+      gap: 16px;
+      width: 389px;
+      max-width: 100%;
+      height: 93px;
+      padding: 0 20px;
+      background: #ffffff;
+      text-decoration: none;
+      color: var(--txt);
+      transition: transform 320ms cubic-bezier(0.22,1,0.36,1), opacity 200ms ease, box-shadow 200ms ease;
     }
-    .contact-title {
-      font-family: "acumin-pro-condensed-black", sans-serif;
-      font-weight: 800;
-      font-size: clamp(20px, 2vw, 28px);
-      line-height: 1.1;
+    .contact-block + .contact-block { margin-top: -9px; }
+
+    .cb-email     { transform: translateX(48.5px);  opacity: 1;   z-index: 3; }
+    .cb-instagram { transform: translateX(-48.5px); opacity: 0.8; z-index: 2; }
+    .cb-linkedin  { transform: translateX(48.5px);  opacity: 0.6; z-index: 1; }
+
+    .contact-block:hover {
+      opacity: 1;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+    .cb-email:hover     { transform: translateX(48.5px)  translateY(-2px); }
+    .cb-instagram:hover { transform: translateX(-48.5px) translateY(-2px); }
+    .cb-linkedin:hover  { transform: translateX(48.5px)  translateY(-2px); }
+
+    .cb-label {
+      font-family: acumin-pro-condensed, sans-serif;
+      font-weight: 700;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
       letter-spacing: 0;
       text-transform: uppercase;
       color: var(--txt);
-      margin-bottom: 0.6rem;
+      margin: 0;
     }
-    .contact-intro {
-      font-family: lumios-typewriter-used, sans-serif;
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 1.7;
-      letter-spacing: 0.06em;
-      color: var(--txt);
-      max-width: 28ch;
-    }
-    .contact-info-group {
+    .cb-meta {
       display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-    .contact-info-label {
-      font-family: lumios-typewriter-used, sans-serif;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      font-family: "Special Elite", "lumios-typewriter-used", monospace;
       font-weight: 400;
       font-size: 15px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: underline;
-      text-underline-offset: 0.25em;
-      color: color-mix(in srgb, var(--txt) 70%, transparent);
-    }
-    .contact-info-value {
-      font-family: lumios-typewriter-used, sans-serif;
-      font-weight: 400;
-      font-size: 15px;
-      letter-spacing: 0.05em;
+      line-height: 1;
+      letter-spacing: 0;
       color: var(--txt);
     }
-    .contact-info-value a {
-      color: var(--txt);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    .contact-info-value a:hover { color: var(--accent); }
-
-    .contact-center { /* center column kept empty for grid balance */ }
-
-    .contact-right {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 100px 30px 80px;
-      gap: 1.4rem;
-    }
-
-    /* ── form ── */
-    .contact-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.4rem;
-    }
-    .form-field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-    .form-label {
-      font-family: lumios-typewriter-used, sans-serif;
-      font-weight: 400;
-      font-size: 15px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: underline;
-      text-underline-offset: 0.25em;
-      color: color-mix(in srgb, var(--txt) 70%, transparent);
-    }
-    .form-input,
-    .form-select,
-    .form-textarea {
-      font-family: lumios-typewriter-used, sans-serif;
-      font-weight: 400;
-      font-size: 15px;
-      letter-spacing: 0.05em;
-      color: var(--txt);
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent);
-      padding: 0.5rem 0;
-      outline: none;
-      transition: border-color 300ms ease;
-    }
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
-      border-bottom-color: var(--txt);
-    }
-    .form-input::placeholder,
-    .form-textarea::placeholder {
-      color: color-mix(in srgb, var(--txt) 35%, transparent);
-    }
-    .form-textarea {
-      resize: vertical;
-      min-height: 80px;
-      line-height: 1.6;
-    }
-    .form-select {
-      appearance: none;
-      -webkit-appearance: none;
-      cursor: pointer;
-      background-image: linear-gradient(45deg, transparent 50%, var(--txt) 50%),
-                        linear-gradient(135deg, var(--txt) 50%, transparent 50%);
-      background-position: calc(100% - 12px) 50%, calc(100% - 7px) 50%;
-      background-size: 5px 5px, 5px 5px;
-      background-repeat: no-repeat;
-      padding-right: 24px;
-    }
-    .form-select option {
-      background: var(--ink);
-      color: var(--txt);
-    }
-
-    .submit-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.4rem;
-      border: 1px solid var(--line);
-      background: transparent;
-      font-family: "acumin-pro-condensed-black", sans-serif;
-      font-weight: 800;
-      font-size: 15px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--line);
-      cursor: pointer;
-      transition: border-color 300ms ease, color 300ms ease;
-      align-self: flex-start;
-      margin-top: 0.6rem;
-    }
-    .submit-btn:hover:not(:disabled) {
-      border-color: var(--txt);
-      color: var(--txt);
-    }
-    .submit-btn:disabled {
+    .cb-desc {
       opacity: 0.5;
-      cursor: not-allowed;
+      white-space: nowrap;
     }
-
-    .form-status {
-      font-family: lumios-typewriter-used, sans-serif;
-      font-size: 13px;
-      letter-spacing: 0.05em;
-      line-height: 1.6;
+    .cb-value {
+      white-space: pre;
       color: var(--txt);
-      min-height: 1.5em;
-      margin-top: 0.4rem;
     }
-    .form-status.success { color: var(--accent); }
-    .form-status.error { color: #b94545; }
 
-    /* ── mobile ── */
+    /* ── Mobile ── */
     @media (max-width: 900px) {
       .nav-capsule {
         top: auto;
@@ -293,24 +244,58 @@
 
       .dot-grid { background-size: 24px 24px; }
 
-      .content {
-        grid-template-columns: 1fr;
-        padding: 100px 24px 140px;
-        gap: 2.4rem;
+      .content { padding: 70px 20px 100px; }
+
+      .biz-hero {
+        height: clamp(340px, 72vw, 500px);
       }
-      .contact-left,
-      .contact-right {
-        padding: 0;
+      .biz-card {
+        width: clamp(260px, 78vw, 420px);
       }
+      .biz-card-front { transform: translate(-3%, -22%) rotate(-6.64deg); }
+      .biz-card-back  { transform: translate(3%, 22%) rotate(3.06deg); }
+      @media (hover: hover) {
+        .biz-hero:hover .biz-card-front { transform: translate(-3%, -22%) rotate(-6.64deg); }
+        .biz-hero:hover .biz-card-back  { transform: translate(3%, 22%) rotate(3.06deg); }
+      }
+
+      .contact-blocks {
+        width: calc(100% - 24px);
+        margin-top: 40px;
+      }
+      .contact-block {
+        width: 100%;
+        height: auto;
+        padding: 18px 22px;
+      }
+      .contact-block + .contact-block { margin-top: 14px; }
+      .cb-email,
+      .cb-instagram,
+      .cb-linkedin {
+        transform: none;
+        opacity: 1;
+      }
+      .cb-email:hover,
+      .cb-instagram:hover,
+      .cb-linkedin:hover { transform: translateY(-2px); }
+
+      .cb-label { font-size: 18px; }
+      .cb-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        font-size: 13px;
+      }
+      .cb-value { white-space: normal; }
     }
   </style>
 </head>
 <body>
 
-<!-- background dot grid -->
+<div class="denim-texture" aria-hidden="true"></div>
 <div class="dot-grid" aria-hidden="true"></div>
+<img class="bg-blur" src="src/bg_blur.svg" alt="" aria-hidden="true">
 
-<!-- nav capsule -->
 <header class="nav-capsule" role="banner">
   <a href="index.html" class="nav-logo" aria-label="Nufik home">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 751.5 208.1">
@@ -330,103 +315,42 @@
   </nav>
 </header>
 
-<!-- contact content -->
-<div class="content" id="content">
-  <div class="contact-left">
-    <h1 class="contact-title">Let's make a boundless possibility</h1>
-    <p class="contact-intro">For brand inquiries, collaborations, or a quiet hello — write to us. We'll get back within a few days.</p>
+<main class="content" id="content">
+  <section class="biz-hero" aria-label="Business cards">
+    <img class="biz-card biz-card-front" src="src/Biz_01.png" alt="Nūfik business card — front">
+    <img class="biz-card biz-card-back"  src="src/Biz_02.png" alt="Nūfik business card — back">
+  </section>
 
-    <div class="contact-info-group">
-      <div class="contact-info-label">Email</div>
-      <div class="contact-info-value"><a href="mailto:hello@nufik.com">hello@nufik.com</a></div>
-    </div>
-    <div class="contact-info-group">
-      <div class="contact-info-label">Based in</div>
-      <div class="contact-info-value">Singapore, Korea</div>
-    </div>
-  </div>
-
-  <div class="contact-center"></div>
-
-  <div class="contact-right">
-    <form class="contact-form" id="contactForm">
-      <!-- Web3Forms access key -->
-      <input type="hidden" name="access_key" value="fa75224f-e122-43bd-9e25-e711dfd4bea7">
-      <input type="hidden" name="subject" value="New message from nufik.com">
-      <input type="hidden" name="from_name" value="Nūfik Website">
-      <!-- honeypot -->
-      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-
-      <div class="form-field">
-        <label class="form-label" for="name">Name</label>
-        <input class="form-input" type="text" id="name" name="name" required autocomplete="name">
+  <section class="contact-blocks" aria-label="Contact channels">
+    <a class="contact-block cb-email" href="mailto:hello@nura.co.kr">
+      <h3 class="cb-label">Email</h3>
+      <div class="cb-meta">
+        <span class="cb-desc">for inquiries</span>
+        <span class="cb-value">[  hello@nura.co.kr  ]</span>
       </div>
+    </a>
 
-      <div class="form-field">
-        <label class="form-label" for="email">Email</label>
-        <input class="form-input" type="email" id="email" name="email" required autocomplete="email">
+    <a class="contact-block cb-instagram" href="https://instagram.com/this.is_nura" target="_blank" rel="noopener">
+      <h3 class="cb-label">Instagram</h3>
+      <div class="cb-meta">
+        <span class="cb-desc">behind the scenes</span>
+        <span class="cb-value">[  @this.is_nura  ]</span>
       </div>
+    </a>
 
-      <div class="form-field">
-        <label class="form-label" for="interest">I'm interested in</label>
-        <select class="form-select" id="interest" name="interest" required>
-          <option value="" disabled selected>Select an option</option>
-          <option value="Brand &amp; Design">Brand &amp; Design Services</option>
-          <option value="Collaboration">Collaboration</option>
-          <option value="Press">Press</option>
-          <option value="Other">Other</option>
-        </select>
+    <a class="contact-block cb-linkedin" href="https://www.linkedin.com/in/nura-lee" target="_blank" rel="noopener">
+      <h3 class="cb-label">LinkedIn</h3>
+      <div class="cb-meta">
+        <span class="cb-desc">career &amp; beyond</span>
+        <span class="cb-value">[  nura-lee  ]</span>
       </div>
-
-      <div class="form-field">
-        <label class="form-label" for="message">Message</label>
-        <textarea class="form-textarea" id="message" name="message" rows="4" required placeholder="Tell us a little about what you have in mind..."></textarea>
-      </div>
-
-      <button class="submit-btn" type="submit" id="submitBtn">Send Message</button>
-      <div class="form-status" id="formStatus" aria-live="polite"></div>
-    </form>
-  </div>
-</div>
+    </a>
+  </section>
+</main>
 
 <script>
-  // Reveal on load
   window.addEventListener('load', () => {
     setTimeout(() => document.getElementById('content').classList.add('visible'), 130);
-  });
-
-  // Form submission via Web3Forms
-  const form   = document.getElementById('contactForm');
-  const status = document.getElementById('formStatus');
-  const submit = document.getElementById('submitBtn');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    status.textContent = 'Sending...';
-    status.classList.remove('success', 'error');
-    submit.disabled = true;
-
-    const formData = new FormData(form);
-    try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData
-      });
-      const data = await res.json();
-      if (data.success) {
-        status.textContent = 'Message sent. We will be in touch soon.';
-        status.classList.add('success');
-        form.reset();
-      } else {
-        status.textContent = data.message || 'Something went wrong. Please email us directly.';
-        status.classList.add('error');
-      }
-    } catch (err) {
-      status.textContent = 'Network error. Please try again or email hello@nufik.com.';
-      status.classList.add('error');
-    } finally {
-      submit.disabled = false;
-    }
   });
 </script>
 

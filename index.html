@@ -40,11 +40,24 @@
       font-family: "Doto", "lumios-typewriter-used", system-ui, sans-serif;
     }
 
-    /* ── Grid dot background ── */
-    .dot-grid {
+    /* ── Denim fabric texture (shared bg layer 1) ── */
+    .denim-texture {
       position: fixed;
       inset: 0;
       z-index: 1;
+      pointer-events: none;
+      background-image: url("src/denim_texture.jpg");
+      background-size: 256px 256px;
+      background-repeat: repeat;
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+    }
+
+    /* ── Grid dot background (shared bg layer 2) ── */
+    .dot-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
       pointer-events: none;
       background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
       background-size: 32px 32px;
@@ -54,6 +67,20 @@
       transition: transform 520ms cubic-bezier(0.22,1,0.36,1),
                   filter 520ms cubic-bezier(0.22,1,0.36,1);
       will-change: transform, filter;
+    }
+
+    /* ── Bottom blur SVG (shared bg layer 3) ── */
+    .bg-blur {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translate(calc(-50% - 116px), 0);
+      width: calc(100vw + 400px);
+      min-width: 1280px;
+      height: auto;
+      pointer-events: none;
+      opacity: 0.7;
+      z-index: 3;
     }
     .dot-grid.is-scrolling {
       transform: scale(1.18);
@@ -279,7 +306,9 @@
 <body>
 
 <!-- background dot grid -->
+<div class="denim-texture" aria-hidden="true"></div>
 <div class="dot-grid" aria-hidden="true"></div>
+<img class="bg-blur" src="src/bg_blur.svg" alt="" aria-hidden="true">
 
 <!-- nav capsule -->
 <header class="nav-capsule" role="banner">

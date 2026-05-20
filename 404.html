@@ -16,7 +16,31 @@
       --txt:    #7B7B7B;
     }
 
-    /* 배경 블러 레이어 (하단 중앙, x=-116) — viewport보다 크게 해서 가장자리가 안 보이게 */
+    /* Denim fabric texture (shared bg layer 1) */
+    .denim-texture {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background-image: url("src/denim_texture.jpg");
+      background-size: 256px 256px;
+      background-repeat: repeat;
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+    }
+
+    /* Background dot grid (shared bg layer 2) */
+    .dot-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(123,123,123,0.18) 1px, transparent 1.5px);
+      background-size: 32px 32px;
+      background-position: 0 0;
+    }
+
+    /* Bottom blur SVG (shared bg layer 3) */
     .bg-blur {
       position: fixed;
       bottom: 0;
@@ -26,7 +50,8 @@
       min-width: 1280px;
       height: auto;
       pointer-events: none;
-      z-index: 2;
+      opacity: 0.7;
+      z-index: 3;
     }
 
     body.theme-denim {
@@ -350,6 +375,8 @@
 <body>
 
 <div class="bg-img"></div>
+<div class="denim-texture" aria-hidden="true"></div>
+<div class="dot-grid" aria-hidden="true"></div>
 <img class="bg-blur" src="src/bg_blur.svg" alt="" aria-hidden="true">
 <div class="grain"></div>
 

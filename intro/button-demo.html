@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button Demo — Nūfik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/bvc3fac.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #E7E7E7;
+    --txt: #7B7B7B;
+    --txt-strong: #090909;
+    --dot: rgba(123,123,123,0.18);
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: "Doto", system-ui, sans-serif;
+  }
+
+  .dot-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
+    background-size: 32px 32px;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 40px 160px;
+  }
+
+  h1 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 56px);
+    color: var(--txt-strong);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin-bottom: 12px;
+  }
+
+  .lede {
+    font-family: "Special Elite", monospace;
+    font-size: 14px;
+    color: var(--txt);
+    margin-bottom: 60px;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  .group {
+    margin-bottom: 80px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(123,123,123,0.25);
+  }
+  .group h2 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--txt-strong);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .group p {
+    font-family: "Special Elite", monospace;
+    font-size: 13px;
+    color: var(--txt);
+    margin-bottom: 28px;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+  }
+  .row .label {
+    font-family: "Doto", sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(123,123,123,0.7);
+    margin-right: 6px;
+  }
+
+  /* ──────────────────────────────────────────────────
+     COMMON button shell — pill on white-ish base
+     ────────────────────────────────────────────────── */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 14px 28px;
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 999px;
+    cursor: pointer;
+    isolation: isolate;
+    transition: transform 320ms cubic-bezier(0.22,1,0.36,1),
+                background 320ms ease,
+                color 320ms ease,
+                box-shadow 320ms ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn .arrow {
+    display: inline-block;
+    transition: transform 280ms cubic-bezier(0.22,1,0.36,1);
+  }
+  .btn:hover .arrow { transform: translateX(4px); }
+
+  /* ──────────────────────────────────────────────────
+     A) Plain solid white pill (baseline reference)
+     ────────────────────────────────────────────────── */
+  .btn-plain {
+    background: #ffffff;
+    color: var(--txt-strong);
+    border: 1px solid rgba(255,255,255,1);
+    box-shadow: 0 6px 20px rgba(123,123,123,0.08);
+  }
+  .btn-plain:hover { box-shadow: 0 12px 28px rgba(123,123,123,0.14); }
+
+  /* ──────────────────────────────────────────────────
+     B) Glass capsule (matches nav)
+     ────────────────────────────────────────────────── */
+  .btn-glass {
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,1);
+    color: var(--txt-strong);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .btn-glass:hover { background: rgba(255,255,255,0.7); }
+
+  /* ──────────────────────────────────────────────────
+     1) Variant 1 — Solid white pill + dot fade-out halo
+        Dots are LARGE inside (printed onto the pill subtly),
+        and DENSE → SPARSE in a glow around the pill.
+     ────────────────────────────────────────────────── */
+  .btn-v1-wrap {
+    position: relative;
+    display: inline-flex;
+    isolation: isolate;
+  }
+  .btn-v1-wrap::before {
+    /* outer dot halo: dense near pill, fading outward */
+    content: "";
+    position: absolute;
+    inset: -56px -72px;
+    z-index: -1;
+    background-image: radial-gradient(circle, rgba(123,123,123,0.55) 1.4px, transparent 1.8px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 18%, rgba(0,0,0,0.4) 45%, transparent 75%);
+            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 18%, rgba(0,0,0,0.4) 45%, transparent 75%);
+    pointer-events: none;
+    transition: opacity 320ms ease, transform 480ms cubic-bezier(0.22,1,0.36,1);
+  }
+  .btn-v1-wrap:hover::before {
+    transform: scale(1.06);
+  }
+  .btn-v1 {
+    background: #ffffff;
+    color: var(--txt-strong);
+    border: 1px solid rgba(255,255,255,1);
+    box-shadow: 0 8px 24px rgba(123,123,123,0.10);
+  }
+
+  /* ──────────────────────────────────────────────────
+     2) Variant 2 — Pill with dot pattern PRINTED on its body,
+        denser at center, sparser at the edges of the pill itself.
+        Dark text.
+     ────────────────────────────────────────────────── */
+  .btn-v2 {
+    color: var(--txt-strong);
+    background: #ffffff;
+    border: 1px solid rgba(255,255,255,1);
+    box-shadow: 0 6px 18px rgba(123,123,123,0.08);
+    overflow: hidden;
+  }
+  .btn-v2::before {
+    /* dot layer inside the pill */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(123,123,123,0.45) 1.2px, transparent 1.6px);
+    background-size: 8px 8px;
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 5%, rgba(0,0,0,0.6) 45%, transparent 85%);
+            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 5%, rgba(0,0,0,0.6) 45%, transparent 85%);
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
+  }
+  .btn-v2 > * { position: relative; z-index: 1; }
+  .btn-v2:hover { background: #fafafa; }
+
+  /* ──────────────────────────────────────────────────
+     3) Variant 3 — Solid pill, dots ONLY in outer halo,
+        smaller as they spread outward. Pill is clean.
+        Closer to a "spark" emanating from the pill.
+     ────────────────────────────────────────────────── */
+  .btn-v3-wrap {
+    position: relative;
+    display: inline-flex;
+    isolation: isolate;
+  }
+  /* layer A: medium dots near pill */
+  .btn-v3-wrap::before {
+    content: "";
+    position: absolute;
+    inset: -28px -42px;
+    z-index: -1;
+    background-image: radial-gradient(circle, rgba(123,123,123,0.55) 1.4px, transparent 1.7px);
+    background-size: 9px 9px;
+    -webkit-mask-image: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,1) 50%, transparent 70%);
+            mask-image: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,1) 50%, transparent 70%);
+    pointer-events: none;
+  }
+  /* layer B: small dots farther out */
+  .btn-v3-wrap::after {
+    content: "";
+    position: absolute;
+    inset: -64px -88px;
+    z-index: -2;
+    background-image: radial-gradient(circle, rgba(123,123,123,0.35) 0.9px, transparent 1.4px);
+    background-size: 14px 14px;
+    -webkit-mask-image: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 62%, transparent 88%);
+            mask-image: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 62%, transparent 88%);
+    pointer-events: none;
+    transition: transform 600ms cubic-bezier(0.22,1,0.36,1);
+  }
+  .btn-v3-wrap:hover::after { transform: scale(1.04); }
+  .btn-v3 {
+    background: #ffffff;
+    color: var(--txt-strong);
+    border: 1px solid rgba(255,255,255,1);
+    box-shadow: 0 8px 22px rgba(123,123,123,0.10);
+  }
+
+  /* ──────────────────────────────────────────────────
+     4) Variant 4 (A) — Noise-displaced pill edges
+        Gray pill, edges roughened by SVG turbulence filter.
+        Whole element wears the filter, so the rim feels like it
+        crumbles into specks. Fast, CSS-only, approximate halftone.
+     ────────────────────────────────────────────────── */
+  .btn-v4 {
+    color: #ffffff;
+    background: #7B7B7B;
+    border: none;
+    padding: 16px 32px;
+    font-weight: 800;
+    filter: url(#noiseRough);
+  }
+  .btn-v4 .arrow { color: #fff; }
+
+  /* ──────────────────────────────────────────────────
+     5) Variant 5 (B) — True halftone dots (SVG filter)
+        Pill edge is dissolved into actual round dots that
+        shrink toward the outside. Built with feTurbulence
+        + feComponentTransfer thresholding + dilation.
+     ────────────────────────────────────────────────── */
+  .btn-v5 {
+    color: #ffffff;
+    background: #7B7B7B;
+    border: none;
+    padding: 16px 32px;
+    font-weight: 800;
+    filter: url(#halftoneEdge);
+  }
+  .btn-v5 .arrow { color: #fff; }
+
+  /* swatch label */
+  .swatch {
+    margin-top: 10px;
+    font-family: "Special Elite", monospace;
+    font-size: 11px;
+    color: rgba(123,123,123,0.75);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 720px) {
+    .page { padding: 60px 24px 120px; }
+    .row { gap: 18px; }
+    .btn { padding: 12px 22px; font-size: 13px; letter-spacing: 0.12em; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ────────────────────────────────────────────────────
+     SVG filters used by V4 (noise) and V5 (halftone)
+     ──────────────────────────────────────────────────── -->
+<svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+  <defs>
+    <!-- V4: rough edge via turbulence + displacement -->
+    <filter id="noiseRough" x="-10%" y="-30%" width="120%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <!-- V5: true halftone dots at the edge -->
+    <filter id="halftoneEdge" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB">
+      <!-- 1) grow the pill outward so we have a band to halftone -->
+      <feMorphology in="SourceGraphic" operator="dilate" radius="6" result="grown"/>
+      <!-- 2) make a fine dot grid (turbulence threshold to round dots) -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="1" seed="2" result="t"/>
+      <feColorMatrix in="t" type="matrix"
+        values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 12 -5"
+        result="threshDots"/>
+      <!-- 3) mask the dot field with the grown pill so dots only appear inside the band -->
+      <feComposite in="threshDots" in2="grown" operator="in" result="dotsInBand"/>
+      <!-- 4) subtract the original pill so the inside stays solid -->
+      <feComposite in="dotsInBand" in2="SourceGraphic" operator="out" result="edgeDots"/>
+      <!-- 5) tint dots with the source color via colorMatrix-on-source -->
+      <feFlood flood-color="#7B7B7B" result="tint"/>
+      <feComposite in="tint" in2="edgeDots" operator="in" result="edgeDotsColored"/>
+      <!-- 6) stack: original pill on top of the colored edge dots -->
+      <feMerge>
+        <feMergeNode in="edgeDotsColored"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<div class="dot-grid" aria-hidden="true"></div>
+
+<div class="page">
+
+  <h1>Button explorations</h1>
+  <p class="lede">
+    Pill shape, the “bitmap-dot dissolve” idea explored five ways.
+    V1–V3 keep a white pill body with dots around or inside it.
+    V4 and V5 switch to a solid gray pill whose edge breaks up — V4 with a noisy
+    rim (CSS approximation), V5 with real halftone dots (SVG filter, closest to
+    the reference). Hover for motion. Pick a winner and I'll wire it into the
+    about CTA and the contact blocks.
+  </p>
+
+  <!-- Reference set -->
+  <section class="group">
+    <h2>Reference — plain styles (already in use)</h2>
+    <p>For comparison. These are the styles closest to what the site already uses.</p>
+    <div class="row">
+      <span class="label">Solid white</span>
+      <a class="btn btn-plain" href="#">Start a project <span class="arrow">→</span></a>
+
+      <span class="label">Glass (nav)</span>
+      <a class="btn btn-glass" href="#">Start a project <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <!-- Variant 1 -->
+  <section class="group">
+    <h2>Variant 1 — Pill + dot halo (outside only)</h2>
+    <p>The pill itself is clean white. Around it, a single layer of dots emanates
+      outward and fades. Dots are uniform size, density decreases toward the edge
+      via a soft mask. Feels like the pill is sitting on the existing dot-grid,
+      but slightly emphasized.</p>
+    <div class="row">
+      <span class="btn-v1-wrap">
+        <a class="btn btn-v1" href="#">Start a project <span class="arrow">→</span></a>
+      </span>
+      <span class="btn-v1-wrap">
+        <a class="btn btn-v1" href="#">Email <span class="arrow">→</span></a>
+      </span>
+    </div>
+    <p class="swatch">Single-layer halo · halo radius ≈ 56–72px · mask: radial fade</p>
+  </section>
+
+  <!-- Variant 2 -->
+  <section class="group">
+    <h2>Variant 2 — Dots printed inside the pill, sparse at edges</h2>
+    <p>The dot pattern lives <em>inside</em> the pill, dense at the center and
+      thinning toward the pill's curved edges. Reads as a textured “printed”
+      button. No external halo.</p>
+    <div class="row">
+      <a class="btn btn-v2" href="#">Start a project <span class="arrow">→</span></a>
+      <a class="btn btn-v2" href="#">Email <span class="arrow">→</span></a>
+    </div>
+    <p class="swatch">In-button radial mask · dots 8px grid · clipped to pill</p>
+  </section>
+
+  <!-- Variant 3 -->
+  <section class="group">
+    <h2>Variant 3 — Two-layer halo (bitmap fade out)</h2>
+    <p>Closer to the “bitmap that gets smaller toward the edges” idea. Two halo
+      layers: medium dots in a tight ring just outside the pill, then smaller
+      dots in a wider, sparser outer ring. Reads like the pill is shedding pixels
+      as it dissolves into the background.</p>
+    <div class="row">
+      <span class="btn-v3-wrap">
+        <a class="btn btn-v3" href="#">Start a project <span class="arrow">→</span></a>
+      </span>
+      <span class="btn-v3-wrap">
+        <a class="btn btn-v3" href="#">Email <span class="arrow">→</span></a>
+      </span>
+    </div>
+    <p class="swatch">Inner ring: 9px grid, dot 1.4px · Outer ring: 14px grid, dot 0.9px</p>
+  </section>
+
+  <!-- Variant 4 -->
+  <section class="group">
+    <h2>Variant 4 (A) — Gray pill, noise-roughened edge</h2>
+    <p>Solid gray pill where the rim has been chewed up by an SVG turbulence filter.
+      Edges feel like they crumble into specks. CSS-only, approximate halftone —
+      the "vibe" version. Whole pill (including text) sits inside the filter.</p>
+    <div class="row">
+      <a class="btn btn-v4" href="#">Start a project <span class="arrow">→</span></a>
+      <a class="btn btn-v4" href="#">Email <span class="arrow">→</span></a>
+    </div>
+    <p class="swatch">SVG feTurbulence + feDisplacementMap · scale 6 · approximate</p>
+  </section>
+
+  <!-- Variant 5 -->
+  <section class="group">
+    <h2>Variant 5 (B) — Gray pill, true halftone dot edge</h2>
+    <p>Real round dots breaking off the rim. Built with an SVG filter that dilates
+      the pill outward, thresholds a fine noise pattern into round dots, masks them
+      to the rim band, and tints them with the pill color. Closest to the reference
+      images you shared.</p>
+    <div class="row">
+      <a class="btn btn-v5" href="#">Start a project <span class="arrow">→</span></a>
+      <a class="btn btn-v5" href="#">Email <span class="arrow">→</span></a>
+    </div>
+    <p class="swatch">SVG halftone filter · dilate radius 6 · threshold dot field</p>
+  </section>
+
+  <!-- Side-by-side comparison -->
+  <section class="group">
+    <h2>Side by side</h2>
+    <p>All five at once for comparison.</p>
+    <div class="row" style="gap:48px;">
+      <span class="btn-v1-wrap">
+        <a class="btn btn-v1" href="#">V1 Halo</a>
+      </span>
+      <a class="btn btn-v2" href="#">V2 Printed</a>
+      <span class="btn-v3-wrap">
+        <a class="btn btn-v3" href="#">V3 Two-ring</a>
+      </span>
+      <a class="btn btn-v4" href="#">V4 Noise edge</a>
+      <a class="btn btn-v5" href="#">V5 Halftone</a>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

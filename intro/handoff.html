@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nūfik v2 — Handoff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;700;800;900&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/bvc3fac.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #E7E7E7;
+    --txt: #7B7B7B;
+    --txt-strong: #090909;
+    --line: #BBBBBB;
+    --dot: rgba(123,123,123,0.18);
+    --capsule-fill: rgba(255,255,255,0.4);
+    --capsule-line: rgba(255,255,255,1);
+    --radius: 10px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: "Doto", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .dot-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
+    background-size: 32px 32px;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 80px 40px 160px;
+  }
+
+  /* Headings */
+  h1 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    font-family: "Special Elite", monospace;
+    font-size: 14px;
+    color: var(--txt);
+    letter-spacing: 0.04em;
+    margin-bottom: 48px;
+  }
+
+  h2 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: clamp(22px, 2.4vw, 34px);
+    line-height: 1.15;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    margin-top: 56px;
+    margin-bottom: 18px;
+  }
+  h3 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--txt-strong);
+    margin-top: 32px;
+    margin-bottom: 10px;
+  }
+
+  /* Body */
+  p, li {
+    font-family: "Special Elite", monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--txt);
+    letter-spacing: 0.02em;
+  }
+  p { margin-bottom: 14px; }
+  ul, ol { margin: 0 0 18px 1.2em; }
+  ul li, ol li { margin-bottom: 6px; }
+  strong { color: var(--txt-strong); font-weight: 700; }
+  em { font-style: normal; color: var(--txt-strong); }
+
+  a {
+    color: var(--txt-strong);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  a:hover { color: var(--txt); }
+
+  hr {
+    border: 0;
+    border-top: 1px solid rgba(123,123,123,0.25);
+    margin: 48px 0;
+  }
+
+  /* Code blocks */
+  pre {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(255,255,255,1);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin: 14px 0 20px;
+    font-family: "Doto", "Special Elite", ui-monospace, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--txt-strong);
+    overflow-x: auto;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  code {
+    font-family: "Doto", ui-monospace, monospace;
+    font-size: 0.92em;
+    background: rgba(255,255,255,0.55);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--txt-strong);
+  }
+  pre code { background: transparent; padding: 0; }
+
+  /* Tables */
+  .tbl-wrap { overflow-x: auto; margin: 12px 0 22px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Special Elite", monospace;
+    font-size: 13px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(123,123,123,0.25);
+    vertical-align: top;
+    color: var(--txt);
+  }
+  th {
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+  }
+  td code { font-size: 12px; }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,1);
+    color: var(--txt-strong);
+  }
+  .badge.todo { background: #fff3c4; border-color: #f0d976; }
+  .badge.done { background: #d4ecd0; border-color: #a7d39e; }
+
+  /* Section card */
+  .card {
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,1);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 12px 0 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Token swatch */
+  .swatches { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 18px; }
+  .swatch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(255,255,255,1);
+    font-family: "Doto", sans-serif;
+    font-size: 12px;
+    color: var(--txt-strong);
+    letter-spacing: 0.06em;
+  }
+  .swatch .chip {
+    width: 18px; height: 18px; border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  /* TOC */
+  .toc {
+    border: 1px solid rgba(123,123,123,0.25);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 40px;
+  }
+  .toc h4 {
+    font-family: "Doto", sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    margin-bottom: 10px;
+  }
+  .toc ol {
+    margin: 0; padding: 0; list-style: none;
+    column-count: 2; column-gap: 32px;
+  }
+  .toc li {
+    margin-bottom: 4px;
+    font-family: "Special Elite", monospace;
+    font-size: 13px;
+    break-inside: avoid;
+  }
+  .toc a { text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  @media (max-width: 720px) {
+    .page { padding: 60px 22px 120px; }
+    h1 { font-size: clamp(32px, 9vw, 48px); }
+    h2 { font-size: clamp(20px, 6vw, 28px); margin-top: 40px; }
+    pre { font-size: 12px; padding: 14px 16px; }
+    .toc ol { column-count: 1; }
+    table { font-size: 12px; }
+    th, td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dot-grid" aria-hidden="true"></div>
+
+<div class="page">
+
+  <h1>Nūfik v2<br>— Handoff</h1>
+  <p class="subtitle">A snapshot of where the v2 branch stands, so the next machine can pick it up cold.</p>
+
+  <!-- Companion links -->
+  <p style="margin-bottom:24px;font-family:'Special Elite',monospace;font-size:13px;">
+    Companion pages —
+    <a href="changelog.html">Changelog &amp; Devlog</a> (day-by-day log with reasoning) ·
+    <a href="button-demo.html">Button explorations</a>
+  </p>
+
+  <!-- TOC -->
+  <nav class="toc" aria-label="Table of contents">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#start">Other machine setup</a></li>
+      <li><a href="#commits">Recent commits</a></li>
+      <li><a href="#system">Design system</a></li>
+      <li><a href="#tokens">Color tokens</a></li>
+      <li><a href="#type">Typography</a></li>
+      <li><a href="#layout">Layout primitives</a></li>
+      <li><a href="#pages">Page status</a></li>
+      <li><a href="#open">Open decisions</a></li>
+      <li><a href="#button">Button explorations</a></li>
+      <li><a href="#log">Changelog &amp; devlog</a></li>
+      <li><a href="#assets">Assets</a></li>
+      <li><a href="#rules">Project rules</a></li>
+    </ol>
+  </nav>
+
+  <!-- START -->
+  <h2 id="start">Other machine setup</h2>
+  <pre>git clone git@github.com:nufikofficial-droid/nufik_web.git
+cd nufik_web
+git checkout v2
+git pull
+
+# local server
+python3 -m http.server 8765
+# → http://localhost:8765/index.html</pre>
+
+  <hr>
+
+  <!-- COMMITS -->
+  <h2 id="commits">Recent commits (this session, newest first)</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>SHA</th><th>What landed</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>3ba9815</code></td>
+          <td>Button explorations demo page (V1–V5) — <span class="badge">demo</span></td>
+        </tr>
+        <tr>
+          <td><code>deb278e</code></td>
+          <td>Rebuild contact page + unify background layers across pages</td>
+        </tr>
+        <tr>
+          <td><code>c15b879</code></td>
+          <td>Unify <code>dot-grid</code> and <code>nav-capsule</code> across about/contact/project; drop the theme toggle</td>
+        </tr>
+        <tr>
+          <td><code>7a0222d</code></td>
+          <td>Refactor index gallery (v1 center-focus pattern); default theme switches to Denim Gray</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- SYSTEM -->
+  <h2 id="system">Design system</h2>
+  <p>The site runs on a single light-gray theme. The blue palette stays in <code>theme.css</code> under an opt-in <code>body.theme-denim</code> class but isn't used anywhere by default.</p>
+
+  <h3 id="tokens">Color tokens</h3>
+  <div class="swatches">
+    <div class="swatch"><span class="chip" style="background:#E7E7E7;"></span>--bg <code>#E7E7E7</code></div>
+    <div class="swatch"><span class="chip" style="background:#7B7B7B;"></span>--txt <code>#7B7B7B</code></div>
+    <div class="swatch"><span class="chip" style="background:#090909;"></span>--txt-strong <code>#090909</code></div>
+    <div class="swatch"><span class="chip" style="background:#BBBBBB;"></span>--line <code>#BBBBBB</code></div>
+    <div class="swatch"><span class="chip" style="background:rgba(123,123,123,0.18); border:1px solid #ccc;"></span>--dot</div>
+    <div class="swatch"><span class="chip" style="background:rgba(255,255,255,0.6); border:1px solid #ccc;"></span>--capsule-fill</div>
+  </div>
+  <p><code>--radius: 10px</code> · <code>--capsule-line: rgba(255,255,255,1)</code></p>
+
+  <h3 id="type">Typography</h3>
+  <ul>
+    <li><strong>Display / titles</strong> — <code>acumin-pro-condensed</code> Semi Bold (600), 34.17px, uppercase, <code>line-height 1.18</code>, <code>letter-spacing 0</code></li>
+    <li><strong>Body</strong> — <code>Special Elite</code> (or <code>lumios-typewriter-used</code>), 14–15px</li>
+    <li><strong>Nav / CTA</strong> — <code>Doto</code> Black 900 (active) / ExtraBold 800 (inactive), 15px, <code>letter-spacing 0.12em</code>, uppercase</li>
+  </ul>
+
+  <h3 id="layout">Layout primitives</h3>
+  <ul>
+    <li><strong>Background</strong> — <code>.dot-grid</code> radial pattern, 32px grid (24px on mobile). On <code>index.html</code> it pulses (<code>scale(1.18)</code> + <code>blur(2px)</code>) while the gallery scrolls.</li>
+    <li><strong>Nav</strong> — <code>.nav-capsule</code> glass capsule. Top center on desktop, bottom center on mobile. <code>border-radius 10px</code>, <code>backdrop-filter: blur(20px)</code>, white border, 40% white fill.</li>
+    <li><strong>Responsive breakpoint</strong> — <code>@media (max-width: 900px)</code></li>
+    <li><strong>Active nav link</strong> — <code>.active</code> gets <code>color: var(--txt-strong)</code> + weight 900</li>
+  </ul>
+
+  <hr>
+
+  <!-- PAGES -->
+  <h2 id="pages">Page status</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Page</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>index.html</code></td>
+          <td>v1-style gallery: fixed viewport, only images scroll, center cover focuses. Dot-grid + meta blur pulse on scroll. Reads <code>data/projects.json</code> (synced from Notion) for name/category/tags. <span class="badge done">stable</span></td>
+        </tr>
+        <tr>
+          <td><code>about.html</code></td>
+          <td>Designer-first 1st-person tone. <em>"A designer for brands that want to be felt."</em> Theme toggle removed. <span class="badge done">stable</span></td>
+        </tr>
+        <tr>
+          <td><code>contact.html</code></td>
+          <td>Rebuilt in <code>deb278e</code> (LOLO-inspired layout). Three big action blocks (Email / Instagram / LinkedIn) instead of a form. <span class="badge">review</span></td>
+        </tr>
+        <tr>
+          <td><code>project.html</code></td>
+          <td>Background + nav unified, toggle removed. <code>.content</code> still uses a 3-column grid intended for the old side-panel layout — may want to clean up. <span class="badge todo">cleanup pending</span></td>
+        </tr>
+        <tr>
+          <td><code>404.html</code>, <code>style-guide.html</code></td>
+          <td>Still carry the theme toggle. Decide whether to strip them too. <span class="badge todo">decision pending</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- OPEN -->
+  <h2 id="open">Open decisions</h2>
+  <ol>
+    <li><strong>Button variant</strong> — pick V4 (CSS noise) or V5 (true halftone) from <a href="button-demo.html">button-demo.html</a>, then wire into <code>.about-cta</code> and the contact action blocks.</li>
+    <li><strong>404 + style-guide toggle</strong> — drop the theme toggle for consistency, or keep style-guide as a system reference page where toggling palettes still matters.</li>
+    <li><strong>Project page <code>.content</code> grid</strong> — collapse the legacy 3-column grid since the side panels are gone.</li>
+    <li><strong>Contact rebuild review</strong> — confirm the LOLO-style rebuild matches intent; tweak copy + spacing on the new action blocks.</li>
+  </ol>
+
+  <hr>
+
+  <!-- BUTTONS -->
+  <h2 id="button">Button explorations</h2>
+  <p>Five takes on a pill button, comparing the "bitmap dots dissolving toward the edge" idea. Live page: <a href="button-demo.html">intro/button-demo.html</a>.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Variant</th><th>Description</th><th>Body color</th></tr></thead>
+      <tbody>
+        <tr><td><strong>V1</strong></td><td>White pill + single outer dot halo (CSS mask fade)</td><td>White</td></tr>
+        <tr><td><strong>V2</strong></td><td>White pill with dots printed inside, sparser at the curved edge</td><td>White</td></tr>
+        <tr><td><strong>V3</strong></td><td>White pill + two-ring halo (medium dots near, smaller dots far)</td><td>White</td></tr>
+        <tr><td><strong>V4 (A)</strong></td><td>Gray pill, rim crumbled by SVG turbulence + displacement (CSS-only, approximate)</td><td><code>#7B7B7B</code></td></tr>
+        <tr><td><strong>V5 (B)</strong></td><td>Gray pill, true halftone dots dissolving off the edge via SVG filter chain (closest to the reference imagery)</td><td><code>#7B7B7B</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- CHANGELOG -->
+  <h2 id="log">Changelog &amp; devlog</h2>
+  <p>For the day-by-day record of <em>what</em> changed and <em>why</em>, see <a href="changelog.html">intro/changelog.html</a>. It carries one entry per change with a short reasoning panel and tag filters (added / changed / removed / fixed / design / decision).</p>
+  <p>This handoff is the "current state"; the changelog is "how we got here."</p>
+
+  <hr>
+
+  <!-- ASSETS -->
+  <h2 id="assets">Assets</h2>
+  <p>Inside <code>src/</code>:</p>
+  <ul>
+    <li><code>Nufik_logo_single.svg</code>, <code>MacBook Air - 64.svg</code></li>
+    <li><code>v2_m.png</code>, <code>v2_pc.png</code></li>
+    <li>New from <code>deb278e</code>: <code>Biz_01.png</code>, <code>Biz_02.png</code>, <code>MacBook Air - 80/84/85.png</code>, <code>denim_texture.jpg</code></li>
+  </ul>
+  <p>Experimental intro: <code>intro/pixel-text-animation.html</code> (also mirrored at <code>src/pixel-text-animation.html</code>).</p>
+
+  <hr>
+
+  <!-- RULES -->
+  <h2 id="rules">Project rules</h2>
+  <ul>
+    <li><strong>No italic, ever</strong> — global rule. Don't use <code>font-style: italic</code>, <code>&lt;em&gt;</code> for italic effect, or <code>&lt;i&gt;</code>.</li>
+    <li><strong>Notion → JSON sync</strong> — projects come from the Notion DB via <code>scripts/sync-notion.mjs</code>. Run with <code>NOTION_TOKEN=xxx node scripts/sync-notion.mjs</code>; it writes <code>data/projects.json</code>.</li>
+    <li><strong>.DS_Store</strong> — macOS metadata. Always excluded from commits even when it shows up dirty in <code>git status</code>.</li>
+  </ul>
+
+  <hr>
+
+  <p class="subtitle" style="text-align:center; margin-top:32px;">
+    Next decision point — pick a button variant from <a href="button-demo.html">button-demo.html</a>.
+  </p>
+
+</div>
+
+</body>
+</html>

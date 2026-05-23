@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nūfik v2 — Changelog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;700;800;900&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/bvc3fac.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #E7E7E7;
+    --txt: #7B7B7B;
+    --txt-strong: #090909;
+    --line: #BBBBBB;
+    --dot: rgba(123,123,123,0.18);
+    --capsule-fill: rgba(255,255,255,0.4);
+    --capsule-line: rgba(255,255,255,1);
+    --radius: 10px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: "Doto", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .dot-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
+    background-size: 32px 32px;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 80px 40px 160px;
+  }
+
+  /* Header */
+  .page-header {
+    margin-bottom: 40px;
+  }
+  h1 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: clamp(36px, 6vw, 68px);
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    font-family: "Special Elite", monospace;
+    font-size: 14px;
+    color: var(--txt);
+    letter-spacing: 0.04em;
+    max-width: 580px;
+    line-height: 1.6;
+  }
+
+  /* Filter chips */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 32px 0 16px;
+  }
+  .chip {
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,1);
+    color: var(--txt-strong);
+    cursor: pointer;
+    transition: background 200ms ease, color 200ms ease, transform 200ms ease;
+  }
+  .chip:hover { transform: translateY(-1px); }
+  .chip.active {
+    background: var(--txt-strong);
+    color: #fff;
+    border-color: var(--txt-strong);
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    margin-top: 12px;
+    padding-left: 28px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 6px; top: 6px; bottom: 6px;
+    width: 1px;
+    background: rgba(123,123,123,0.35);
+  }
+
+  /* Each day entry */
+  .entry {
+    position: relative;
+    margin-bottom: 38px;
+    transition: opacity 220ms ease, transform 220ms ease;
+  }
+  .entry::before {
+    content: "";
+    position: absolute;
+    left: -28px; top: 6px;
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--txt-strong);
+  }
+  .entry.hidden { display: none; }
+
+  .entry-date {
+    font-family: "Doto", sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    margin-bottom: 6px;
+  }
+  .entry-title {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: clamp(20px, 2.2vw, 26px);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    color: var(--txt-strong);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .entry-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .tag {
+    font-family: "Doto", sans-serif;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--txt-strong);
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,1);
+  }
+  .tag.added    { background: #d4ecd0; border-color: #a7d39e; }
+  .tag.changed  { background: #d4e0f0; border-color: #9ab6d4; }
+  .tag.removed  { background: #f0d4d4; border-color: #d4a7a7; }
+  .tag.fixed    { background: #fff3c4; border-color: #f0d976; }
+  .tag.design   { background: #e9d8f0; border-color: #c9a7d4; }
+  .tag.decision { background: #f0e2d0; border-color: #d4b88a; }
+
+  .entry-body p,
+  .entry-body li {
+    font-family: "Special Elite", monospace;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--txt);
+    letter-spacing: 0.02em;
+  }
+  .entry-body p { margin-bottom: 10px; }
+  .entry-body ul { margin: 0 0 12px 1.2em; }
+  .entry-body li { margin-bottom: 4px; }
+  .entry-body strong { color: var(--txt-strong); font-weight: 700; }
+  .entry-body em { font-style: normal; color: var(--txt-strong); }
+
+  /* Why / Decision panel */
+  .why {
+    margin-top: 12px;
+    border-left: 2px solid var(--txt-strong);
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.45);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .why-label {
+    font-family: "Doto", sans-serif;
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    margin-bottom: 4px;
+  }
+  .why p {
+    font-family: "Special Elite", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--txt);
+    margin: 0;
+  }
+
+  .entry-footer {
+    margin-top: 10px;
+    font-family: "Doto", sans-serif;
+    font-size: 11px;
+    color: rgba(123,123,123,0.75);
+    letter-spacing: 0.06em;
+  }
+  .entry-footer code {
+    background: rgba(255,255,255,0.6);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--txt-strong);
+    font-size: 0.92em;
+  }
+
+  a {
+    color: var(--txt-strong);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  a:hover { color: var(--txt); }
+
+  /* Stats strip */
+  .stats {
+    display: flex;
+    gap: 26px;
+    margin: 8px 0 28px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,1);
+    border-radius: var(--radius);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat-num {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    color: var(--txt-strong);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--txt);
+  }
+
+  /* Empty state */
+  .empty {
+    display: none;
+    padding: 40px 20px;
+    text-align: center;
+    font-family: "Special Elite", monospace;
+    font-size: 13px;
+    color: var(--txt);
+  }
+  .empty.visible { display: block; }
+
+  @media (max-width: 720px) {
+    .page { padding: 60px 22px 120px; }
+    h1 { font-size: clamp(32px, 9vw, 48px); }
+    .timeline { padding-left: 22px; }
+    .entry::before { left: -22px; }
+    .stats { gap: 16px; padding: 12px 14px; }
+    .stat-num { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dot-grid" aria-hidden="true"></div>
+
+<div class="page">
+
+  <div class="page-header">
+    <h1>Changelog<br>&amp; Devlog</h1>
+    <p class="subtitle">
+      What changed on Nūfik v2, day by day — paired with the reasoning behind
+      each call. The top entries are the most recent. Filter by tag to focus on
+      design decisions, additions, removals, or fixes.
+    </p>
+  </div>
+
+  <!-- Quick stats -->
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-num" id="stat-entries">—</span>
+      <span class="stat-label">Entries</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num" id="stat-days">—</span>
+      <span class="stat-label">Active days</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num" id="stat-latest">—</span>
+      <span class="stat-label">Latest</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">v2</span>
+      <span class="stat-label">Branch</span>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters" id="filters" role="group" aria-label="Filter by tag">
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="added">Added</button>
+    <button class="chip" data-filter="changed">Changed</button>
+    <button class="chip" data-filter="removed">Removed</button>
+    <button class="chip" data-filter="fixed">Fixed</button>
+    <button class="chip" data-filter="design">Design</button>
+    <button class="chip" data-filter="decision">Decision</button>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline" id="timeline">
+    <!-- entries injected by JS -->
+  </div>
+
+  <div class="empty" id="empty">No entries match this filter.</div>
+
+</div>
+
+<script>
+  /* ───────────────────────────────────────────────────
+     Entries live here. Newest first. To add a new day,
+     prepend an object to the array. Tags drive both color
+     and filtering. Keep "why" short — one or two sentences.
+     ─────────────────────────────────────────────────── */
+  const entries = [
+    {
+      date: "2026-05-23",
+      title: "Devlog + changelog page",
+      tags: ["added", "design"],
+      body: `
+        <p>New <code>intro/changelog.html</code> page that combines a dated
+        changelog with a design devlog. Each entry carries tags, a body, and a
+        short "why" panel. Filterable by tag.</p>
+      `,
+      why: `Handoff snapshots get rewritten every session, so the reasoning behind decisions kept getting lost. A running log preserves it.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-23",
+      title: "Handoff snapshot page",
+      tags: ["added"],
+      body: `
+        <p>Added <code>intro/handoff.html</code> — a single self-contained page
+        summarising current state of v2: setup commands, recent commits, color
+        + type tokens, page-by-page status, open decisions, button explorations,
+        and project rules.</p>
+      `,
+      why: `Anyone (or future-me on another machine) should be able to git pull and have a complete picture in one read.`,
+      ref: "intro/handoff.html"
+    },
+    {
+      date: "2026-05-21",
+      title: "Button explorations — five pill variants",
+      tags: ["design", "decision"],
+      body: `
+        <p>Comparison page at <code>intro/button-demo.html</code> with five
+        takes on the "bitmap dots dissolving toward the edge" pill button.</p>
+        <ul>
+          <li><strong>V1</strong> White pill + single outer dot halo</li>
+          <li><strong>V2</strong> White pill, dots printed inside, sparser at the edge</li>
+          <li><strong>V3</strong> White pill + two-ring halo (medium near, small far)</li>
+          <li><strong>V4 (A)</strong> Gray pill, rim roughened by SVG turbulence + displacement</li>
+          <li><strong>V5 (B)</strong> Gray pill, true halftone dots via SVG filter chain — closest to the reference</li>
+        </ul>
+      `,
+      why: `Wanted to physically compare the "approximate" (V4) and "real halftone" (V5) routes before wiring one into the about CTA and contact blocks. V1–V3 are kept for white-pill reference even though the chosen direction is gray.`,
+      ref: "intro/button-demo.html · commit 3ba9815"
+    },
+    {
+      date: "2026-05-19",
+      title: "Project page color + nav unified",
+      tags: ["changed", "removed"],
+      body: `
+        <p>Project detail page now uses the same <code>dot-grid</code> background
+        and <code>nav-capsule</code> as the rest of the site. The
+        <code>body.theme-denim</code> palette, the toggle button, and all of its
+        JS / CSS were stripped.</p>
+      `,
+      why: `Project pages were the last place still carrying the blue theme + toggle. Removing it locks the site to a single Denim Gray palette and keeps about / contact / project visually consistent.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-19",
+      title: "About — designer-first 1st-person tone",
+      tags: ["changed", "design"],
+      body: `
+        <p>Rewrote the About page voice from agency plural ("we are a studio")
+        to designer singular ("Nūfik is the design practice of Nura, a space
+        that holds her design philosophy…"). Title becomes <em>A designer for
+        brands that want to be felt.</em></p>
+      `,
+      why: `The site represents one designer, not a team. The studio framing flattened the personal angle that the rest of the brand leans into.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-19",
+      title: "Removed theme toggle from contact and about",
+      tags: ["removed"],
+      body: `
+        <p>Stripped the color theme toggle UI, related CSS, and the
+        localStorage restore script from <code>contact.html</code> and
+        <code>about.html</code>. Both pages now lock to Denim Gray.</p>
+      `,
+      why: `v2 commits to a single palette — having a runtime toggle implied a choice that no longer exists.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-18",
+      title: "Scroll-pulse effect on dot grid + meta",
+      tags: ["added", "design"],
+      body: `
+        <p>While the index gallery scrolls, the background dot grid scales to
+        1.18× and blurs to 2px; the slide-meta text also blurs 2px. Both ease
+        back to crisp ~140ms after the user stops scrolling.</p>
+      `,
+      why: `Wanted a subtle "in motion vs. settled" cue without adding extra UI. Tying it to the dot grid reinforces the bitmap / halftone tone that's becoming the site's signature.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-18",
+      title: "Contact rebuild + background layers unified",
+      tags: ["changed"],
+      body: `
+        <p>Rebuilt the contact page around three big action blocks (Email /
+        Instagram / LinkedIn) instead of a form. All pages now share the same
+        background layer stack — single light-gray base + the dot-grid overlay.
+        Texture layers (bg-img, grain) are gone.</p>
+      `,
+      why: `A solo designer site doesn't need a contact form — direct email is more personal and matches the tone. Unifying backgrounds also cuts visual noise that the toggle era left behind.`,
+      ref: "commit deb278e"
+    },
+    {
+      date: "2026-05-17",
+      title: "Dot-grid + nav-capsule shared across pages",
+      tags: ["changed", "design"],
+      body: `
+        <p>about, contact, project all drop the legacy side panels, bg-blur
+        image, and dual-nav (top-left logo + top-right menu). Replaced by the
+        shared <code>.dot-grid</code> background and the centered
+        <code>.nav-capsule</code> from the index page.</p>
+      `,
+      why: `Multiple page-specific chrome systems were drifting apart. Consolidating to one background + one nav makes future changes propagate everywhere, and the dot grid ties into the bigger halftone language.`,
+      ref: "commit c15b879"
+    },
+    {
+      date: "2026-05-17",
+      title: "Index gallery refactored to v1 center-focus",
+      tags: ["changed", "design"],
+      body: `
+        <p>The gallery now keeps the viewport fixed and scrolls only the image
+        track — the centered cover is always focused, neighbours are blurred
+        and dimmed. Meta text (title, category, tags) reads from
+        <code>data/projects.json</code> (synced from Notion).</p>
+      `,
+      why: `The v2 "every slide scrolls as a whole" pattern was visually busy. The v1 center-focus model puts a single project in the spotlight at a time, which suits the editorial / portfolio framing better.`,
+      ref: "commit 7a0222d"
+    },
+    {
+      date: "2026-05-17",
+      title: "Default theme switched to Denim Gray",
+      tags: ["changed", "decision"],
+      body: `
+        <p>Site-wide default palette changes from Denim Blue (<code>#C4DAE2</code>)
+        to Denim Gray (<code>#E7E7E7</code>). The blue palette stays in
+        <code>theme.css</code> as an opt-in <code>body.theme-denim</code> class
+        but isn't applied anywhere by default.</p>
+      `,
+      why: `Gray reads as more neutral / contemporary and lets the dot-grid + halftone direction breathe without competing with a colored backdrop. Keeping blue available means we can revisit without rewriting tokens.`,
+      ref: ""
+    }
+  ];
+
+  /* ─────────── Render ─────────── */
+  const tl = document.getElementById("timeline");
+  const empty = document.getElementById("empty");
+  let activeFilter = "all";
+
+  function tagHTML(tags) {
+    return tags.map(t => `<span class="tag ${t}">${t}</span>`).join("");
+  }
+
+  function render() {
+    tl.innerHTML = "";
+    let visible = 0;
+    entries.forEach((e, i) => {
+      if (activeFilter !== "all" && !e.tags.includes(activeFilter)) return;
+      visible++;
+      const el = document.createElement("article");
+      el.className = "entry";
+      el.innerHTML = `
+        <div class="entry-date">${e.date}</div>
+        <h2 class="entry-title">${e.title}</h2>
+        <div class="entry-meta">${tagHTML(e.tags)}</div>
+        <div class="entry-body">${e.body}</div>
+        ${e.why ? `
+          <div class="why">
+            <div class="why-label">Why</div>
+            <p>${e.why}</p>
+          </div>
+        ` : ""}
+        ${e.ref ? `<div class="entry-footer">${e.ref}</div>` : ""}
+      `;
+      tl.appendChild(el);
+    });
+    empty.classList.toggle("visible", visible === 0);
+  }
+
+  /* ─────────── Stats ─────────── */
+  function renderStats() {
+    document.getElementById("stat-entries").textContent = entries.length;
+    const uniqueDays = new Set(entries.map(e => e.date));
+    document.getElementById("stat-days").textContent = uniqueDays.size;
+    document.getElementById("stat-latest").textContent = entries[0]?.date.slice(5).replace("-", "/") || "—";
+  }
+
+  /* ─────────── Filters ─────────── */
+  document.getElementById("filters").addEventListener("click", (e) => {
+    const btn = e.target.closest(".chip");
+    if (!btn) return;
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c === btn));
+    render();
+  });
+
+  renderStats();
+  render();
+</script>
+
+</body>
+</html>

@@ -357,6 +357,37 @@
   const entries = [
     {
       date: "2026-05-23",
+      title: "Poster background on contact (plus-darker, right-anchored)",
+      tags: ["added", "design"],
+      body: `
+        <p>Added <code>src/poster.jpg</code> as the topmost background layer on
+        the contact page. Anchored to the viewport's right edge so it scales
+        with the screen without leaving an empty right side on wide displays.
+        Blend mode <code>plus-darker</code>; opacity 0.10 on desktop, 0.48 on
+        mobile (Figma spec retained for small screens where the poster reads
+        as a hero).</p>
+      `,
+      why: `Wanted a brand artifact behind the cards instead of plain texture — gives the page a quiet depth without competing with the business-card composition. The plus-darker mode keeps it tonal, never colored.`,
+      ref: "commit 05d9080"
+    },
+    {
+      date: "2026-05-23",
+      title: "About — single-gray type system, lighter weights",
+      tags: ["changed", "design"],
+      body: `
+        <p>Tightened the About page typography: section titles switched to
+        <code>Special Elite</code> 20px (no uppercase), the big quote drops to
+        weight 700 at 34px, body copy now Special Elite 15px. CTA pill uses
+        <code>acumin-pro-condensed</code> 700 (previously a non-existent
+        <em>-black</em> alias that was silently falling back). All text colors
+        collapsed to a single <code>--txt</code> (#7B7B7B), removing the faded
+        70%/75% variations.</p>
+      `,
+      why: `The About voice was getting fragmented — three different gray opacities and an unloaded font weight made the page feel "designed by committee". Pulling everything to one tone lets the writing carry the personality instead of the styling.`,
+      ref: "commit 05d9080"
+    },
+    {
+      date: "2026-05-23",
       title: "Devlog + changelog page",
       tags: ["added", "design"],
       body: `

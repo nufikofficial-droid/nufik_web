@@ -33,11 +33,30 @@
       overflow-x: hidden;
     }
 
+    /* Poster background (Figma: poster_2, 1014×1437, plus-darker)
+       Desktop anchored to right edge, scales up to fill viewport on wide screens
+       Desktop opacity lowered (0.30) for a softer feel; mobile keeps Figma 0.48 */
+    .bg-poster {
+      position: fixed;
+      top: -149px;
+      right: 0;
+      left: auto;
+      transform: none;
+      transform-origin: right top;
+      width: max(1014px, 100vw);
+      max-width: none;
+      height: auto;
+      pointer-events: none;
+      opacity: 0.10;
+      mix-blend-mode: plus-darker;
+      z-index: 1;
+    }
+
     /* Denim fabric texture (Figma: seamless tile, mix-blend soft-light) */
     .denim-texture {
       position: fixed;
       inset: 0;
-      z-index: 1;
+      z-index: 2;
       pointer-events: none;
       background-image: url("src/denim_texture.jpg");
       background-size: 256px 256px;
@@ -49,7 +68,7 @@
     .dot-grid {
       position: fixed;
       inset: 0;
-      z-index: 2;
+      z-index: 3;
       pointer-events: none;
       background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
       background-size: 32px 32px;
@@ -67,7 +86,20 @@
       height: auto;
       pointer-events: none;
       opacity: 0.7;
-      z-index: 3;
+      z-index: 4;
+    }
+
+    @media (max-width: 900px) {
+      /* Mobile: anchor poster to right edge so it shrinks/grows from the right */
+      .bg-poster {
+        top: -80px;
+        left: auto;
+        right: 0;
+        transform: none;
+        transform-origin: right top;
+        width: min(820px, 95vw);
+        opacity: 0.48;
+      }
     }
 
     /* Nav capsule */
@@ -292,6 +324,7 @@
 </head>
 <body>
 
+<img class="bg-poster" src="src/poster.jpg" alt="" aria-hidden="true">
 <div class="denim-texture" aria-hidden="true"></div>
 <div class="dot-grid" aria-hidden="true"></div>
 <img class="bg-blur" src="src/bg_blur.svg" alt="" aria-hidden="true">

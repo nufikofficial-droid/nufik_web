@@ -1,5 +1,127 @@
 [
   {
+    "slug": "proof-of-retreat",
+    "name": "Proof of Retreat",
+    "category": "Visual Identity",
+    "year": "2025",
+    "client": "Thou Ārt™",
+    "description": "Pop-up village landing page",
+    "cover": "images/projects/proof-of-retreat/por_01.jpg",
+    "tags": [
+      "Identity",
+      "Digital"
+    ],
+    "order": 2,
+    "content": [
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_01.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "A pop-up village where you heal, focus, and do your best work by ocean."
+      },
+      {
+        "type": "paragraph",
+        "text": "\nThe design draws from the feeling of slow travel. The quiet excitement of arriving somewhere new. Days that unfold without urgency. Film grain and paper textures bring that analog warmth to the screen. Turning a landing page into something that feels less like a website and more like a memory worth keeping."
+      },
+      {
+        "type": "paragraph",
+        "text": "WEB : https://proofofretreat.me/\n"
+      },
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_02.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_03.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/proof-of-retreat/por_04.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "\nCredit"
+      },
+      {
+        "type": "paragraph",
+        "text": "Design: Nura, Jimin by Thou Ārt Creative Studio"
+      },
+      {
+        "type": "paragraph",
+        "text": "Year: 2025"
+      }
+    ]
+  },
+  {
+    "slug": "herhis",
+    "name": "HerHis",
+    "category": "Brand Identity",
+    "year": "2024",
+    "client": "HerHis lab Ltd.",
+    "description": "HerHis is a clean skincare brand that values simplicity and healthy skin habits, inspiring genuine beauty in everyday life.",
+    "cover": "images/projects/herhis/herhis_01.jpg",
+    "tags": [
+      "Branding",
+      "Package"
+    ],
+    "order": 3,
+    "content": [
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_01.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "HerHis is a clean skincare brand that values simplicity and healthy skin habits, inspiring genuine beauty in everyday life.\n"
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_02.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_03.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_04.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_05.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/herhis/herhis_06.jpg",
+        "caption": ""
+      },
+      {
+        "type": "paragraph",
+        "text": "\nCredit"
+      },
+      {
+        "type": "paragraph",
+        "text": "Design: Nura by HerHis lab Ltd."
+      },
+      {
+        "type": "paragraph",
+        "text": "Year: 2024"
+      }
+    ]
+  },
+  {
     "slug": "cha-cha-cha",
     "name": "Cha Cha Cha",
     "category": "Brand Identity",
@@ -8,13 +130,11 @@
     "description": "The traditional culture of Matcha with a modern sensibility, offering not only an experience of inner peace and relaxation.",
     "cover": "images/projects/cha-cha-cha/cha_01.jpg",
     "tags": [
-      "identity",
-      "branding",
-      "print",
-      "packaging",
-      "digital"
+      "Branding",
+      "Package",
+      "Digital"
     ],
-    "order": 999,
+    "order": 4,
     "content": [
       {
         "type": "image",
@@ -81,131 +201,6 @@
       {
         "type": "paragraph",
         "text": "Year: 2024"
-      }
-    ]
-  },
-  {
-    "slug": "herhis",
-    "name": "HerHis",
-    "category": "Brand Identity",
-    "year": "2024",
-    "client": "HerHis lab Ltd.",
-    "description": "HerHis is a clean skincare brand that values simplicity and healthy skin habits, inspiring genuine beauty in everyday life.",
-    "cover": "images/projects/herhis/herhis_01.jpg",
-    "tags": [
-      "identity",
-      "branding",
-      "print",
-      "packaging",
-      "digital"
-    ],
-    "order": 999,
-    "content": [
-      {
-        "type": "image",
-        "src": "images/projects/herhis/herhis_01.jpg",
-        "caption": ""
-      },
-      {
-        "type": "paragraph",
-        "text": "HerHis is a clean skincare brand that values simplicity and healthy skin habits, inspiring genuine beauty in everyday life.\n"
-      },
-      {
-        "type": "image",
-        "src": "images/projects/herhis/herhis_02.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/herhis/herhis_03.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/herhis/herhis_04.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/herhis/herhis_05.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/herhis/herhis_06.jpg",
-        "caption": ""
-      },
-      {
-        "type": "paragraph",
-        "text": "\nCredit"
-      },
-      {
-        "type": "paragraph",
-        "text": "Design: Nura by HerHis lab Ltd."
-      },
-      {
-        "type": "paragraph",
-        "text": "Year: 2024"
-      }
-    ]
-  },
-  {
-    "slug": "proof-of-retreat",
-    "name": "Proof of Retreat",
-    "category": "Web",
-    "year": "2025",
-    "client": "Thou Ārt™",
-    "description": "Pop-up village landing page",
-    "cover": "images/projects/proof-of-retreat/por_01.jpg",
-    "tags": [
-      "identity",
-      "digital"
-    ],
-    "order": 999,
-    "content": [
-      {
-        "type": "image",
-        "src": "images/projects/proof-of-retreat/por_01.jpg",
-        "caption": ""
-      },
-      {
-        "type": "paragraph",
-        "text": "A pop-up village where you heal, focus, and do your best work by ocean."
-      },
-      {
-        "type": "paragraph",
-        "text": "\nThe design draws from the feeling of slow travel. The quiet excitement of arriving somewhere new. Days that unfold without urgency. Film grain and paper textures bring that analog warmth to the screen. Turning a landing page into something that feels less like a website and more like a memory worth keeping."
-      },
-      {
-        "type": "paragraph",
-        "text": "WEB : https://proofofretreat.me/\n"
-      },
-      {
-        "type": "image",
-        "src": "images/projects/proof-of-retreat/por_02.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/proof-of-retreat/por_03.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/proof-of-retreat/por_04.jpg",
-        "caption": ""
-      },
-      {
-        "type": "paragraph",
-        "text": "\nCredit"
-      },
-      {
-        "type": "paragraph",
-        "text": "Design: Nura, Jimin by Thou Ārt Creative Studio"
-      },
-      {
-        "type": "paragraph",
-        "text": "Year: 2025"
       }
     ]
   }

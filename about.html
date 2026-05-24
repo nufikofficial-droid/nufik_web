@@ -6,7 +6,7 @@
   <title>About — Nūfik</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;700;800;900&family=Special+Elite&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;700;800;900&family=Special+Elite&family=Source+Serif+4:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/bvc3fac.css">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -17,6 +17,14 @@
       --line:   #BBBBBB;
       --accent: #7B7B7B;
       --txt:    #7B7B7B;
+
+      --capsule-fill: rgba(255,255,255,0.4);
+      --capsule-line: rgba(255,255,255,1);
+      --dot:          rgba(123,123,123,0.18);
+      --txt-strong:   #090909;
+      --radius:       10px;
+      --box-strong:   #ffffff;
+      --box-soft:     rgba(255,255,255,0.5);
     }
 
     html, body {
@@ -27,19 +35,26 @@
       overflow-x: hidden;
     }
 
-    :root {
-      --capsule-fill: rgba(255,255,255,0.4);
-      --capsule-line: rgba(255,255,255,1);
-      --dot:          rgba(123,123,123,0.18);
-      --txt-strong:   #090909;
-      --radius:       10px;
+    /* ── Background stack (identical to contact.html) ── */
+    .bg-poster {
+      position: fixed;
+      top: -149px;
+      right: 0;
+      left: auto;
+      transform: none;
+      transform-origin: right top;
+      width: max(1014px, 100vw);
+      max-width: none;
+      height: auto;
+      pointer-events: none;
+      opacity: 0.10;
+      mix-blend-mode: plus-darker;
+      z-index: 1;
     }
-
-    /* Denim fabric texture (shared bg layer 1) */
     .denim-texture {
       position: fixed;
       inset: 0;
-      z-index: 1;
+      z-index: 2;
       pointer-events: none;
       background-image: url("src/denim_texture.jpg");
       background-size: 256px 256px;
@@ -47,19 +62,15 @@
       mix-blend-mode: soft-light;
       opacity: 0.9;
     }
-
-    /* Background dot grid (shared with index) */
     .dot-grid {
       position: fixed;
       inset: 0;
-      z-index: 2;
+      z-index: 3;
       pointer-events: none;
       background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
       background-size: 32px 32px;
       background-position: 0 0;
     }
-
-    /* Bottom blur SVG (shared bg layer 3) */
     .bg-blur {
       position: fixed;
       bottom: 0;
@@ -70,10 +81,22 @@
       height: auto;
       pointer-events: none;
       opacity: 0.7;
-      z-index: 3;
+      z-index: 4;
     }
 
-    /* Nav capsule (shared with index) */
+    @media (max-width: 900px) {
+      .bg-poster {
+        top: -80px;
+        left: auto;
+        right: 0;
+        transform: none;
+        transform-origin: right top;
+        width: min(820px, 95vw);
+        opacity: 0.48;
+      }
+    }
+
+    /* ── Nav capsule (identical to contact.html) ── */
     .nav-capsule {
       position: fixed;
       top: 28px;
@@ -92,11 +115,7 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
     }
-    .nav-logo {
-      display: inline-flex;
-      align-items: center;
-      text-decoration: none;
-    }
+    .nav-logo { display: inline-flex; align-items: center; text-decoration: none; }
     .nav-logo svg { width: 72px; height: auto; display: block; }
     .nav-logo svg .st0 { fill: var(--txt); }
     .nav-links {
@@ -114,133 +133,148 @@
       text-transform: uppercase;
       color: var(--txt);
       text-decoration: none;
-      transition: opacity 200ms ease, color 200ms ease;
+      transition: color 200ms ease;
     }
     .nav-links a.active { color: var(--txt-strong); font-weight: 900; }
     .nav-links a:not(.active):hover { color: var(--txt-strong); }
 
-    /* ── about content layout (single centered column) ── */
-    .content {
+    /* ── About layout: single centered column ── */
+    .about-page {
       position: relative;
-      min-height: 100vh;
-      box-sizing: border-box;
+      z-index: 10;
+      max-width: 565px;
+      margin: 0 auto;
+      padding: 142px 24px 200px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 140px 27px 120px;
-      z-index: 10;
+      gap: 42px;
       opacity: 0;
       transform: translateY(14px);
       transition: opacity 540ms ease, transform 540ms cubic-bezier(0.22,1,0.36,1);
     }
-    .content.visible { opacity: 1; transform: translateY(0); }
+    .about-page.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-    .about-column {
+    /* ── Block = label box + body box, alternating alignment ── */
+    .block {
+      display: flex;
+      flex-direction: column;
       width: 100%;
-      max-width: 640px;
-      display: flex;
-      flex-direction: column;
-      gap: 2.4rem;
-      text-align: center;
     }
+    .block.left  { align-items: flex-start; }
+    .block.right { align-items: flex-end; }
 
-    .about-quote {
-      font-family: acumin-pro-condensed, "Doto", sans-serif;
-      font-weight: 700;
-      font-style: normal;
-      font-size: 34px;
-      line-height: 1.18;
-      letter-spacing: 0;
-      text-transform: uppercase;
-      color: var(--txt);
+    .label-box {
+      padding: 10px;
+      display: inline-block;
     }
-    .about-quote span {
+    .body-box {
+      padding: 10px;
       display: block;
-      font-style: normal;
-      color: var(--txt);
+      width: 100%;
     }
 
-    .about-title {
+    /* Default state — all boxes translucent white */
+    .label-box,
+    .body-box {
+      background: var(--box-soft);
+      transition:
+        background 360ms cubic-bezier(0.22,1,0.36,1),
+        transform  420ms cubic-bezier(0.22,1,0.36,1),
+        box-shadow 420ms cubic-bezier(0.22,1,0.36,1);
+    }
+    /* The intro block is white by default (Figma reference) */
+    .block.intro .label-box,
+    .block.intro .body-box {
+      background: var(--box-strong);
+    }
+    .block.intro .body-box { width: 100%; }
+    .block.full-body .body-box { width: 100%; }
+
+    /* Focused block — solid white + slight lift, "snaps" into focus as it
+       enters the viewport center. Driven by .in-focus class added via IntersectionObserver. */
+    .block.in-focus .label-box,
+    .block.in-focus .body-box {
+      background: var(--box-strong);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(123,123,123,0.10);
+    }
+
+    /* Label: Special Elite 20px (Figma spec) */
+    .label-box p {
       font-family: "Special Elite", "lumios-typewriter-used", monospace;
       font-weight: 400;
-      font-style: normal;
       font-size: 20px;
-      line-height: 1.18;
+      line-height: 1.2;
+      color: var(--txt);
       letter-spacing: 0;
-      color: var(--txt);
     }
 
-    .about-body {
-      font-family: "Special Elite", "lumios-typewriter-used", monospace;
+    /* Body copy: Source Serif 4 at contact's 15px size */
+    .body-box {
+      font-family: "Source Serif 4", "Source Serif Pro", Georgia, serif;
       font-weight: 400;
-      font-style: normal;
       font-size: 15px;
-      line-height: 1.7;
-      letter-spacing: 0.06em;
+      line-height: 1.6;
       color: var(--txt);
+      letter-spacing: 0;
+      text-align: left;
     }
-    .about-body + .about-body { margin-top: 1rem; }
-
-    .about-section {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      align-items: center;
-    }
-    .about-section-label {
-      font-family: "Special Elite", "lumios-typewriter-used", monospace;
-      font-weight: 400;
-      font-style: normal;
-      font-size: 15px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: underline;
-      text-underline-offset: 0.25em;
-      color: var(--txt);
-    }
-    .about-services {
-      list-style: none;
-      padding: 0;
+    .body-box p {
       margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      align-items: center;
+      column-count: 1;
+      columns: auto;
     }
-    .about-services li {
-      font-family: "Special Elite", "lumios-typewriter-used", monospace;
-      font-weight: 400;
-      font-style: normal;
-      font-size: 15px;
-      letter-spacing: 0.05em;
-      color: var(--txt);
+    .body-box p + p { margin-top: 1em; }
+
+    /* ── Floating decorations (desktop only) — anchored to the column ── */
+    /* These sit OUTSIDE the about-page column, drifting to its left.
+       Each deco group is absolutely positioned relative to .about-page. */
+    .deco {
+      position: absolute;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .deco img {
+      display: block;
+      width: 100%;
+      height: auto;
     }
 
-    .about-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.4rem;
-      border: 1px solid var(--txt);
-      font-family: acumin-pro-condensed, sans-serif;
-      font-weight: 700;
-      font-style: normal;
-      font-size: 15px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--txt);
-      text-decoration: none;
-      transition: border-color 300ms ease, color 300ms ease;
-      align-self: center;
-      margin-top: 0.6rem;
+    /* Business cards — beside "How to build a visual story" block */
+    .deco-cards {
+      top: 380px;
+      left: -260px;
+      width: 260px;
+      height: 220px;
     }
-    .about-cta:hover {
-      border-color: var(--txt);
-      color: var(--txt);
+    .deco-cards img {
+      position: absolute;
+      width: 244px;
+      border-radius: 1px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    }
+    .deco-cards .biz-1 { top: 0;   left: -10px; transform: rotate(-6.64deg); }
+    .deco-cards .biz-2 { top: 90px; left: 30px; transform: rotate(3.06deg);  z-index: 1; }
+
+    /* Nufik graphic (circuit board) — beside "About Nūfik" block */
+    .deco-graphic {
+      top: 900px;
+      left: -240px;
+      width: 220px;
+      transform: rotate(-4deg);
+    }
+    .deco-graphic img {
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.12));
     }
 
-    /* ── mobile ── */
+    @media (max-width: 1100px) {
+      .deco { display: none; }
+    }
+
+    /* ── Mobile / tablet ── */
     @media (max-width: 900px) {
       .nav-capsule {
         top: auto;
@@ -255,14 +289,17 @@
 
       .dot-grid { background-size: 24px 24px; }
 
-      .content { padding: 100px 24px 140px; }
-      .about-column { gap: 2rem; }
+      .about-page {
+        padding: 110px 20px 140px;
+        gap: 32px;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- background dot grid -->
+<!-- background layers (back → front), same stack as contact.html -->
+<img class="bg-poster" src="src/poster.jpg" alt="" aria-hidden="true">
 <div class="denim-texture" aria-hidden="true"></div>
 <div class="dot-grid" aria-hidden="true"></div>
 <img class="bg-blur" src="src/bg_blur.svg" alt="" aria-hidden="true">
@@ -287,44 +324,109 @@
   </nav>
 </header>
 
-<!-- about content -->
-<div class="content" id="content">
-  <div class="about-column">
-    <p class="about-quote">
-      Branding,
-      <span>defined by sensibility.</span>
-    </p>
+<!-- floating decorations are now positioned relative to the .about-page column,
+     so they live inside <main class="about-page"> further below -->
 
-    <h1 class="about-title">A designer for brands that want to be felt.</h1>
+<!-- main content column -->
+<main class="about-page" id="aboutPage">
 
-    <p class="about-body">
-      Nūfik is the design practice of Nura, a space that holds her design philosophy, based between Singapore and Korea. I build identities that begin in instinct and end in intent. Quiet systems with a recognizable point of view.
-    </p>
-    <p class="about-body">
-      My work spans visual identity, editorial design, packaging, and the small considered details that hold a brand together. I work closely with founders and teams who care about how things feel, not only how they look.
-    </p>
-
-    <div class="about-section">
-      <div class="about-section-label">Services</div>
-      <ul class="about-services">
-        <li>Branding</li>
-        <li>Events &amp; Spatial</li>
-        <li>Art Direction</li>
-        <li>Print &amp; Production</li>
-        <li>Motion</li>
-        <li>Digital UI/UX</li>
-      </ul>
-    </div>
-
-    <a class="about-cta" href="contact.html">Start a project →</a>
+  <!-- Floating decorations (desktop only, drift to the column's left) -->
+  <div class="deco deco-cards" aria-hidden="true">
+    <img class="biz-1" src="src/Biz_01.png" alt="">
+    <img class="biz-2" src="src/Biz_02.png" alt="">
   </div>
-</div>
+  <div class="deco deco-graphic" aria-hidden="true">
+    <img src="src/nufik_graphic_01.png" alt="">
+  </div>
+
+  <section class="block intro left">
+    <div class="label-box">
+      <p>Branding, remembered through sensibility.</p>
+    </div>
+    <div class="body-box">
+      <p>Nūfik is a space where I share my design work and the philosophy behind it. My goal is to build brands that don't end at the visual, but feel almost tactile, brands that linger in memory through their mood.</p>
+      <p>My work centers on visual identity, extending into graphic design, editorial, packaging, UI, key visuals, and the small considered details that hold a brand together. I work closely with passionate founders and teams who carry a clear vision, shaping a visual language that belongs only to their brand.</p>
+    </div>
+  </section>
+
+  <section class="block right">
+    <div class="label-box">
+      <p>How to build a visual story</p>
+    </div>
+    <div class="body-box">
+      <p>I believe every brand exists in two layers, the essence that stays unseen, and the way it shows itself to the world. I think of these as inner branding and external branding.</p>
+      <p>Inner branding is about a brand's attitude, philosophy, emotion, and direction. External branding is the process of translating all of that into a visual experience.</p>
+      <p>Because every brand carries a different message, I believe the most important part of my work is finding the visual language that belongs to each one. I shape a consistent story by considering the brand's philosophy, its mission, and the flow of emotion and experience felt by the people who encounter it.</p>
+    </div>
+  </section>
+
+  <section class="block left">
+    <div class="label-box">
+      <p>What I value :</p>
+    </div>
+    <div class="body-box">
+      <p>A distinct aesthetic and sensibility. Efficiency. A romantic way of looking at life. Passion, kindness, and humor.</p>
+      <p>In the age of AI, I find myself drawn to the comfort of imperfection, to honesty, and to experiences that feel more human, more genuine, more sensorial.</p>
+    </div>
+  </section>
+
+  <section class="block right full-body">
+    <div class="label-box">
+      <p>About Nūfik</p>
+    </div>
+    <div class="body-box">
+      <p>Just as pixels gather to form an image, and halftone dots gather to form a printed page, I believe small ideas, when set in motion, can build entire new worlds.</p>
+      <p>Nūfik means light (Nū) and creation (fik).</p>
+      <p>At Nūfik, we craft sensations, turning emotions into visual identities that resonate and stay in memory.</p>
+    </div>
+  </section>
+
+  <section class="block left full-body">
+    <div class="label-box">
+      <p>Personal Notes</p>
+    </div>
+    <div class="body-box">
+      <p>Behind the scenes of my design work and small moments from the studio will be shared on my Instagram. Follow along and stay with me as it unfolds.</p>
+      <p>I'm currently based in Singapore, but as Korean 'Seoul Days' is a small project I'm building to introduce Korean culture. It's still very much a work in progress, but I'll keep updating it, little by little.</p>
+    </div>
+  </section>
+
+</main>
 
 <script>
   // Reveal on load
   window.addEventListener('load', () => {
-    setTimeout(() => document.getElementById('content').classList.add('visible'), 130);
+    setTimeout(() => document.getElementById('aboutPage').classList.add('visible'), 80);
   });
+
+  // Focus the block currently nearest the viewport center
+  (function () {
+    const blocks = Array.from(document.querySelectorAll('.about-page .block'));
+    if (!blocks.length) return;
+
+    let raf = 0;
+    function update() {
+      raf = 0;
+      const vhCenter = window.innerHeight / 2;
+      let bestEl = null;
+      let bestDist = Infinity;
+      for (const el of blocks) {
+        const r = el.getBoundingClientRect();
+        const c = r.top + r.height / 2;
+        const d = Math.abs(c - vhCenter);
+        if (d < bestDist) { bestDist = d; bestEl = el; }
+      }
+      for (const el of blocks) el.classList.toggle('in-focus', el === bestEl);
+    }
+    function onScroll() {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    // initial
+    requestAnimationFrame(update);
+  })();
 </script>
 
 </body>

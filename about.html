@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#E7E7E7">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>About — Nūfik</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,9 +34,19 @@
     html, body {
       width: 100%;
       min-height: 100%;
-      background: var(--ink);
       color: var(--txt);
       overflow-x: hidden;
+    }
+    html { background-color: var(--ink); }
+    /* Body owns the denim — bg-image + soft-light blends with the ink color.
+       Lives directly on body so the bounce area shows the same denim intensity
+       instead of suddenly revealing untextured gray. */
+    body {
+      background-color: var(--ink);
+      background-image: url("src/denim_texture.jpg");
+      background-size: 256px 256px;
+      background-repeat: repeat;
+      background-blend-mode: soft-light;
     }
 
     /* ── Background stack (identical to contact.html) ── */
@@ -57,16 +66,6 @@
     }
     /* Background layers — z-index removed so mix-blend-mode on .deco-graphics
        reaches these layers as a backdrop. Document order keeps them visually behind .about-page. */
-    .denim-texture {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image: url("src/denim_texture.jpg");
-      background-size: 256px 256px;
-      background-repeat: repeat;
-      mix-blend-mode: soft-light;
-      opacity: 0.9;
-    }
     .dot-grid {
       position: fixed;
       inset: 0;
@@ -74,6 +73,15 @@
       background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
       background-size: 32px 32px;
       background-position: 0 0;
+      transform: scale(1);
+      filter: blur(0px);
+      transition: transform 520ms cubic-bezier(0.22,1,0.36,1),
+                  filter 520ms cubic-bezier(0.22,1,0.36,1);
+      will-change: transform, filter;
+    }
+    .dot-grid.is-scrolling {
+      transform: scale(1.18);
+      filter: blur(2px);
     }
     .bg-blur {
       position: fixed;
@@ -102,7 +110,7 @@
     /* ── Nav capsule (identical to contact.html) ── */
     .nav-capsule {
       position: fixed;
-      top: 28px;
+      top: calc(28px + env(safe-area-inset-top));
       left: 50%;
       transform: translateX(-50%);
       width: min(840px, calc(100% - 56px));
@@ -456,7 +464,7 @@
     @media (max-width: 900px) {
       .nav-capsule {
         top: auto;
-        bottom: 20px;
+        bottom: calc(20px + env(safe-area-inset-bottom));
         width: calc(100% - 40px);
         gap: 20px;
         padding: 10px 20px;
@@ -480,17 +488,32 @@
         padding: 14px 20px;
         white-space: nowrap;
       }
+
+      /* Mobile focus blur — only the block nearest viewport center stays sharp,
+         neighbors soften out (matches gallery's center-vs-blur language).
+         .in-focus is toggled by the IntersectionObserver-like loop in <script>. */
+      .block {
+        filter: blur(3px);
+        opacity: 0.45;
+        transition: filter 360ms cubic-bezier(0.22,1,0.36,1),
+                    opacity 360ms ease;
+        will-change: filter, opacity;
+      }
+      .block.in-focus {
+        filter: blur(0);
+        opacity: 1;
+      }
     }
 
   </style>
 </head>
 <body>
 
-<!-- background layers (back → front), same stack as contact.html -->
-<!-- bg-poster hidden temporarily (compare with / without poster background) -->
+<!-- background layers (back → front). Denim now lives on body itself; dots + blur stay fixed.
+     .is-scrolling on load → dots start scaled/blurred, JS removes after first paint so they
+     ease back to crisp (same entrance feel as the index gallery). -->
 <!-- <img class="bg-poster" src="src/poster.jpg" alt="" aria-hidden="true"> -->
-<div class="denim-texture" aria-hidden="true"></div>
-<div class="dot-grid" aria-hidden="true"></div>
+<div class="dot-grid is-scrolling" aria-hidden="true"></div>
 <img class="bg-blur" src="src/bg_blur.svg" alt="" aria-hidden="true">
 
 <!-- nav capsule -->
@@ -639,6 +662,25 @@
     window.addEventListener('resize', onScroll);
     // initial
     requestAnimationFrame(update);
+  })();
+
+  // Dot grid pulse — entrance fade-from-blur on load + same scroll-driven pulse as the index gallery
+  (function () {
+    const dotGrid = document.querySelector('.dot-grid');
+    if (!dotGrid) return;
+    // Entrance: HTML ships with .is-scrolling so dots start blurred; remove
+    // after first paint so the CSS transition eases them to crisp.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setTimeout(() => dotGrid.classList.remove('is-scrolling'), 80);
+      });
+    });
+    let idleTimer = null;
+    window.addEventListener('scroll', () => {
+      if (!dotGrid.classList.contains('is-scrolling')) dotGrid.classList.add('is-scrolling');
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => dotGrid.classList.remove('is-scrolling'), 140);
+    }, { passive: true });
   })();
 </script>
 

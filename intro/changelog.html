@@ -356,6 +356,113 @@
      ─────────────────────────────────────────────────── */
   const entries = [
     {
+      date: "2026-05-24",
+      title: "Denim on body + dot grid pulse on about/contact",
+      tags: ["changed", "design"],
+      body: `
+        <p>Pulled the denim texture off the fixed <code>.denim-texture</code>
+        element on about and contact and put it directly on <code>body</code>
+        via <code>background-image</code> + <code>background-blend-mode: soft-light</code>.
+        Added the same scroll-driven scale/blur on <code>.dot-grid</code> as the
+        index gallery, plus an entrance pulse that ships <code>.is-scrolling</code>
+        in the markup and lets JS remove it after first paint so the dots ease
+        from blurred to crisp.</p>
+      `,
+      why: `Mobile rubber-band bounce was exposing untextured gray under the content because the fixed denim didn't follow the bounce, while the half-transparent content boxes did. Body-bg denim is part of the scroll surface, so intensity stays constant. The pulse + entrance unify motion language across the three main pages.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-24",
+      title: "About mobile — non-focused blocks blur out",
+      tags: ["added", "design"],
+      body: `
+        <p>Every <code>.block</code> in the about column starts at
+        <code>filter: blur(3px); opacity: 0.45</code> on mobile; only the block
+        nearest viewport center (<code>.in-focus</code>, toggled by the existing
+        center-of-viewport loop) stays sharp.</p>
+      `,
+      why: `Mirrors the gallery's center-vs-blur language so the cards feel like part of the same motion vocabulary. On a small screen it also stops the column from competing with itself — your eye lands where the design wants it.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-24",
+      title: "Contact — click to flip business cards",
+      tags: ["added"],
+      body: `
+        <p>Clicking <code>.biz-hero</code> toggles a <code>.flipped</code> class
+        that swaps z-index between front and back, so the visitor can alternate
+        which side sits on top without leaving the page. Hover transforms stay
+        wired to the same selectors and keep working on either state.</p>
+      `,
+      why: `Both card faces (Biz_01 / Biz_02) live in the composition but only the back was reachable. A click toggle is the lightest possible affordance — no carousel, no flip-3D, just z-index swap that matches the card's existing rotation language.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-24",
+      title: "Safe-area insets in, theme-color + PWA meta out",
+      tags: ["changed", "fix"],
+      body: `
+        <p>Added <code>viewport-fit=cover</code> across all four pages and
+        switched fixed nav / slide-meta offsets to
+        <code>calc(28px + env(safe-area-inset-top))</code> /
+        <code>calc(20px + env(safe-area-inset-bottom))</code> so the capsule
+        clears the notch and home indicator. Tried
+        <code>theme-color="#E7E7E7"</code> +
+        <code>apple-mobile-web-app-status-bar-style</code> earlier in the
+        session but reverted — a solid bar didn't blend with the denim+dot
+        texture and created a visible seam. Also rolled back
+        <code>overscroll-behavior-y: none</code>; the rigid scroll feel was
+        worse than the denim reveal it was meant to fix.</p>
+      `,
+      why: `Safe-area insets are pure win: env() reports 0 in regular Safari, so it only acts when there's actually a notch / home-indicator to clear. The PWA meta tags only do anything when the page is added to home screen; we're not optimising for that path, and keeping Safari's translucent URL bar reads more naturally over a textured background than a flat color match ever could.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-24",
+      title: "Mobile poster opacity, contact framing pass",
+      tags: ["changed", "design"],
+      body: `
+        <p>Mobile <code>.bg-poster</code> on contact dropped from
+        <code>opacity: 0.48 → 0.10</code> to match desktop. Earlier in the same
+        session the poster was scaled to fill viewport height
+        (<code>height: calc(100lvh + 40px)</code>, shifted up 40px to avoid
+        clipping the bottom), and the content top padding was halved
+        (70px → 35px) on mobile.</p>
+      `,
+      why: `0.48 was an artifact of the earlier width-based sizing — at full mobile bleed it read as a second hero competing with the cards. One opacity across breakpoints lets the poster work as ambient depth instead of feature.`,
+      ref: ""
+    },
+    {
+      date: "2026-05-24",
+      title: "Project detail meta — 12px type, mobile 2-col Category/Year",
+      tags: ["changed", "design"],
+      body: `
+        <p>Project detail page meta cluster: label / value / description type
+        scales 15px → 12px on every viewport. On mobile, Category + Year share
+        one row via a 2-column grid, Description spans full width, and the
+        Back pill stays at its intrinsic width via
+        <code>justify-self: start</code>.</p>
+      `,
+      why: `15px was too loud next to the body copy; 12px reads as a quiet sidebar. Stacking Category and Year vertically on mobile wasted vertical space — side-by-side keeps the meta a compact block above the case study.`,
+      ref: "commit 5d99d91"
+    },
+    {
+      date: "2026-05-24",
+      title: "Index gallery scroll — flex → block",
+      tags: ["fix"],
+      body: `
+        <p><code>#gallery</code> was a flex row container; flex sizing didn't
+        expose the full intrinsic height of the track to
+        <code>overflow-y: scroll</code>, so only 2–3 of the 5 Notion projects
+        were ever reachable. Switched to plain block layout — the track now
+        grows to its natural ~2.4× viewport height and every project scrolls
+        into view. Desktop top padding trimmed 50vh → 22vh so the first cover
+        sits closer to the nav.</p>
+      `,
+      why: `Five projects had been synced from Notion but the rendered list felt locked at three. The diagnosis ran through align-items tweaks and an aborted infinite-scroll attempt before the real culprit (flex container hiding overflow height) showed itself. Block layout is the right level of complexity for a vertical-only scroller.`,
+      ref: "commit ad4adf5"
+    },
+    {
       date: "2026-05-23",
       title: "Poster background on contact (plus-darker, right-anchored)",
       tags: ["added", "design"],

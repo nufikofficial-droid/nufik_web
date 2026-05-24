@@ -87,14 +87,13 @@
       filter: blur(2px);
     }
 
-    /* ── Gallery viewport: full-screen scroller, only images move ── */
+    /* ── Gallery viewport: full-screen scroller, only images move ──
+       Block layout (no flex) so the track grows to its intrinsic height
+       and overflow-y: scroll exposes every item. */
     #gallery {
       position: fixed;
       inset: 0;
       z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       overflow-y: scroll;
       overflow-x: hidden;
       scroll-behavior: smooth;
@@ -108,8 +107,8 @@
       flex-direction: column;
       align-items: center;
       gap: 0;
-      padding: 50vh 0;
-      box-sizing: border-box;
+      padding: 22vh 0 50vh;
+      box-sizing: content-box;
     }
 
     /* Figma: 2-stage only — center (sharp) vs non-center (blur 4px, opacity 0.2) */
@@ -296,6 +295,9 @@
 
       /* Tighten vertical breathing room around each cover on mobile */
       .g-item { margin: 10px 0; }
+
+      /* Mobile keeps the original centered-on-load top padding */
+      #gallery-track { padding: 50vh 0; }
     }
 
     @media (max-width: 480px) {

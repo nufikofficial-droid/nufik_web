@@ -6,7 +6,7 @@
   <title>Project — Nūfik</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;700;800;900&family=Special+Elite&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;700;800;900&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,600;8..60,700&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/bvc3fac.css">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -111,6 +111,10 @@
     .nav-links a.active { color: var(--txt-strong); font-weight: 900; }
     .nav-links a:not(.active):hover { color: var(--txt-strong); }
 
+    html {
+      overflow-y: scroll;
+      scrollbar-gutter: stable;
+    }
     html, body {
       width: 100%;
       min-height: 100%;
@@ -123,11 +127,12 @@
     /* ── project content layout ── */
     .content {
       position: relative;
-      height: 100vh;
       box-sizing: border-box;
-      display: grid;
-      grid-template-columns: calc(100% / 3.5) 1fr calc(100% / 3.5);
-      padding: 0 27px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 120px 28px 40px;
+      gap: 40px;
       z-index: 10;
       opacity: 0;
       transform: translateY(14px);
@@ -138,31 +143,55 @@
     .proj-body {
       position: relative;
       z-index: 10;
-      max-width: 880px;
+      width: 100%;
+      max-width: min(840px, calc(100vw - 56px));   /* matches nav-capsule width */
       margin: 0 auto;
-      padding: 60px 24px 160px;
+      padding: 60px 0 160px;
       opacity: 0;
       transition: opacity 540ms ease;
     }
     .proj-body.visible { opacity: 1; }
-    .pb-heading {
-      font-family: "acumin-pro-condensed-black", sans-serif;
-      font-weight: 800;
-      font-size: clamp(18px, 1.6vw, 26px);
-      letter-spacing: 0.04em;
+
+    /* === Notion-style heading hierarchy ===
+       h1 / h2 / h3 mapped from Notion's heading_1/2/3 blocks */
+    .pb-h1 {
+      font-family: "acumin-pro-condensed", sans-serif;
+      font-weight: 700;
+      font-size: clamp(28px, 3vw, 40px);
+      line-height: 1.15;
+      letter-spacing: 0;
       color: var(--txt);
-      margin: 3rem 0 1.2rem;
+      margin: 3.5rem 0 1.2rem;
     }
-    .pb-heading.lvl-3 { font-size: clamp(14px, 1.2vw, 18px); }
+    .pb-h2 {
+      font-family: "acumin-pro-condensed", sans-serif;
+      font-weight: 700;
+      font-size: clamp(22px, 2.2vw, 30px);
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+      color: var(--txt);
+      margin: 2.8rem 0 1rem;
+    }
+    .pb-h3 {
+      font-family: "acumin-pro-condensed", sans-serif;
+      font-weight: 600;
+      font-size: clamp(17px, 1.5vw, 22px);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+      color: var(--txt);
+      margin: 2rem 0 0.8rem;
+    }
+
+    /* Body — Source Serif 15px */
     .pb-paragraph {
-      font-family: lumios-typewriter-used, sans-serif;
+      font-family: "Source Serif 4", "Source Serif Pro", Georgia, serif;
       font-weight: 400;
       font-style: normal;
-      font-size: 17px;
-      letter-spacing: 0.06em;
+      font-size: 15px;
+      letter-spacing: 0;
       line-height: 1.7;
       color: var(--txt);
-      margin: 0 0 1.4rem;
+      margin: 0 0 1.2rem;
     }
     .pb-quote {
       border-left: 2px solid var(--accent);
@@ -191,7 +220,7 @@
       margin: 3rem 0;
     }
     .pb-media {
-      margin: 2rem 0;
+      margin: 0;            /* image-to-image gap = 0 */
     }
     .pb-media img,
     .pb-media video {
@@ -222,40 +251,25 @@
       transform: translateY(0);
     }
 
-    /* left column: empty spacer (was rotated title) */
-    .proj-left {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 100px 30px 80px;
-    }
-    .proj-title {
-      font-family: "acumin-pro-condensed-black", sans-serif;
-      font-weight: 800;
-      font-size: clamp(20px, 2vw, 28px);
-      line-height: 1.1;
-      letter-spacing: 0;
-      text-transform: uppercase;
-      color: var(--txt);
-      margin: 0 0 1.4rem;
-    }
-
-    /* center column: image placeholder */
-    .proj-center {
-      display: flex;
-      flex-direction: column;
-      padding: 80px 20px;
-    }
-    .proj-img-placeholder {
-      flex: 1;
-      background: color-mix(in srgb, var(--point) 55%, transparent);
-      border: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
+    /* === Hero (cover image at top, nav-width) === */
+    .proj-hero {
+      width: min(840px, calc(100vw - 56px));
+      aspect-ratio: 16 / 10;
+      background: rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: var(--radius);     /* 10px, same as nav-capsule + gallery items */
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .proj-img-label {
+    .proj-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .proj-cover-label {
       font-family: lumios-typewriter-used, sans-serif;
       font-size: 9px;
       letter-spacing: 0.3em;
@@ -264,66 +278,85 @@
       user-select: none;
     }
 
-    /* right column: meta */
-    .proj-right {
+    /* === Title + meta row below hero === */
+    .proj-info {
+      width: min(840px, calc(100vw - 56px));
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 40px;
+      align-items: start;
+      padding-top: 12px;
+    }
+    .proj-title {
+      font-family: "acumin-pro-condensed", sans-serif;
+      font-weight: 700;
+      font-size: clamp(24px, 2.4vw, 36px);
+      line-height: 1.1;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--txt);
+      margin: 0;
+    }
+    .proj-meta-cluster {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 100px 30px 80px;
-      gap: 1.8rem;
+      gap: 1.4rem;
     }
     .proj-meta-group {
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
     }
+    /* Meta LABEL — Doto (dot), no underline */
     .proj-meta-label {
-      font-family: lumios-typewriter-used, sans-serif;
-      font-weight: 400;
+      font-family: "Doto", sans-serif;
+      font-weight: 800;
       font-style: normal;
       font-size: 15px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      text-decoration: underline;
-      text-underline-offset: 0.25em;
       color: color-mix(in srgb, var(--txt) 70%, transparent);
     }
+    /* Meta VALUE — Special Elite */
     .proj-meta-value {
-      font-family: lumios-typewriter-used, sans-serif;
+      font-family: "Special Elite", "lumios-typewriter-used", monospace;
       font-weight: 400;
       font-style: normal;
       font-size: 15px;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.02em;
       color: var(--txt);
     }
+    /* Description — Special Elite */
     .proj-desc {
-      font-family: lumios-typewriter-used, sans-serif;
+      font-family: "Special Elite", "lumios-typewriter-used", monospace;
       font-weight: 400;
       font-style: normal;
       font-size: 15px;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.02em;
       line-height: 1.7;
       color: var(--txt);
     }
+    /* Back button — compact pill, minimal hover */
     .back-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.4rem;
-      border: 1px solid var(--line);
-      font-family: "acumin-pro-condensed-black", sans-serif;
-      font-weight: 800;
-      font-size: 15px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--line);
-      text-decoration: none;
-      transition: border-color 300ms ease, color 300ms ease;
+      gap: 0.4rem;
       align-self: flex-start;
+      padding: 8px 16px;
+      background: #ffffff;
+      border: 1px solid rgba(255,255,255,1);
+      border-radius: var(--radius);
+      font-family: "Doto", sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #7B7B7B;
+      text-decoration: none;
+      transition: background 200ms ease;
     }
     .back-btn:hover {
-      border-color: var(--txt);
-      color: var(--txt);
+      background: rgba(255, 255, 255, 0.4);
     }
 
 
@@ -342,43 +375,24 @@
 
       .dot-grid { background-size: 24px 24px; }
 
-      /* project layout: mobile stacked */
+      /* project layout: mobile */
       .content {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-        min-height: 100vh;
-        padding: 90px 36px 120px;
-        gap: 0;
+        padding: 90px 20px 40px;
+        gap: 24px;
+      }
+      .proj-hero {
+        width: 100%;
+        aspect-ratio: 16 / 11;
+      }
+      .proj-info {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 20px;
       }
       .proj-body {
-        padding: 40px 24px 100px;
+        padding: 32px 0 100px;
       }
-      .proj-left {
-        padding: 0 0 20px;
-        order: 2;
-      }
-      .proj-title {
-        writing-mode: horizontal-tb;
-        transform: none;
-        font-size: clamp(22px, 6vw, 36px);
-      }
-      .proj-center {
-        padding: 0 0 24px;
-        order: 1;
-        height: 50vw;
-        min-height: 200px;
-        flex: none;
-      }
-      .proj-img-placeholder {
-        flex: none;
-        height: 100%;
-      }
-      .proj-right {
-        padding: 0;
-        order: 3;
-        gap: 1.4rem;
-      }
+      .proj-title { font-size: clamp(22px, 6vw, 30px); }
     }
   </style>
 </head>
@@ -411,31 +425,31 @@
 
 
 <!-- project detail content -->
-<div class="content" id="content">
-  <div class="proj-left"></div>
-  <div class="proj-center">
-    <div class="proj-img-placeholder" id="projCoverWrap">
-      <img id="projCover" alt="" style="width:100%;height:100%;object-fit:cover;display:none;">
-      <span class="proj-img-label" id="projCoverLabel">Image</span>
-    </div>
-  </div>
-  <div class="proj-right">
+<main class="content" id="content">
+  <section class="proj-hero" id="projCoverWrap">
+    <img id="projCover" class="proj-cover" alt="" style="display:none;">
+    <span class="proj-cover-label" id="projCoverLabel">Image</span>
+  </section>
+
+  <section class="proj-info">
     <h1 class="proj-title" id="projTitle">Project</h1>
-    <div class="proj-meta-group">
-      <div class="proj-meta-label">Category</div>
-      <div class="proj-meta-value" id="projCategory">—</div>
+    <div class="proj-meta-cluster">
+      <div class="proj-meta-group">
+        <div class="proj-meta-label">Category</div>
+        <div class="proj-meta-value" id="projCategory">—</div>
+      </div>
+      <div class="proj-meta-group">
+        <div class="proj-meta-label">Year</div>
+        <div class="proj-meta-value" id="projYear">—</div>
+      </div>
+      <div class="proj-meta-group">
+        <div class="proj-meta-label">Description</div>
+        <div class="proj-desc" id="projDesc">Selected works available on request.</div>
+      </div>
+      <a class="back-btn" href="index.html">← Back</a>
     </div>
-    <div class="proj-meta-group">
-      <div class="proj-meta-label">Year</div>
-      <div class="proj-meta-value" id="projYear">—</div>
-    </div>
-    <div class="proj-meta-group">
-      <div class="proj-meta-label">Description</div>
-      <div class="proj-desc" id="projDesc">Selected works available on request.</div>
-    </div>
-    <a class="back-btn" href="index.html">← Back</a>
-  </div>
-</div>
+  </section>
+</main>
 
 <!-- project body (case study content blocks) -->
 <section class="proj-body" id="projBody"></section>
@@ -501,8 +515,9 @@
   function renderBlock(b) {
     switch (b.type) {
       case 'heading': {
-        const el = document.createElement('h2');
-        el.className = 'pb-heading' + (b.level === 3 ? ' lvl-3' : '');
+        const lvl = (b.level === 1 || b.level === 2 || b.level === 3) ? b.level : 2;
+        const el = document.createElement('h' + lvl);
+        el.className = 'pb-h' + lvl;       /* pb-h1 / pb-h2 / pb-h3 — styled per level */
         el.textContent = b.text || '';
         return el;
       }

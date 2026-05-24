@@ -25,6 +25,10 @@
       --radius:       10px;
     }
 
+    html {
+      overflow-y: scroll;          /* 항상 스크롤바 표시 → 콘텐츠 시프트 방지 */
+      scrollbar-gutter: stable;
+    }
     html, body {
       width: 100%;
       min-height: 100%;
@@ -151,10 +155,9 @@
       padding: 100px 24px 100px;
       z-index: 10;
       opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 540ms ease, transform 540ms cubic-bezier(0.22,1,0.36,1);
+      transition: opacity 540ms ease;
     }
-    .content.visible { opacity: 1; transform: translateY(0); }
+    .content.visible { opacity: 1; }
 
     /* ── Business card hero ── */
     /* Figma spec: Biz_01 447×262 −6.64°, Biz_02 447×262 +3.06° */
@@ -383,7 +386,16 @@
 
 <script>
   window.addEventListener('load', () => {
-    setTimeout(() => document.getElementById('content').classList.add('visible'), 130);
+    // Wait for webfonts to load before fade-in so text reflow happens BEFORE animation (prevents sideways glitch from FOUT)
+    const reveal = () => document.getElementById('content').classList.add('visible');
+    if (document.fonts && document.fonts.ready) {
+      Promise.race([
+        document.fonts.ready,
+        new Promise(r => setTimeout(r, 1500))
+      ]).then(() => setTimeout(reveal, 60));
+    } else {
+      setTimeout(reveal, 130);
+    }
   });
 </script>
 

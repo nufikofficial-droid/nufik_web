@@ -312,7 +312,7 @@
       font-family: "Doto", sans-serif;
       font-weight: 800;
       font-style: normal;
-      font-size: 15px;
+      font-size: 12px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: color-mix(in srgb, var(--txt) 70%, transparent);
@@ -322,7 +322,7 @@
       font-family: "Special Elite", "lumios-typewriter-used", monospace;
       font-weight: 400;
       font-style: normal;
-      font-size: 15px;
+      font-size: 12px;
       letter-spacing: 0.02em;
       color: var(--txt);
     }
@@ -331,7 +331,7 @@
       font-family: "Special Elite", "lumios-typewriter-used", monospace;
       font-weight: 400;
       font-style: normal;
-      font-size: 15px;
+      font-size: 12px;
       letter-spacing: 0.02em;
       line-height: 1.7;
       color: var(--txt);
@@ -388,6 +388,21 @@
         width: 100%;
         grid-template-columns: 1fr;
         gap: 20px;
+      }
+      /* Mobile: Category + Year share one row; Description + Back span full width */
+      .proj-meta-cluster {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 16px;
+        row-gap: 1.4rem;
+      }
+      .proj-meta-cluster > .proj-meta-group:nth-child(3),
+      .proj-meta-cluster > .back-btn {
+        grid-column: 1 / -1;
+      }
+      /* Back button sits on its own row but keeps its intrinsic width */
+      .proj-meta-cluster > .back-btn {
+        justify-self: start;
       }
       .proj-body {
         padding: 32px 0 100px;

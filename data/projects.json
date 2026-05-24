@@ -1,5 +1,20 @@
 [
   {
+    "slug": "aifokato",
+    "name": "Aifokato",
+    "category": "Brand Identity",
+    "year": "2026",
+    "client": "Wook",
+    "description": "",
+    "cover": "images/projects/aifokato/aifokato_01.png",
+    "tags": [
+      "Branding",
+      "Package"
+    ],
+    "order": 1,
+    "content": []
+  },
+  {
     "slug": "proof-of-retreat",
     "name": "Proof of Retreat",
     "category": "Visual Identity",
@@ -60,6 +75,21 @@
     ]
   },
   {
+    "slug": "pawth",
+    "name": "Pawth",
+    "category": "Brand Identity",
+    "year": "",
+    "client": "Thou Ārt™",
+    "description": "",
+    "cover": "images/projects/pawth/pawth_01.jpg",
+    "tags": [
+      "Branding",
+      "UI/UX"
+    ],
+    "order": 3,
+    "content": []
+  },
+  {
     "slug": "herhis",
     "name": "HerHis",
     "category": "Brand Identity",
@@ -71,7 +101,7 @@
       "Branding",
       "Package"
     ],
-    "order": 3,
+    "order": 4,
     "content": [
       {
         "type": "image",
@@ -134,7 +164,7 @@
       "Package",
       "Digital"
     ],
-    "order": 4,
+    "order": 5,
     "content": [
       {
         "type": "image",

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#E7E7E7">
   <title>Contact — Nūfik</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,14 +95,19 @@
     }
 
     @media (max-width: 900px) {
-      /* Mobile: anchor poster to right edge so it shrinks/grows from the right */
+      /* Mobile: scale poster by viewport height so it fills the screen.
+         Sized 40px taller than viewport and shifted up 40px so framing
+         lifts without clipping the bottom. lvh covers the largest
+         visible area (incl. when iOS URL bar collapses). */
       .bg-poster {
-        top: -80px;
+        top: -40px;
         left: auto;
         right: 0;
         transform: none;
         transform-origin: right top;
-        width: min(820px, 95vw);
+        width: auto;
+        height: calc(100vh + 40px);
+        height: calc(100lvh + 40px);
         opacity: 0.48;
       }
     }
@@ -279,7 +285,7 @@
 
       .dot-grid { background-size: 24px 24px; }
 
-      .content { padding: 70px 20px 100px; }
+      .content { padding: 35px 20px 100px; }
 
       .biz-hero {
         height: clamp(340px, 72vw, 500px);

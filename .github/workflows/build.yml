@@ -2,7 +2,7 @@ name: Sync Notion → projects.json
 
 on:
   push:
-    branches: [main]
+    branches: [v2]
     paths-ignore:
       - 'data/projects.json'
   schedule:
@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: v2          # always operate on the v2 production branch
 
       - uses: actions/setup-node@v4
         with:

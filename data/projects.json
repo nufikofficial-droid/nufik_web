@@ -9,7 +9,8 @@
     "cover": "images/projects/aifokato/aifokato_01.png",
     "tags": [
       "Branding",
-      "Package"
+      "Package",
+      "Spatial"
     ],
     "order": 1,
     "content": []
@@ -233,5 +234,21 @@
         "text": "Year: 2024"
       }
     ]
+  },
+  {
+    "slug": "333",
+    "name": "333",
+    "category": "Brand Identity",
+    "year": "2026",
+    "client": "Wook",
+    "description": "",
+    "cover": "images/projects/333/333_01.png",
+    "tags": [
+      "Branding",
+      "Package",
+      "Spatial"
+    ],
+    "order": 6,
+    "content": []
   }
 ]

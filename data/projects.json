@@ -1,5 +1,21 @@
 [
   {
+    "slug": "333",
+    "name": "333",
+    "category": "Brand Identity",
+    "year": "2026",
+    "client": "Wook",
+    "description": "",
+    "cover": "images/projects/333/333_01.png",
+    "tags": [
+      "Branding",
+      "Package",
+      "Spatial"
+    ],
+    "order": 95,
+    "content": []
+  },
+  {
     "slug": "aifokato",
     "name": "Aifokato",
     "category": "Brand Identity",
@@ -12,7 +28,7 @@
       "Package",
       "Spatial"
     ],
-    "order": 1,
+    "order": 96,
     "content": []
   },
   {
@@ -27,7 +43,7 @@
       "Identity",
       "Digital"
     ],
-    "order": 2,
+    "order": 97,
     "content": [
       {
         "type": "image",
@@ -87,7 +103,7 @@
       "Branding",
       "UI/UX"
     ],
-    "order": 3,
+    "order": 98,
     "content": []
   },
   {
@@ -102,7 +118,7 @@
       "Branding",
       "Package"
     ],
-    "order": 4,
+    "order": 99,
     "content": [
       {
         "type": "image",
@@ -165,7 +181,7 @@
       "Package",
       "Digital"
     ],
-    "order": 5,
+    "order": 100,
     "content": [
       {
         "type": "image",
@@ -234,21 +250,5 @@
         "text": "Year: 2024"
       }
     ]
-  },
-  {
-    "slug": "333",
-    "name": "333",
-    "category": "Brand Identity",
-    "year": "2026",
-    "client": "Wook",
-    "description": "",
-    "cover": "images/projects/333/333_01.png",
-    "tags": [
-      "Branding",
-      "Package",
-      "Spatial"
-    ],
-    "order": 6,
-    "content": []
   }
 ]

@@ -1,5 +1,89 @@
 [
   {
+    "slug": "333",
+    "name": "333",
+    "category": "Brand Identity",
+    "year": "2026",
+    "client": "Wook",
+    "description": "Brand identity for a Korean restaurant where healing food is served like a prescription.",
+    "cover": "images/projects/333/333_01.jpg",
+    "tags": [
+      "Branding",
+      "Package",
+      "Spatial"
+    ],
+    "order": 95,
+    "content": [
+      {
+        "type": "heading",
+        "level": 1,
+        "text": "333 - Sam Sam Sam"
+      },
+      {
+        "type": "paragraph",
+        "text": "A Korean restaurant where a bowl of samgyetang is served like a prescription for vitality. 333 takes the visual language of the Korean apothecary (한약방) and reframes restorative food as something precise, generous, and open to everyone at the table."
+      },
+      {
+        "type": "video",
+        "src": "images/projects/333/333_intro.mp4",
+        "loop": true,
+        "muted": true,
+        "caption": ""
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "The Triple Essence"
+      },
+      {
+        "type": "paragraph",
+        "text": "The name begins with a sound. In Korean, the number 3 is pronounced \"Sam\", and that single syllable opens into three meanings that together describe the whole brand."
+      },
+      {
+        "type": "heading",
+        "level": 3,
+        "text": "인삼 / Insam"
+      },
+      {
+        "type": "paragraph",
+        "text": "\"Sam\" first points to insam, ginseng, the legendary root of vitality. It is the essential ingredient that brings deep nourishment and quiet energy, the source from which everything else grows."
+      },
+      {
+        "type": "heading",
+        "level": 3,
+        "text": "삼계탕 / Samgyetang"
+      },
+      {
+        "type": "paragraph",
+        "text": "At the centre sits samgyetang, a soul-warming ginseng chicken soup. 333 serves it as a wholesome, halal-friendly meal: one bowl that connects everyone gathered at the table."
+      },
+      {
+        "type": "heading",
+        "level": 3,
+        "text": "삼삼오오 / Sam-Sam-O-O"
+      },
+      {
+        "type": "paragraph",
+        "text": "The same sound carries into a cultural expression, \"sam-sam-o-o\", which describes the gentle sight of people coming together in small, friendly groups to share a joyful moment. It is the feeling the restaurant is built around."
+      },
+      {
+        "type": "image",
+        "src": "images/projects/333/333_03.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/333/333_04.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/projects/333/333_05.jpg",
+        "caption": ""
+      }
+    ]
+  },
+  {
     "slug": "aifokato",
     "name": "Aifokato",
     "category": "Brand Identity",
@@ -12,7 +96,7 @@
       "Package",
       "Spatial"
     ],
-    "order": 1,
+    "order": 96,
     "content": []
   },
   {
@@ -27,7 +111,7 @@
       "Identity",
       "Digital"
     ],
-    "order": 2,
+    "order": 97,
     "content": [
       {
         "type": "image",
@@ -87,7 +171,7 @@
       "Branding",
       "UI/UX"
     ],
-    "order": 3,
+    "order": 98,
     "content": []
   },
   {
@@ -102,7 +186,7 @@
       "Branding",
       "Package"
     ],
-    "order": 4,
+    "order": 99,
     "content": [
       {
         "type": "image",
@@ -165,7 +249,7 @@
       "Package",
       "Digital"
     ],
-    "order": 5,
+    "order": 100,
     "content": [
       {
         "type": "image",
@@ -234,21 +318,5 @@
         "text": "Year: 2024"
       }
     ]
-  },
-  {
-    "slug": "333",
-    "name": "333",
-    "category": "Brand Identity",
-    "year": "2026",
-    "client": "Wook",
-    "description": "",
-    "cover": "images/projects/333/333_01.png",
-    "tags": [
-      "Branding",
-      "Package",
-      "Spatial"
-    ],
-    "order": 6,
-    "content": []
   }
 ]

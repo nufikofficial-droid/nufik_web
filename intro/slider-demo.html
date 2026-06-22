@@ -254,6 +254,147 @@
   }
   .slider.marquee:hover .slider-track { /* hover pause handled in JS */ }
 
+  /* ─── V3a: Cross-fade auto — opacity, no horizontal motion ─── */
+  .slider.auto-fade {
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: var(--radius);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding-bottom: 36px;
+  }
+  .slider.auto-fade .slider-stage {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .slider.auto-fade .slider-track {
+    display: block;
+    position: relative;
+    transition: none;
+  }
+  .slider.auto-fade .slider-slide {
+    position: absolute;
+    inset: 0; width: 100%; height: 100%;
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+  .slider.auto-fade .slider-slide.active { opacity: 1; z-index: 1; }
+  .slider.auto-fade .slider-dots {
+    position: absolute; bottom: 12px; left: 50%;
+    transform: translateX(-50%); z-index: 3;
+  }
+
+  /* ─── V3b: Ken Burns — slow zoom + drift on each slide ─── */
+  .slider.kenburns {
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: var(--radius);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding-bottom: 36px;
+  }
+  .slider.kenburns .slider-stage {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .slider.kenburns .slider-track {
+    display: block; position: relative;
+    transition: none;
+  }
+  .slider.kenburns .slider-slide {
+    position: absolute;
+    inset: 0; width: 100%; height: 100%;
+    opacity: 0;
+    transition: opacity 1200ms ease;
+    overflow: hidden;
+  }
+  .slider.kenburns .slider-slide.active { opacity: 1; z-index: 1; }
+  .slider.kenburns .slider-slide.active .placeholder,
+  .slider.kenburns .slider-slide.active img {
+    animation: kenburns-pan 6500ms ease-in-out both;
+  }
+  @keyframes kenburns-pan {
+    0%   { transform: scale(1.0)  translate(0, 0); }
+    100% { transform: scale(1.15) translate(-3%, -2%); }
+  }
+  .slider.kenburns .slider-dots {
+    position: absolute; bottom: 12px; left: 50%;
+    transform: translateX(-50%); z-index: 3;
+  }
+
+  /* ─── V3c: Vertical auto — slides up instead of sideways ─── */
+  .slider.auto-vertical {
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: var(--radius);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding-bottom: 36px;
+  }
+  .slider.auto-vertical .slider-stage {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .slider.auto-vertical .slider-track {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    transition: transform 900ms cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: transform;
+  }
+  .slider.auto-vertical .slider-slide {
+    flex: 0 0 100%;
+    width: 100%; height: 100%;
+  }
+  .slider.auto-vertical .slider-dots {
+    position: absolute; bottom: 12px; left: 50%;
+    transform: translateX(-50%); z-index: 3;
+  }
+
+  /* ─── V3d: Continuous marquee — never stops, smooth linear scroll ─── */
+  .slider.continuous {
+    aspect-ratio: auto;
+    background: transparent; border: 0; border-radius: 0;
+    backdrop-filter: none;
+    overflow: hidden;
+    padding-bottom: 36px;
+  }
+  .slider.continuous .slider-stage {
+    aspect-ratio: auto;
+    height: clamp(220px, 30vw, 360px);
+    overflow: hidden;
+    border-radius: var(--radius);
+  }
+  .slider.continuous .slider-track {
+    width: max-content;
+    transition: none;
+    gap: 16px;
+    padding: 0;
+    animation: continuous-scroll 28s linear infinite;
+  }
+  .slider.continuous .slider-slide {
+    flex: 0 0 auto;
+    width: clamp(280px, 32vw, 420px);
+    height: 100%;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.7);
+  }
+  @keyframes continuous-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .slider.continuous:hover .slider-track { animation-play-state: paused; }
+  .slider.continuous .slider-dots {
+    position: relative;
+    margin-top: 16px;
+    transform: none;
+    left: auto; bottom: auto;
+    justify-content: center;
+  }
+  .slider.continuous .slider-dots .slider-dot { cursor: default; }
+
   /* ─── V4: snap row — scroll-snap, native swipe, peek next ─── */
   .slider.snap-row {
     aspect-ratio: auto;
@@ -374,6 +515,94 @@
         </div>
       </div>
       <div class="slider-dots"></div>
+    </div>
+  </section>
+
+  <!-- V3a: Cross-fade auto -->
+  <section class="group">
+    <h2>V3a — Auto cross-fade</h2>
+    <div class="meta-row">
+      <span>Autoplay</span><span>2s dwell</span><span>0.9s fade</span><span>Dots</span><span>Hover pauses</span>
+    </div>
+    <p>Same dwell logic as V3, but slides cross-fade instead of slide horizontally. Softer, more editorial. Good when frames are visually unrelated.</p>
+    <div class="slider auto-fade" id="v3a">
+      <div class="slider-stage">
+        <div class="slider-track">
+          <div class="slider-slide active"><div class="placeholder">Slide 1</div></div>
+          <div class="slider-slide"><div class="placeholder b">Slide 2</div></div>
+          <div class="slider-slide"><div class="placeholder c">Slide 3</div></div>
+          <div class="slider-slide"><div class="placeholder d">Slide 4</div></div>
+          <div class="slider-slide"><div class="placeholder e">Slide 5</div></div>
+        </div>
+      </div>
+      <div class="slider-dots"></div>
+    </div>
+  </section>
+
+  <!-- V3b: Ken Burns -->
+  <section class="group">
+    <h2>V3b — Ken Burns auto</h2>
+    <div class="meta-row">
+      <span>Autoplay</span><span>6.5s dwell</span><span>Cross-fade</span><span>Slow zoom + drift</span><span>Dots</span>
+    </div>
+    <p>Each slide slowly zooms and drifts (1.0× → 1.15×, slight pan) while it's on screen, then cross-fades to the next. Cinematic. Best when you want imagery to feel alive even when standing still — long dwell so the motion is visible.</p>
+    <div class="slider kenburns" id="v3b">
+      <div class="slider-stage">
+        <div class="slider-track">
+          <div class="slider-slide active"><div class="placeholder">Slide 1</div></div>
+          <div class="slider-slide"><div class="placeholder b">Slide 2</div></div>
+          <div class="slider-slide"><div class="placeholder c">Slide 3</div></div>
+          <div class="slider-slide"><div class="placeholder d">Slide 4</div></div>
+        </div>
+      </div>
+      <div class="slider-dots"></div>
+    </div>
+  </section>
+
+  <!-- V3c: Vertical auto -->
+  <section class="group">
+    <h2>V3c — Vertical auto</h2>
+    <div class="meta-row">
+      <span>Autoplay</span><span>2s dwell</span><span>Slides upward</span><span>Dots</span><span>Hover pauses</span>
+    </div>
+    <p>Slides move up instead of sideways. Same dwell + ease as V3. Reads more like a typography reel or a feed scroll. Distinctive without being flashy.</p>
+    <div class="slider auto-vertical" id="v3c">
+      <div class="slider-stage">
+        <div class="slider-track">
+          <div class="slider-slide"><div class="placeholder">Slide 1</div></div>
+          <div class="slider-slide"><div class="placeholder b">Slide 2</div></div>
+          <div class="slider-slide"><div class="placeholder c">Slide 3</div></div>
+          <div class="slider-slide"><div class="placeholder d">Slide 4</div></div>
+          <div class="slider-slide"><div class="placeholder e">Slide 5</div></div>
+        </div>
+      </div>
+      <div class="slider-dots"></div>
+    </div>
+  </section>
+
+  <!-- V3d: Continuous marquee -->
+  <section class="group">
+    <h2>V3d — Continuous marquee</h2>
+    <div class="meta-row">
+      <span>Autoplay</span><span>No dwell</span><span>Linear scroll</span><span>Hover pauses</span><span>Loops seamlessly</span>
+    </div>
+    <p>Never stops — frames flow continuously from right to left like a billboard ticker. Multiple frames visible at once. Frames are doubled in the DOM for a seamless wrap. Best for ambient detail shots (patterns, textures, repetition) where reading any single frame doesn't matter.</p>
+    <div class="slider continuous" id="v3d">
+      <div class="slider-stage">
+        <div class="slider-track">
+          <div class="slider-slide"><div class="placeholder">Slide 1</div></div>
+          <div class="slider-slide"><div class="placeholder b">Slide 2</div></div>
+          <div class="slider-slide"><div class="placeholder c">Slide 3</div></div>
+          <div class="slider-slide"><div class="placeholder d">Slide 4</div></div>
+          <div class="slider-slide"><div class="placeholder e">Slide 5</div></div>
+          <!-- duplicated for seamless wrap -->
+          <div class="slider-slide"><div class="placeholder">Slide 1</div></div>
+          <div class="slider-slide"><div class="placeholder b">Slide 2</div></div>
+          <div class="slider-slide"><div class="placeholder c">Slide 3</div></div>
+          <div class="slider-slide"><div class="placeholder d">Slide 4</div></div>
+          <div class="slider-slide"><div class="placeholder e">Slide 5</div></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -509,6 +738,58 @@
     // kick off
     schedule();
   })();
+
+  /* ─── Shared auto-advance helper for V3a / V3b / V3c ─── */
+  function autoAdvance(rootId, opts) {
+    const root = document.getElementById(rootId);
+    if (!root) return;
+    const slides = root.querySelectorAll('.slider-slide');
+    const dotsBox = root.querySelector('.slider-dots');
+    const DWELL = opts.dwell ?? 2000;
+    const mode = opts.mode || 'fade';    // 'fade' | 'translateY'
+    let i = 0, timer = 0, paused = false;
+
+    slides.forEach((_, idx) => {
+      const dot = document.createElement('button');
+      dot.className = 'slider-dot' + (idx === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to slide ' + (idx + 1));
+      dot.addEventListener('click', () => { go(idx); schedule(); });
+      dotsBox.appendChild(dot);
+    });
+
+    function go(n) {
+      i = (n + slides.length) % slides.length;
+      if (mode === 'fade') {
+        slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+      } else if (mode === 'translateY') {
+        const track = root.querySelector('.slider-track');
+        track.style.transform = `translateY(${-i * 100}%)`;
+      }
+      root.querySelectorAll('.slider-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+    }
+
+    function schedule() {
+      clearTimeout(timer);
+      if (paused) return;
+      timer = setTimeout(() => go(i + 1), DWELL);
+    }
+
+    root.addEventListener('mouseenter', () => { paused = true;  clearTimeout(timer); });
+    root.addEventListener('mouseleave', () => { paused = false; schedule(); });
+
+    schedule();
+  }
+
+  // V3a Cross-fade — 2s dwell, opacity transition handled by CSS
+  autoAdvance('v3a', { dwell: 2000, mode: 'fade' });
+
+  // V3b Ken Burns — long dwell so the slow zoom is visible
+  autoAdvance('v3b', { dwell: 6500, mode: 'fade' });
+
+  // V3c Vertical — slides up via translateY on the column track
+  autoAdvance('v3c', { dwell: 2000, mode: 'translateY' });
+
+  // V3d Continuous marquee — pure CSS animation, hover pause via :hover { animation-play-state }
 
   /* V4 is native scroll — no JS needed */
 </script>

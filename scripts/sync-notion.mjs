@@ -102,10 +102,48 @@ function richToText(rich) {
   return (rich ?? []).map(t => t.plain_text).join('');
 }
 
-// Token regex: {{img:filename}} or {{video:filename}} or {{img:filename|caption}}
-const TOKEN_RE = /^\s*\{\{(img|video):([^|}]+?)(?:\|([^}]+))?\}\}\s*$/;
+// Token formats — three kinds, all on a single paragraph line:
+//   {{img:filename.png}}                    (optional |caption at the end)
+//   {{video:clip.mp4}}                      (optional |caption)
+//   {{slider:a.png|b.png|c.png}}            (each pipe-separated entry is a frame)
+//   {{slider:a.png|b.png|c.png|caption=Title}}   (any frame can be key=value to set an option)
+//
+// Options on slider (place at the very end as key=value, comma-allowed inside value):
+//   caption=...     overall caption shown under the slider
+//   autoplay=true   autoplay the slider
+//   style=fade      use cross-fade transition instead of slide
+const SLIDER_RE = /^\s*\{\{slider:([^}]+)\}\}\s*$/;
+const TOKEN_RE  = /^\s*\{\{(img|video):([^|}]+?)(?:\|([^}]+))?\}\}\s*$/;
 
 function parseToken(text, slug) {
+  // Slider first — it allows arbitrary number of pipe-separated frames
+  const sm = text.match(SLIDER_RE);
+  if (sm) {
+    const parts = sm[1].split('|').map(s => s.trim()).filter(Boolean);
+    const frames = [];
+    const opts = {};
+    for (const p of parts) {
+      const eq = p.indexOf('=');
+      if (eq > 0 && !p.includes('/') && !/\.[a-z0-9]+$/i.test(p)) {
+        // key=value option
+        const k = p.slice(0, eq).trim();
+        const v = p.slice(eq + 1).trim();
+        opts[k] = v;
+      } else {
+        // image filename
+        frames.push({ src: `images/projects/${slug}/${p}` });
+      }
+    }
+    if (!frames.length) return null;
+    return {
+      type: 'slider',
+      frames,
+      caption: opts.caption || '',
+      autoplay: opts.autoplay === 'true',
+      style: opts.style || 'slide'
+    };
+  }
+
   const m = text.match(TOKEN_RE);
   if (!m) return null;
   const [, kind, filename, caption] = m;

@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#E7E7E7">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Project — Nūfik</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,7 +68,7 @@
     /* Nav capsule (shared with index) */
     .nav-capsule {
       position: fixed;
-      top: 28px;
+      top: calc(28px + env(safe-area-inset-top));
       left: 50%;
       transform: translateX(-50%);
       width: min(840px, calc(100% - 56px));
@@ -230,6 +229,60 @@
       display: block;
       background: var(--ink);
     }
+
+    /* ── Image slider (Notion {{slider:a.jpg, b.jpg, ...}} token) ──
+       Horizontal scroll-snap container — desktop trackpad swipe, mobile finger swipe.
+       Each slide takes full container width; dots reflect active slide. */
+    .pb-slider-wrap {
+      margin: 0;
+      width: 100%;
+    }
+    .pb-slider {
+      display: flex;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+      background: var(--ink);
+    }
+    .pb-slider::-webkit-scrollbar { display: none; }
+    .pb-slide {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+      display: block;
+    }
+    .pb-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .pb-slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 14px 0 0;
+    }
+    .pb-slider-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(123,123,123,0.25);
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      transition: background 220ms ease, transform 220ms cubic-bezier(0.22,1,0.36,1);
+    }
+    .pb-slider-dot:hover { background: rgba(123,123,123,0.5); }
+    .pb-slider-dot.active {
+      background: rgba(9,9,9,0.7);
+      transform: scale(1.4);
+    }
     .pb-caption {
       font-family: lumios-typewriter-used, sans-serif;
       font-size: 9px;
@@ -365,7 +418,7 @@
     @media (max-width: 900px) {
       .nav-capsule {
         top: auto;
-        bottom: 20px;
+        bottom: calc(20px + env(safe-area-inset-bottom));
         width: calc(100% - 40px);
         gap: 20px;
         padding: 10px 20px;
@@ -579,6 +632,111 @@
           cap.textContent = b.caption;
           wrap.appendChild(cap);
         }
+        return wrap;
+      }
+      case 'slider': {
+        const wrap = document.createElement('div');
+        wrap.className = 'pb-slider-wrap';
+        const slider = document.createElement('div');
+        slider.className = 'pb-slider';
+        (b.frames || []).forEach(im => {
+          const slide = document.createElement('div');
+          slide.className = 'pb-slide';
+          const img = document.createElement('img');
+          img.src = im.src;
+          img.alt = im.caption || '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          slide.appendChild(img);
+          slider.appendChild(slide);
+        });
+
+        // Custom RAF tween — ease-in-out cubic for buttery transitions, beats
+        // the browser's native smooth-scroll which varies per device. Tween
+        // cancels if the user starts swiping, so finger input always wins.
+        let tweenId = null;
+        const cancelTween = () => {
+          if (tweenId) { cancelAnimationFrame(tweenId); tweenId = null; }
+        };
+        const tweenTo = (targetLeft, duration = 900) => {
+          cancelTween();
+          const startLeft = slider.scrollLeft;
+          const delta = targetLeft - startLeft;
+          if (Math.abs(delta) < 1) return;
+          const t0 = performance.now();
+          const step = (now) => {
+            const t = Math.min(1, (now - t0) / duration);
+            // ease-in-out cubic
+            const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            slider.scrollLeft = startLeft + delta * eased;
+            if (t < 1) tweenId = requestAnimationFrame(step);
+            else tweenId = null;
+          };
+          tweenId = requestAnimationFrame(step);
+        };
+        slider.addEventListener('pointerdown', cancelTween, { passive: true });
+        slider.addEventListener('wheel', cancelTween, { passive: true });
+
+        const dots = document.createElement('div');
+        dots.className = 'pb-slider-dots';
+        (b.frames || []).forEach((_, i) => {
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = 'pb-slider-dot' + (i === 0 ? ' active' : '');
+          dot.setAttribute('aria-label', `Slide ${i + 1}`);
+          dot.addEventListener('click', () => {
+            const target = slider.children[i];
+            if (target) tweenTo(target.offsetLeft);
+          });
+          dots.appendChild(dot);
+        });
+        let ticking = false;
+        slider.addEventListener('scroll', () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            const idx = Math.round(slider.scrollLeft / slider.clientWidth);
+            dots.querySelectorAll('.pb-slider-dot').forEach((d, i) => {
+              d.classList.toggle('active', i === idx);
+            });
+            ticking = false;
+          });
+        }, { passive: true });
+
+        // Auto-advance — opt-in via the slider token's autoplay=true option.
+        // Runs while slider is in view, pauses permanently only when the user
+        // explicitly grabs control (clicks a dot). Page-scroll wheel/touch
+        // events on the slider area do NOT count, otherwise auto stops before
+        // it even gets a chance. Honors prefers-reduced-motion.
+        const AUTO_MS = 2500;
+        const total = (b.frames || []).length;
+        let autoTimer = null;
+        let userTouched = false;
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        const startAuto = () => {
+          if (!b.autoplay || autoTimer || userTouched || total < 2 || reduced.matches) return;
+          autoTimer = setInterval(() => {
+            const cur = Math.round(slider.scrollLeft / slider.clientWidth);
+            const next = (cur + 1) % total;
+            const target = slider.children[next];
+            if (target) tweenTo(target.offsetLeft);
+          }, AUTO_MS);
+        };
+        const stopAuto = () => {
+          if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+        };
+        dots.addEventListener('click', () => { userTouched = true; stopAuto(); });
+
+        const io = new IntersectionObserver(entries => {
+          for (const e of entries) {
+            if (e.isIntersecting) startAuto(); else stopAuto();
+          }
+        }, { threshold: 0.4 });
+        io.observe(slider);
+
+        wrap.appendChild(slider);
+        wrap.appendChild(dots);
         return wrap;
       }
       case 'video': {

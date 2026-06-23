@@ -356,6 +356,43 @@
      ─────────────────────────────────────────────────── */
   const entries = [
     {
+      date: "2026-06-23",
+      title: "Slider renderer wired into project.html (frames + autoplay option)",
+      tags: ["added", "design"],
+      body: `
+        <p>Project detail body now renders the
+          <code>{{slider:a.png|b.png|c.png|autoplay=true|caption=…}}</code>
+          token (parsed by the earlier
+          <code>scripts/sync-notion.mjs</code> work) as a horizontal CSS
+          scroll-snap carousel with pagination dots underneath. Reads
+          the <code>frames[]</code> array and respects the
+          <code>autoplay</code> / <code>caption</code> options that come
+          out of the parser.</p>
+        <ul>
+          <li>Opt-in auto-advance via <code>autoplay=true</code> — off
+            unless the designer asks for it. When on, cycles every
+            <strong>2.5s</strong> while in viewport.</li>
+          <li>Custom RAF tween — ease-in-out cubic, 900ms — replaces
+            <code>scrollTo({behavior:'smooth'})</code> so timing is
+            consistent across devices.</li>
+          <li>Pointer/wheel during a tween cancels it instantly so finger
+            input always wins; auto-play stops permanently only when the
+            user explicitly clicks a dot.</li>
+          <li>Pauses when scrolled out of view (IntersectionObserver,
+            threshold 0.4) so battery isn't burning on off-screen
+            sliders.</li>
+          <li>Honors <code>prefers-reduced-motion</code> — no auto cycle
+            for that audience.</li>
+        </ul>
+        <p>Usage docs:
+          <a href="handoff.html#content-tokens">handoff.html → Notion content tokens</a>.
+          UI exploration alternatives live in
+          <a href="slider-demo.html">slider-demo.html</a> (V1–V4 + V3a–V3d).</p>
+      `,
+      why: `The slider-demo page proved the auto-scroll-snap (V4 + V3 dwell) variant felt right for showcasing brand artifacts. Wiring it into the real renderer was the missing piece — designer can now write the token in Notion and have a working slider on the live page after sync, with the option to keep it manual (default) or auto-cycling.`,
+      ref: "commits 4822191 (parser+demo) · ee3f4bf (V3a–V3d)"
+    },
+    {
       date: "2026-05-24",
       title: "Denim on body + dot grid pulse on about/contact",
       tags: ["changed", "design"],

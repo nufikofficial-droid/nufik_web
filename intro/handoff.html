@@ -289,6 +289,7 @@
       <li><a href="#button">Button explorations</a></li>
       <li><a href="#log">Changelog &amp; devlog</a></li>
       <li><a href="#assets">Assets</a></li>
+      <li><a href="#content-tokens">Notion content tokens</a></li>
       <li><a href="#rules">Project rules</a></li>
     </ol>
   </nav>
@@ -443,6 +444,49 @@ python3 -m http.server 8765
     <li>New from <code>deb278e</code>: <code>Biz_01.png</code>, <code>Biz_02.png</code>, <code>MacBook Air - 80/84/85.png</code>, <code>denim_texture.jpg</code></li>
   </ul>
   <p>Experimental intro: <code>intro/pixel-text-animation.html</code> (also mirrored at <code>src/pixel-text-animation.html</code>).</p>
+
+  <hr>
+
+  <!-- NOTION CONTENT TOKENS -->
+  <h2 id="content-tokens">Notion content tokens</h2>
+  <p>In the Notion project body, write tokens as a <strong>single paragraph block</strong> exactly as shown. The sync script (<code>scripts/sync-notion.mjs</code>) detects these and rewrites them as renderable blocks in <code>data/projects.json</code>. Files always live in <code>images/projects/&lt;slug&gt;/</code>.</p>
+
+  <h3>Single image — <code>{{img:filename}}</code></h3>
+  <pre style="background: rgba(255,255,255,0.5); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; font-family: 'Special Elite', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">{{img:cover.jpg}}
+{{img:hero.jpg|Caption shown below the image}}</pre>
+  <p>Renders full-width with 0 margin against the next media block. Caption is optional after a <code>|</code>.</p>
+
+  <h3>Video — <code>{{video:filename}}</code></h3>
+  <pre style="background: rgba(255,255,255,0.5); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; font-family: 'Special Elite', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">{{video:intro.mp4}}</pre>
+  <p>Renders muted + looping, autoplays only when on screen (IntersectionObserver). Same caption syntax with <code>|</code>.</p>
+
+  <h3>Image slider — <code>{{slider:files…}}</code></h3>
+  <pre style="background: rgba(255,255,255,0.5); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; font-family: 'Special Elite', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">{{slider:03.jpg|04.jpg|05.jpg|06.jpg|07.jpg}}
+{{slider:03.jpg|04.jpg|05.jpg|autoplay=true}}
+{{slider:03.jpg|04.jpg|05.jpg|caption=Brand artifacts|autoplay=true}}</pre>
+  <p>Pipe-separated filenames render as a horizontal scroll-snap carousel with pagination dots. Trailing <code>key=value</code> entries set slider options instead of frames. Supported options:</p>
+  <ul>
+    <li><code>autoplay=true</code> — opt in to auto-advance every <strong>2.5s</strong>. Off by default; the slider only cycles on its own when this is set.</li>
+    <li><code>caption=...</code> — overall caption shown under the slider.</li>
+    <li><code>style=fade</code> — reserved for cross-fade transition (slide is the default).</li>
+  </ul>
+  <p>Auto-play behavior (when enabled):</p>
+  <ul>
+    <li>Ease-in-out cubic 900ms tween (custom RAF, not native smooth-scroll — keeps timing consistent across devices)</li>
+    <li>Pauses when scrolled out of view (IntersectionObserver, threshold 0.4)</li>
+    <li>Clicking a dot stops auto permanently — user takes manual control</li>
+    <li>Swipe / trackpad scroll cancels the in-flight tween so finger input always wins</li>
+    <li>Honors <code>prefers-reduced-motion</code> — no auto cycle if the visitor opted out</li>
+  </ul>
+  <p>UI exploration variants live at <a href="slider-demo.html">slider-demo.html</a> (V1–V4 + V3a–V3d auto-advance flavors).</p>
+
+  <h3>Adding the image files</h3>
+  <ol>
+    <li>Drop the assets in <code>images/projects/&lt;slug&gt;/</code> with the exact filenames you referenced in Notion</li>
+    <li>Compress &gt;2MB JPGs (target ≤1MB) — large hero images are fine but body images don't need print resolution</li>
+    <li>Commit + push the images to <code>v2</code></li>
+    <li>Trigger <strong>"Sync Notion → projects.json"</strong> on GitHub Actions (Actions tab → Run workflow → branch <code>v2</code>) so <code>data/projects.json</code> picks up the new tokens</li>
+  </ol>
 
   <hr>
 

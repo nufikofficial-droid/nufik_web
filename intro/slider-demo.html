@@ -430,6 +430,56 @@
     border: 1px solid rgba(255,255,255,0.6);
   }
 
+  /* ─── V5: Production — mirrors project.html's live renderer ───
+     Full-bleed scroll-snap (no peek, no chrome), RAF tween, opt-in autoplay.
+     Identical class names + styles to .pb-slider in project.html so what you
+     see here is what the live page renders for a {{slider:...|autoplay=true}}
+     token. */
+  .pb-slider-wrap { margin: 0; width: 100%; }
+  .pb-slider {
+    display: flex;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    background: var(--bg);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.9);
+  }
+  .pb-slider::-webkit-scrollbar { display: none; }
+  .pb-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    display: block;
+  }
+  .pb-slide .placeholder {
+    width: 100%; height: 100%;
+  }
+  .pb-slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 14px 0 0;
+  }
+  .pb-slider-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(123,123,123,0.25);
+    border: 0; padding: 0;
+    cursor: pointer;
+    transition: background 220ms ease, transform 220ms cubic-bezier(0.22,1,0.36,1);
+  }
+  .pb-slider-dot:hover { background: rgba(123,123,123,0.5); }
+  .pb-slider-dot.active {
+    background: rgba(9,9,9,0.7);
+    transform: scale(1.4);
+  }
+
   @media (max-width: 720px) {
     .page { padding: 60px 22px 120px; }
     .slider-arrow { width: 34px; height: 34px; font-size: 16px; }
@@ -444,9 +494,11 @@
 
   <h1>Slider explorations</h1>
   <p class="lede">
-    Four ways to render <code>{{slider:a.png|b.png|c.png}}</code> when it appears
-    inside a project's Notion body. Same data, different feel. Pick the one that
-    fits the site tone, and that's what every slider token will render as.
+    Ways to render <code>{{slider:a.png|b.png|c.png}}</code> when it appears
+    inside a project's Notion body. Same data, different feel. <strong>V5 is
+    the version currently live</strong> on the production site; V1–V4 (+ V3a–V3d)
+    are alternates — swap one of them into <code>project.html</code>'s
+    <code>case 'slider'</code> if you want a different feel.
     Coloured placeholder cards stand in for real images so you can see the motion.
   </p>
 
@@ -626,6 +678,26 @@
     </div>
   </section>
 
+  <!-- V5: Production — the one currently wired into project.html -->
+  <section class="group">
+    <h2>V5 — Production (live on project pages)</h2>
+    <div class="meta-row">
+      <span>Live renderer</span><span>Scroll-snap</span><span>Custom RAF tween</span><span>Autoplay opt-in</span>
+      <span>autoplay = <code>true</code></span>
+    </div>
+    <p>What <code>project.html</code> actually renders for a slider token today. Full-bleed scroll-snap (no peek, no chrome), pagination dots only. Custom <code>requestAnimationFrame</code> tween (ease-in-out cubic, 900ms) replaces native smooth-scroll so timing stays consistent across devices. Autoplay is opt-in via the token's <code>autoplay=true</code> option — this demo has it on so you can see the 2.5s cycle. Pointer/wheel cancels the in-flight tween; clicking a dot stops auto permanently; pauses when scrolled off-screen; honors <code>prefers-reduced-motion</code>.</p>
+    <div class="pb-slider-wrap" id="v5" data-autoplay="true">
+      <div class="pb-slider">
+        <div class="pb-slide"><div class="placeholder">Slide 1</div></div>
+        <div class="pb-slide"><div class="placeholder b">Slide 2</div></div>
+        <div class="pb-slide"><div class="placeholder c">Slide 3</div></div>
+        <div class="pb-slide"><div class="placeholder d">Slide 4</div></div>
+        <div class="pb-slide"><div class="placeholder e">Slide 5</div></div>
+      </div>
+      <div class="pb-slider-dots"></div>
+    </div>
+  </section>
+
   <!-- Side-by-side notes -->
   <section class="group">
     <h2>Quick guide</h2>
@@ -634,7 +706,11 @@
       brand applications.<br>
       <strong>V2 Cross-fade</strong> for moodboards / loosely related frames.<br>
       <strong>V3 Marquee</strong> for ambient detail shots — patterns, textures, repetitions.<br>
-      <strong>V4 Snap row</strong> for catalog feel — show me everything, let me pick.
+      <strong>V4 Snap row</strong> for catalog feel — show me everything, let me pick.<br>
+      <strong>V5 Production</strong> — currently live. Full-bleed scroll-snap with optional
+      auto-cycle. Switching the live renderer to V1/V2/V3/V4 means swapping the
+      <code>case 'slider'</code> block in <code>project.html</code> with that
+      variant's HTML + JS.
     </p>
   </section>
 
@@ -792,6 +868,92 @@
   // V3d Continuous marquee — pure CSS animation, hover pause via :hover { animation-play-state }
 
   /* V4 is native scroll — no JS needed */
+
+  /* ─── V5 Production — identical logic to project.html's case 'slider' ───
+     Builds dots, drives a custom RAF tween for smooth scrollTo, opt-in autoplay
+     gated on data-autoplay="true", pauses off-screen, respects reduced-motion. */
+  (function () {
+    const root = document.getElementById('v5');
+    if (!root) return;
+    const slider = root.querySelector('.pb-slider');
+    const dots = root.querySelector('.pb-slider-dots');
+    const slides = slider.querySelectorAll('.pb-slide');
+    const total = slides.length;
+    const autoplay = root.dataset.autoplay === 'true';
+
+    let tweenId = null;
+    const cancelTween = () => {
+      if (tweenId) { cancelAnimationFrame(tweenId); tweenId = null; }
+    };
+    const tweenTo = (targetLeft, duration = 900) => {
+      cancelTween();
+      const startLeft = slider.scrollLeft;
+      const delta = targetLeft - startLeft;
+      if (Math.abs(delta) < 1) return;
+      const t0 = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - t0) / duration);
+        const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        slider.scrollLeft = startLeft + delta * eased;
+        if (t < 1) tweenId = requestAnimationFrame(step);
+        else tweenId = null;
+      };
+      tweenId = requestAnimationFrame(step);
+    };
+    slider.addEventListener('pointerdown', cancelTween, { passive: true });
+    slider.addEventListener('wheel', cancelTween, { passive: true });
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'pb-slider-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `Slide ${i + 1}`);
+      dot.addEventListener('click', () => {
+        const target = slider.children[i];
+        if (target) tweenTo(target.offsetLeft);
+      });
+      dots.appendChild(dot);
+    });
+
+    let ticking = false;
+    slider.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const idx = Math.round(slider.scrollLeft / slider.clientWidth);
+        dots.querySelectorAll('.pb-slider-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === idx);
+        });
+        ticking = false;
+      });
+    }, { passive: true });
+
+    const AUTO_MS = 2500;
+    let autoTimer = null;
+    let userTouched = false;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const startAuto = () => {
+      if (!autoplay || autoTimer || userTouched || total < 2 || reduced.matches) return;
+      autoTimer = setInterval(() => {
+        const cur = Math.round(slider.scrollLeft / slider.clientWidth);
+        const next = (cur + 1) % total;
+        const target = slider.children[next];
+        if (target) tweenTo(target.offsetLeft);
+      }, AUTO_MS);
+    };
+    const stopAuto = () => {
+      if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+    };
+    dots.addEventListener('click', () => { userTouched = true; stopAuto(); });
+
+    const io = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (e.isIntersecting) startAuto(); else stopAuto();
+      }
+    }, { threshold: 0.4 });
+    io.observe(slider);
+  })();
 </script>
 
 </body>

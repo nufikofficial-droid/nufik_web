@@ -300,6 +300,107 @@
       text-align: center;
       padding: 60px 0;
     }
+
+    /* ── Editorial blocks (from the 333 layout) ──
+       Each is a Notion-token-driven content block: {{letter}}, {{polaroids}},
+       {{pair}}, {{stack}}. They opt out of .proj-body's column width by
+       breaking out via negative margins where appropriate. */
+
+    /* {{letter:Nū}} — single oversized display letterform, soft-light on bg */
+    .pb-letter {
+      font-family: "acumin-pro-condensed", sans-serif;
+      font-weight: 700;
+      font-size: clamp(60px, 11vw, 140px);
+      line-height: 0.95;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--txt-strong);
+      text-align: center;
+      mix-blend-mode: soft-light;
+      margin: 4rem 0 2rem;
+    }
+
+    /* {{polaroids:a.jpg@-12,b.jpg,c.jpg@8}} — rotated photo cluster.
+       Centered with subtle overlap; each card uses its own rotation. */
+    .pb-polaroids {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin: 4rem -20px;
+      padding: 20px 0;
+    }
+    .pb-polaroid {
+      flex: 0 0 auto;
+      width: clamp(180px, 28vw, 340px);
+      aspect-ratio: 541 / 765;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--ink);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      transform-origin: center;
+      transition: transform 420ms cubic-bezier(0.22,1,0.36,1);
+    }
+    .pb-polaroid img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .pb-polaroid:hover { transform: scale(1.02) rotate(var(--rot, 0deg)) translateY(-4px); }
+
+    /* {{pair:a.jpg|b.jpg}} — two large mockups side by side with right overflow */
+    .pb-pair {
+      display: flex;
+      gap: 29px;
+      margin: 3rem 0;
+      width: calc(100vw - 56px);
+      max-width: none;
+      margin-left: calc(50% - 50vw + 28px);
+      overflow: visible;
+    }
+    .pb-pair-frame {
+      flex: 1 0 auto;
+      width: 70vw;
+      max-width: 1400px;
+      aspect-ratio: 1400 / 933;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .pb-pair-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* {{stack:a.jpg|b.jpg|…|indent=1,2}} — full-bleed vertical stack.
+       Frames at the indexed positions sit inset 40px each side. */
+    .pb-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      margin: 3rem 0;
+      width: calc(100vw - 56px);
+      max-width: none;
+      margin-left: calc(50% - 50vw + 28px);
+    }
+    .pb-stack-frame {
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--ink);
+      aspect-ratio: 2123 / 1415;
+    }
+    .pb-stack-frame.indented { width: calc(100% - 80px); margin: 0 40px; }
+    .pb-stack-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
     .content.visible {
       opacity: 1;
       transform: translateY(0);
@@ -344,11 +445,11 @@
     .proj-title {
       font-family: "acumin-pro-condensed", sans-serif;
       font-weight: 700;
-      font-size: clamp(24px, 2.4vw, 36px);
-      line-height: 1.1;
-      letter-spacing: 0;
+      font-size: clamp(72px, 12vw, 150px);
+      line-height: 0.9;
+      letter-spacing: -0.01em;
       text-transform: uppercase;
-      color: var(--txt);
+      color: var(--txt-strong);
       margin: 0;
     }
     .proj-meta-cluster {
@@ -547,6 +648,12 @@
       return;
     }
 
+    // Per-project page tone — override --ink so the page bg tints to the
+    // project's brand color (denim texture + soft-light blend ride on top).
+    if (project.tone) {
+      document.documentElement.style.setProperty('--ink', project.tone);
+    }
+
     // Hero (title, cover, meta)
     document.title = `${project.name} — Nūfik`;
     document.getElementById('projTitle').textContent    = project.name || '';
@@ -632,6 +739,65 @@
           cap.textContent = b.caption;
           wrap.appendChild(cap);
         }
+        return wrap;
+      }
+      case 'letter': {
+        const el = document.createElement('p');
+        el.className = 'pb-letter';
+        el.textContent = b.text || '';
+        return el;
+      }
+      case 'polaroids': {
+        const wrap = document.createElement('div');
+        wrap.className = 'pb-polaroids';
+        (b.items || []).forEach(it => {
+          const card = document.createElement('figure');
+          card.className = 'pb-polaroid';
+          if (it.rotation) {
+            card.style.setProperty('--rot', `${it.rotation}deg`);
+            card.style.transform = `rotate(${it.rotation}deg)`;
+          }
+          const img = document.createElement('img');
+          img.src = it.src;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          card.appendChild(img);
+          wrap.appendChild(card);
+        });
+        return wrap;
+      }
+      case 'pair': {
+        const wrap = document.createElement('div');
+        wrap.className = 'pb-pair';
+        (b.images || []).forEach(src => {
+          const frame = document.createElement('div');
+          frame.className = 'pb-pair-frame';
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          frame.appendChild(img);
+          wrap.appendChild(frame);
+        });
+        return wrap;
+      }
+      case 'stack': {
+        const wrap = document.createElement('div');
+        wrap.className = 'pb-stack';
+        const indentSet = new Set(b.indent || []);
+        (b.images || []).forEach((src, i) => {
+          const frame = document.createElement('div');
+          frame.className = 'pb-stack-frame' + (indentSet.has(i) ? ' indented' : '');
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          frame.appendChild(img);
+          wrap.appendChild(frame);
+        });
         return wrap;
       }
       case 'slider': {

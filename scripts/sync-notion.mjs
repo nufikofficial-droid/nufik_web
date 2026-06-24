@@ -102,21 +102,24 @@ function richToText(rich) {
   return (rich ?? []).map(t => t.plain_text).join('');
 }
 
-// Token formats — three kinds, all on a single paragraph line:
-//   {{img:filename.png}}                    (optional |caption at the end)
-//   {{video:clip.mp4}}                      (optional |caption)
-//   {{slider:a.png|b.png|c.png}}            (each pipe-separated entry is a frame)
-//   {{slider:a.png|b.png|c.png|caption=Title}}   (any frame can be key=value to set an option)
-//
-// Options on slider (place at the very end as key=value, comma-allowed inside value):
-//   caption=...     overall caption shown under the slider
-//   autoplay=true   autoplay the slider
-//   style=fade      use cross-fade transition instead of slide
-const SLIDER_RE = /^\s*\{\{slider:([^}]+)\}\}\s*$/;
-const TOKEN_RE  = /^\s*\{\{(img|video):([^|}]+?)(?:\|([^}]+))?\}\}\s*$/;
+// Token formats — every token is a single paragraph block:
+//   {{img:file.jpg}}                               single full-width image (optional |caption)
+//   {{video:clip.mp4}}                             muted+looping video (optional |caption)
+//   {{slider:a.jpg|b.jpg|c.jpg|autoplay=true}}     scroll-snap carousel (slider options: caption=, autoplay=true, style=)
+//   {{letter:Nū}}                                  oversized display letter (typographic break)
+//   {{polaroids:a.jpg@-12,b.jpg@0,c.jpg@8}}        rotated photo cluster (rotation in degrees after @)
+//   {{pair:a.jpg|b.jpg}}                           two large mockups side by side, slight right overflow
+//   {{stack:a.jpg|b.jpg|c.jpg|d.jpg|indent=1,2}}   full-bleed vertical stack; indent= lists 0-based
+//                                                   frame indices that should sit inset 40px each side
+const TOKEN_RE     = /^\s*\{\{(img|video):([^|}]+?)(?:\|([^}]+))?\}\}\s*$/;
+const SLIDER_RE    = /^\s*\{\{slider:([^}]+)\}\}\s*$/;
+const LETTER_RE    = /^\s*\{\{letter:([^}]+)\}\}\s*$/;
+const POLAROIDS_RE = /^\s*\{\{polaroids:([^}]+)\}\}\s*$/;
+const PAIR_RE      = /^\s*\{\{pair:([^}]+)\}\}\s*$/;
+const STACK_RE     = /^\s*\{\{stack:([^}]+)\}\}\s*$/;
 
 function parseToken(text, slug) {
-  // Slider first — it allows arbitrary number of pipe-separated frames
+  // Slider — pipe-separated frames + optional key=value options
   const sm = text.match(SLIDER_RE);
   if (sm) {
     const parts = sm[1].split('|').map(s => s.trim()).filter(Boolean);
@@ -125,12 +128,8 @@ function parseToken(text, slug) {
     for (const p of parts) {
       const eq = p.indexOf('=');
       if (eq > 0 && !p.includes('/') && !/\.[a-z0-9]+$/i.test(p)) {
-        // key=value option
-        const k = p.slice(0, eq).trim();
-        const v = p.slice(eq + 1).trim();
-        opts[k] = v;
+        opts[p.slice(0, eq).trim()] = p.slice(eq + 1).trim();
       } else {
-        // image filename
         frames.push({ src: `images/projects/${slug}/${p}` });
       }
     }
@@ -144,6 +143,54 @@ function parseToken(text, slug) {
     };
   }
 
+  // Letter — oversized display letterform
+  const lt = text.match(LETTER_RE);
+  if (lt) return { type: 'letter', text: lt[1].trim() };
+
+  // Polaroids — comma-separated; each item is "filename" or "filename@rotation"
+  const pl = text.match(POLAROIDS_RE);
+  if (pl) {
+    const items = pl[1].split(',').map(s => s.trim()).filter(Boolean).map(item => {
+      const at = item.lastIndexOf('@');
+      if (at > 0) {
+        const rot = parseFloat(item.slice(at + 1));
+        if (!Number.isNaN(rot)) {
+          return { src: `images/projects/${slug}/${item.slice(0, at).trim()}`, rotation: rot };
+        }
+      }
+      return { src: `images/projects/${slug}/${item}`, rotation: 0 };
+    });
+    if (!items.length) return null;
+    return { type: 'polaroids', items };
+  }
+
+  // Pair — exactly two pipe-separated images
+  const pr = text.match(PAIR_RE);
+  if (pr) {
+    const images = pr[1].split('|').map(s => s.trim()).filter(Boolean)
+      .map(name => `images/projects/${slug}/${name}`);
+    if (images.length !== 2) return null;
+    return { type: 'pair', images };
+  }
+
+  // Stack — pipe-separated images + optional indent=0,1,…
+  const st = text.match(STACK_RE);
+  if (st) {
+    const parts = st[1].split('|').map(s => s.trim()).filter(Boolean);
+    const images = [];
+    let indent = [];
+    for (const p of parts) {
+      if (p.startsWith('indent=')) {
+        indent = p.slice(7).split(',').map(n => parseInt(n, 10)).filter(n => !Number.isNaN(n));
+      } else {
+        images.push(`images/projects/${slug}/${p}`);
+      }
+    }
+    if (!images.length) return null;
+    return { type: 'stack', images, indent };
+  }
+
+  // Single image / video
   const m = text.match(TOKEN_RE);
   if (!m) return null;
   const [, kind, filename, caption] = m;
@@ -152,6 +199,16 @@ function parseToken(text, slug) {
     return { type: 'image', src, caption: caption?.trim() || '' };
   }
   return { type: 'video', src, loop: true, muted: true, caption: caption?.trim() || '' };
+}
+
+// Tone — optional hex color set in Notion DB (rich_text property "Tone").
+// When present, the project detail page tints body bg + denim to this color.
+function getTone(props) {
+  const raw = getRichText(props, 'Tone').trim();
+  if (!raw) return null;
+  if (/^#[0-9a-f]{3,8}$/i.test(raw)) return raw;
+  console.warn(`  invalid Tone "${raw}" — must be hex like #906e47, skipping`);
+  return null;
 }
 
 // Convert Notion blocks to portable JSON content blocks
@@ -226,6 +283,7 @@ function pageToProject(page, content) {
     cover: cover ? `images/projects/${slug}/${cover}` : '',
     tags: getMultiSelect(props, 'Tags'),
     order: getNumber(props, 'Order') ?? 9999,
+    tone: getTone(props),
     content,
   };
 }

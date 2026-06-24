@@ -356,6 +356,45 @@
      ─────────────────────────────────────────────────── */
   const entries = [
     {
+      date: "2026-06-24",
+      title: "Editorial blocks — letter / polaroids / pair / stack + per-project Tone",
+      tags: ["added", "design"],
+      body: `
+        <p>Four new content tokens for project bodies, modeled after the
+          333 Figma layout — composable from Notion so every project can
+          mix them freely. All take a single paragraph block.</p>
+        <ul>
+          <li><code>{{letter:Nū}}</code> — single oversized display
+            letterform, <code>clamp(60px, 11vw, 140px)</code>
+            acumin-pro-condensed with soft-light blend so it reads as a
+            typographic break embossed into the page tone.</li>
+          <li><code>{{polaroids:a.jpg@-12,b.jpg,c.jpg@8}}</code> —
+            rotated photo cluster; comma-separated filenames with optional
+            <code>@&lt;deg&gt;</code> rotation per item, hover scales each
+            card.</li>
+          <li><code>{{pair:a.jpg|b.jpg}}</code> — two large mockups side
+            by side, edge-to-edge across the viewport at 1400:933 aspect.</li>
+          <li><code>{{stack:a.jpg|b.jpg|c.jpg|d.jpg|indent=1,2}}</code> —
+            full-bleed vertical stack with optional <code>indent=</code>
+            list (0-based indices that sit inset 40px each side to break
+            rhythm).</li>
+        </ul>
+        <p>Also: project detail title scales up from
+          <code>clamp(24px, 2.4vw, 36px)</code> to
+          <code>clamp(72px, 12vw, 150px)</code> so it works as a magazine
+          display headline instead of a sidebar label.</p>
+        <p>New Notion DB property <code>Tone</code> (rich text, hex like
+          <code>#906e47</code>) — when set, overrides the <code>--ink</code>
+          CSS variable on page load so each project tints its detail page
+          to its brand color. Denim texture + soft-light blend ride on top
+          so the texture reads correctly against the new tone.</p>
+        <p>Usage docs:
+          <a href="handoff.html#content-tokens">handoff.html → Notion content tokens</a>.</p>
+      `,
+      why: `333's Figma mockup uses a brown/sepia page tone, oversized title, rotated photo cluster, paired mockups, and full-bleed stack — none of which the previous renderer could express. Putting each layout shape behind a Notion token (instead of one-off project HTML) means future projects can compose their own editorial story without code changes, while keeping the simple cases (single image, paragraph, video) the same. Tone moves the design system from "one neutral background" to "each project owns its own color world".`,
+      ref: ""
+    },
+    {
       date: "2026-06-23",
       title: "Slider renderer wired into project.html (frames + autoplay option)",
       tags: ["added", "design"],

@@ -480,6 +480,27 @@ python3 -m http.server 8765
   </ul>
   <p>UI exploration variants live at <a href="slider-demo.html">slider-demo.html</a> (V1–V4 + V3a–V3d auto-advance flavors).</p>
 
+  <h3>Display letterform — <code>{{letter:Nū}}</code></h3>
+  <pre style="background: rgba(255,255,255,0.5); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; font-family: 'Special Elite', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">{{letter:Nū}}
+{{letter:Fik}}</pre>
+  <p>Single oversized letterform as a typographic break in the body. Uses <code>acumin-pro-condensed</code> at <code>clamp(60px, 11vw, 140px)</code>, mix-blend soft-light on the page tone so it reads as embossed.</p>
+
+  <h3>Rotated photo cluster — <code>{{polaroids:files…}}</code></h3>
+  <pre style="background: rgba(255,255,255,0.5); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; font-family: 'Special Elite', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">{{polaroids:a.jpg@-12,b.jpg@0,c.jpg@8}}</pre>
+  <p>Comma-separated filenames, each optionally followed by <code>@&lt;degrees&gt;</code> for rotation (positive or negative, decimals OK). Cards render centered in a row, wrap on narrow viewports. Use this for scattered shots that should feel hand-placed rather than gridded.</p>
+
+  <h3>Side-by-side mockup pair — <code>{{pair:a.jpg|b.jpg}}</code></h3>
+  <pre style="background: rgba(255,255,255,0.5); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; font-family: 'Special Elite', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">{{pair:333_biz_mockup3.jpg|333_mockup_02.jpg}}</pre>
+  <p>Exactly two pipe-separated images. Renders edge-to-edge across the viewport (breaks out of the body column) at a 1400:933 (~3:2) aspect ratio with 29px gap. Use for paired comparison shots.</p>
+
+  <h3>Full-bleed stack — <code>{{stack:files…|indent=…}}</code></h3>
+  <pre style="background: rgba(255,255,255,0.5); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; font-family: 'Special Elite', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">{{stack:a.jpg|b.jpg|c.jpg|d.jpg}}
+{{stack:a.jpg|b.jpg|c.jpg|d.jpg|indent=1,2}}</pre>
+  <p>Pipe-separated images stack vertically edge-to-edge at 2123:1415 (~3:2) with 40px gap. <code>indent=</code> takes a comma-separated list of 0-based frame indices that should sit inset 40px each side (use it to break visual rhythm — usually inner frames).</p>
+
+  <h3>Per-project page tone — Notion DB "Tone" property</h3>
+  <p>Add an optional <strong>rich text</strong> property named <code>Tone</code> to the Notion Projects DB. Paste a single hex color (e.g. <code>#906e47</code>) and the project detail page tints its body background to that color (denim texture + soft-light blend ride on top). Leave empty for the default <code>#E7E7E7</code> page tone. Invalid values are skipped with a warning in the sync log.</p>
+
   <h3>Adding the image files</h3>
   <ol>
     <li>Drop the assets in <code>images/projects/&lt;slug&gt;/</code> with the exact filenames you referenced in Notion</li>

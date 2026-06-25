@@ -498,8 +498,13 @@ python3 -m http.server 8765
 {{stack:a.jpg|b.jpg|c.jpg|d.jpg|indent=1,2}}</pre>
   <p>Pipe-separated images stack vertically edge-to-edge at 2123:1415 (~3:2) with 40px gap. <code>indent=</code> takes a comma-separated list of 0-based frame indices that should sit inset 40px each side (use it to break visual rhythm — usually inner frames).</p>
 
-  <h3>Per-project page tone — Notion DB "Tone" property</h3>
-  <p>Add an optional <strong>rich text</strong> property named <code>Tone</code> to the Notion Projects DB. Paste a single hex color (e.g. <code>#906e47</code>) and the project detail page tints its body background to that color (denim texture + soft-light blend ride on top). Leave empty for the default <code>#E7E7E7</code> page tone. Invalid values are skipped with a warning in the sync log.</p>
+  <h3>Per-project page tone — Notion DB "Tone" + "Tone Text" properties</h3>
+  <p>Add two optional <strong>rich text</strong> properties to the Notion Projects DB:</p>
+  <ul>
+    <li><code>Tone</code> — page background hex (e.g. <code>#906e47</code>). Overrides <code>--ink</code> so the body bg tints to this color, denim texture + soft-light blend ride on top. Empty falls back to <code>#E7E7E7</code>.</li>
+    <li><code>Tone Text</code> — text color hex (e.g. <code>#45300F</code>). Applies to <strong>all</strong> text on the detail page (title, body, meta, headings) via <code>--txt-strong</code> + <code>--txt</code>. Empty falls back to the site defaults (<code>#090909</code> / <code>#7b7b7b</code>).</li>
+  </ul>
+  <p>Both validate hex format (<code>#RGB</code> / <code>#RRGGBB</code> / <code>#RRGGBBAA</code>) and skip with a sync-log warning on invalid input.</p>
 
   <h3>Adding the image files</h3>
   <ol>

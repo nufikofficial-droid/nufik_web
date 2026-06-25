@@ -103,22 +103,35 @@ function richToText(rich) {
 }
 
 // Token formats — every token is a single paragraph block:
-//   {{img:file.jpg}}                               single full-width image (optional |caption)
-//   {{video:clip.mp4}}                             muted+looping video (optional |caption)
-//   {{slider:a.jpg|b.jpg|c.jpg|autoplay=true}}     scroll-snap carousel (slider options: caption=, autoplay=true, style=)
+//   {{img:file.jpg}}                               full-bleed image, 0 horizontal margin (optional |caption)
+//   {{img-inline:file.jpg}}                        boxed image inside the body column (optional |caption)
+//   {{video:clip.mp4}}                             muted+looping video, full-bleed (optional |caption)
+//   {{slider:a.jpg|b.jpg|c.jpg|autoplay=true}}     scroll-snap carousel (options: caption=, autoplay=true, style=marquee)
 //   {{letter:Nū}}                                  oversized display letter (typographic break)
 //   {{polaroids:a.jpg@-12,b.jpg@0,c.jpg@8}}        rotated photo cluster (rotation in degrees after @)
 //   {{pair:a.jpg|b.jpg}}                           two large mockups side by side, slight right overflow
 //   {{stack:a.jpg|b.jpg|c.jpg|d.jpg|indent=1,2}}   full-bleed vertical stack; indent= lists 0-based
 //                                                   frame indices that should sit inset 40px each side
-const TOKEN_RE     = /^\s*\{\{(img|video):([^|}]+?)(?:\|([^}]+))?\}\}\s*$/;
-const SLIDER_RE    = /^\s*\{\{slider:([^}]+)\}\}\s*$/;
-const LETTER_RE    = /^\s*\{\{letter:([^}]+)\}\}\s*$/;
-const POLAROIDS_RE = /^\s*\{\{polaroids:([^}]+)\}\}\s*$/;
-const PAIR_RE      = /^\s*\{\{pair:([^}]+)\}\}\s*$/;
-const STACK_RE     = /^\s*\{\{stack:([^}]+)\}\}\s*$/;
+const TOKEN_RE      = /^\s*\{\{(img|video):([^|}]+?)(?:\|([^}]+))?\}\}\s*$/;
+const IMG_INLINE_RE = /^\s*\{\{img-inline:([^|}]+?)(?:\|([^}]+))?\}\}\s*$/;
+const SLIDER_RE     = /^\s*\{\{slider:([^}]+)\}\}\s*$/;
+const LETTER_RE     = /^\s*\{\{letter:([^}]+)\}\}\s*$/;
+const POLAROIDS_RE  = /^\s*\{\{polaroids:([^}]+)\}\}\s*$/;
+const PAIR_RE       = /^\s*\{\{pair:([^}]+)\}\}\s*$/;
+const STACK_RE      = /^\s*\{\{stack:([^}]+)\}\}\s*$/;
 
 function parseToken(text, slug) {
+  // Inline (boxed) image — checked before {{img:}} so the prefix doesn't conflict
+  const ii = text.match(IMG_INLINE_RE);
+  if (ii) {
+    return {
+      type: 'image',
+      src: `images/projects/${slug}/${ii[1].trim()}`,
+      caption: ii[2]?.trim() || '',
+      inline: true
+    };
+  }
+
   // Slider — pipe-separated frames + optional key=value options
   const sm = text.match(SLIDER_RE);
   if (sm) {
@@ -204,10 +217,21 @@ function parseToken(text, slug) {
 // Tone — optional hex color set in Notion DB (rich_text property "Tone").
 // When present, the project detail page tints body bg + denim to this color.
 function getTone(props) {
-  const raw = getRichText(props, 'Tone').trim();
+  return readHexProp(props, 'Tone');
+}
+
+// Tone Text — optional hex applied to every piece of text on the project
+// detail page (title, body, meta, headings). Defaults to the site palette
+// when empty. Lets each project carry its own text color against its tone.
+function getToneText(props) {
+  return readHexProp(props, 'Tone Text');
+}
+
+function readHexProp(props, name) {
+  const raw = getRichText(props, name).trim();
   if (!raw) return null;
   if (/^#[0-9a-f]{3,8}$/i.test(raw)) return raw;
-  console.warn(`  invalid Tone "${raw}" — must be hex like #906e47, skipping`);
+  console.warn(`  invalid ${name} "${raw}" — must be hex like #906e47, skipping`);
   return null;
 }
 
@@ -284,6 +308,7 @@ function pageToProject(page, content) {
     tags: getMultiSelect(props, 'Tags'),
     order: getNumber(props, 'Order') ?? 9999,
     tone: getTone(props),
+    toneText: getToneText(props),
     content,
   };
 }

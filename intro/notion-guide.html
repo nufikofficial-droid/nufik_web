@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nūfik v2 — Notion authoring guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;700;800;900&family=Special+Elite&family=Source+Serif+4:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/bvc3fac.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #E7E7E7;
+    --txt: #7B7B7B;
+    --txt-strong: #090909;
+    --line: #BBBBBB;
+    --dot: rgba(123,123,123,0.18);
+    --capsule-fill: rgba(255,255,255,0.4);
+    --radius: 10px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: "Doto", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .dot-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
+    background-size: 32px 32px;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 80px 40px 160px;
+  }
+
+  /* Headings */
+  h1 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    font-family: "Special Elite", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--txt);
+    max-width: 640px;
+    margin-bottom: 48px;
+  }
+  h2 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    color: var(--txt-strong);
+    text-transform: uppercase;
+    margin: 56px 0 16px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(123,123,123,0.25);
+  }
+  h2:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+  h3 {
+    font-family: "acumin-pro-condensed", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--txt-strong);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 32px 0 10px;
+  }
+  h4 {
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--txt);
+    margin: 20px 0 6px;
+  }
+
+  p {
+    font-family: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--txt);
+    margin: 0 0 14px;
+    max-width: 720px;
+  }
+  p strong { color: var(--txt-strong); font-weight: 500; }
+
+  code {
+    font-family: "Special Elite", monospace;
+    font-size: 0.92em;
+    background: rgba(255,255,255,0.55);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--txt-strong);
+  }
+
+  pre {
+    font-family: "Special Elite", monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,1);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 0 0 16px;
+    overflow-x: auto;
+    color: var(--txt-strong);
+    white-space: pre;
+  }
+
+  ul, ol {
+    margin: 0 0 16px 1.4rem;
+    padding: 0;
+  }
+  ul li, ol li {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--txt);
+    margin-bottom: 4px;
+  }
+  ul li strong, ol li strong { color: var(--txt-strong); font-weight: 500; }
+
+  a {
+    color: var(--txt-strong);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  a:hover { color: var(--txt); }
+
+  /* DB schema table */
+  .schema {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 24px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,1);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 14px;
+  }
+  .schema th, .schema td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(123,123,123,0.18);
+    vertical-align: top;
+  }
+  .schema th {
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    background: rgba(255,255,255,0.4);
+  }
+  .schema tr:last-child td { border-bottom: 0; }
+  .schema td.req { color: var(--txt-strong); font-weight: 500; }
+  .schema td code { font-size: 12px; }
+
+  /* Callout */
+  .callout {
+    background: rgba(255,255,255,0.45);
+    border-left: 3px solid color-mix(in srgb, var(--txt-strong) 40%, transparent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 18px;
+    margin: 20px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout strong { color: var(--txt-strong); }
+
+  /* Token visual block */
+  .token-card {
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: var(--radius);
+    padding: 18px 20px 16px;
+    margin: 0 0 28px;
+  }
+  .token-card .name {
+    font-family: "Special Elite", monospace;
+    font-size: 14px;
+    color: var(--txt-strong);
+    margin-bottom: 6px;
+  }
+  .token-card .name code {
+    background: transparent;
+    padding: 0;
+    font-size: 14px;
+  }
+  .token-card .lede {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--txt);
+    margin-bottom: 12px;
+  }
+  .token-card pre {
+    background: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+  }
+  .token-card .meta {
+    font-family: "Doto", monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: rgba(123,123,123,0.85);
+    text-transform: uppercase;
+  }
+
+  .toc {
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,1);
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    margin: 0 0 48px;
+  }
+  .toc h4 {
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--txt-strong);
+    margin: 0 0 10px;
+  }
+  .toc ol {
+    list-style: decimal inside;
+    column-count: 2;
+    column-gap: 40px;
+    margin: 0;
+  }
+  .toc ol li {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--txt);
+    break-inside: avoid;
+    margin-bottom: 0;
+  }
+  .toc a { text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  @media (max-width: 720px) {
+    .page { padding: 60px 22px 120px; }
+    h1 { font-size: clamp(30px, 8vw, 46px); }
+    .toc ol { column-count: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dot-grid" aria-hidden="true"></div>
+
+<div class="page">
+
+  <h1>Notion 작성<br>가이드</h1>
+  <p class="subtitle">
+    노션에서 새 프로젝트를 추가하거나 기존 프로젝트의 본문을 다듬을 때
+    참고하는 문서. DB 칼럼 의미부터 본문 토큰 사용법, 이미지 파일 워크플로우까지
+    한 화면에서 끝낼 수 있게 정리했어. 변경한 내용은 GitHub Actions sync
+    가 돌면 자동으로 사이트에 반영됨.
+  </p>
+
+  <nav class="toc" aria-label="Table of contents">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#quickstart">Quick start</a></li>
+      <li><a href="#db">Projects DB 칼럼</a></li>
+      <li><a href="#tone">Tone — 프로젝트별 색상</a></li>
+      <li><a href="#tokens">본문 토큰</a></li>
+      <li><a href="#images">이미지 파일 워크플로우</a></li>
+      <li><a href="#example">실제 적용 예시 (333)</a></li>
+      <li><a href="#sync">동기화 트리거</a></li>
+      <li><a href="#tips">자주 하는 실수</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="quickstart">Quick start</h2>
+  <p>새 프로젝트 추가하는 가장 짧은 흐름:</p>
+  <ol>
+    <li>노션 <strong>Portfolio DB</strong> 에 새 row 추가, 필수 칼럼 채우기 (Name / Slug / Published / Order / Cover / Category / Year / Description / Tags)</li>
+    <li>(선택) <code>Tone</code> / <code>Tone Text</code> 에 hex 색상 입력 — 프로젝트 페이지의 배경/텍스트 색상</li>
+    <li>본문에 토큰으로 미디어 배치: <code>{{slider:a.jpg|b.jpg|autoplay=true|style=marquee}}</code> 등</li>
+    <li>이미지 파일은 로컬 repo 의 <code>images/projects/&lt;slug&gt;/</code> 폴더에 같은 이름으로 넣고 commit + push</li>
+    <li>GitHub Actions 에서 <strong>"Sync Notion → projects.json"</strong> 트리거 → 1–2 분 뒤 도메인 반영</li>
+  </ol>
+
+  <h2 id="db">Projects DB 칼럼</h2>
+  <p>노션 DB 의 각 칼럼이 사이트의 어디로 들어가는지:</p>
+
+  <table class="schema">
+    <thead>
+      <tr>
+        <th>칼럼</th>
+        <th>타입</th>
+        <th>역할</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="req">Name</td>
+        <td>Title</td>
+        <td>프로젝트 이름 — 메인 갤러리, 상세페이지 헤더 타이틀 (예: "333")</td>
+      </tr>
+      <tr>
+        <td class="req">Slug</td>
+        <td>Rich text</td>
+        <td>URL 식별자. 소문자 + 숫자 + 하이픈만 (<code>^[a-z0-9-]+$</code>). 폴더명도 동일. 예: <code>333</code>, <code>proof-of-retreat</code></td>
+      </tr>
+      <tr>
+        <td class="req">Published</td>
+        <td>Checkbox</td>
+        <td>체크돼야 sync 가 가져감. 체크 안 된 row 는 사이트에 안 나옴 — 임시 작업용으로 활용</td>
+      </tr>
+      <tr>
+        <td class="req">Order</td>
+        <td>Number</td>
+        <td>갤러리 정렬 순서 (오름차순). 작을수록 먼저</td>
+      </tr>
+      <tr>
+        <td>Cover</td>
+        <td>Rich text</td>
+        <td>커버 이미지 파일명 (확장자 포함). <code>images/projects/&lt;slug&gt;/&lt;cover&gt;</code> 경로로 해석됨. 예: <code>333_01.jpg</code></td>
+      </tr>
+      <tr>
+        <td>Category</td>
+        <td>Select</td>
+        <td>예: Brand Identity, Editorial, Packaging</td>
+      </tr>
+      <tr>
+        <td>Year</td>
+        <td>Rich text</td>
+        <td>예: 2026</td>
+      </tr>
+      <tr>
+        <td>Client</td>
+        <td>Rich text</td>
+        <td>(JSON 에는 포함되지만 페이지에 직접 표시되진 않음 — 향후 노출 가능)</td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td>Rich text</td>
+        <td>상세페이지 헤더의 짧은 소개 (Special Elite 12px)</td>
+      </tr>
+      <tr>
+        <td>Tags</td>
+        <td>Multi-select</td>
+        <td>예: Branding, Package, Spatial. 메인 갤러리 메타에 표시</td>
+      </tr>
+      <tr>
+        <td>Tone</td>
+        <td>Rich text (hex)</td>
+        <td>(선택) 페이지 배경색 hex. 예: <code>#906e47</code>. 비우면 기본 <code>#E7E7E7</code></td>
+      </tr>
+      <tr>
+        <td>Tone Text</td>
+        <td>Rich text (hex)</td>
+        <td>(선택) 모든 텍스트 색상 hex. 예: <code>#45300F</code>. 비우면 기본 <code>#090909</code> / <code>#7b7b7b</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Slug 주의:</strong> 한 번 정하면 URL 이 그 값으로 고정됨. 나중에 바꾸면 외부 링크가 깨짐 + 이미지 폴더명도 같이 옮겨야 함. 처음부터 신중히.</p>
+  </div>
+
+  <h2 id="tone">Tone — 프로젝트별 색상</h2>
+  <p>각 프로젝트가 자기 브랜드 컬러를 가질 수 있게 2개 hex 칼럼만 채우면 됨.</p>
+
+  <h3>Tone (배경)</h3>
+  <p><code>Tone</code> 에 hex 입력 → 페이지의 <code>--ink</code> CSS 변수가 그 색으로 override. 데님 텍스처와 dot grid 가 위에 soft-light 로 블렌드.</p>
+  <pre>Tone:       #906e47    ← 333 브랜드 brown
+            #1a1a1a    ← 어두운 톤
+            #f5e8d8    ← 따뜻한 ivory</pre>
+
+  <h3>Tone Text (텍스트)</h3>
+  <p><code>Tone Text</code> 에 hex 입력 → 페이지의 모든 텍스트 (<code>.proj-title</code>, <code>.pb-h1/2/3</code>, <code>.pb-paragraph</code>, <code>.proj-meta-*</code>, <code>.back-btn</code>) 가 그 색으로 통일.</p>
+  <pre>Tone Text:  #45300F    ← brown bg 에 dark brown 텍스트 (333 톤온톤)
+            #ffffff    ← 어두운 bg 에 흰 텍스트
+            (비움)     ← 기본 #090909 / #7b7b7b</pre>
+
+  <div class="callout">
+    <p>두 칼럼은 <strong>완전 선택</strong>. 둘 다 비우면 기본 톤 (Denim Gray) 으로 렌더. 한쪽만 설정해도 됨.</p>
+  </div>
+
+  <h2 id="tokens">본문 토큰</h2>
+  <p>노션 본문의 <strong>paragraph 블록 한 줄</strong>에 토큰만 적으면 sync 가 그걸 인식해서 해당 미디어 블록으로 변환. 토큰 형식 외에는 일반 paragraph / heading / bulleted list / quote 등 노션 기본 블록 그대로 사용.</p>
+
+  <div class="callout">
+    <p><strong>중요:</strong> 토큰은 <strong>혼자 있는 paragraph</strong> 여야 함. 다른 텍스트와 같은 줄에 섞으면 인식 안 됨.</p>
+  </div>
+
+  <h3>이미지 — 풀블리드 (기본)</h3>
+  <div class="token-card">
+    <div class="name"><code>{{img:file.jpg}}</code> 또는 <code>{{img:file.jpg|caption text}}</code></div>
+    <div class="lede">한 장 이미지. 화면 너비 풀블리드 (최대 840px) 가 기본. 캡션은 옵션.</div>
+    <pre>{{img:333_01.jpg}}
+{{img:hero_shot.jpg|Studio session, Spring 2026}}</pre>
+    <div class="meta">FULL-BLEED · 0 SIDE MARGIN · 5px RADIUS</div>
+  </div>
+
+  <h3>이미지 — 박스 (본문 컬럼 안)</h3>
+  <div class="token-card">
+    <div class="name"><code>{{img-inline:file.jpg}}</code></div>
+    <div class="lede">본문 컬럼 너비에 맞춰 박스 안에 표시. 텍스트 단락과 같은 폭. 작은 디테일 샷이나 스크린샷에 적합.</div>
+    <pre>{{img-inline:detail_shot.jpg}}
+{{img-inline:screenshot.png|UI in progress}}</pre>
+    <div class="meta">BOXED · STAYS IN BODY COLUMN</div>
+  </div>
+
+  <h3>비디오</h3>
+  <div class="token-card">
+    <div class="name"><code>{{video:clip.mp4}}</code></div>
+    <div class="lede">muted + loop 자동 재생, 화면 들어올 때만 play (배터리 절약). 풀블리드.</div>
+    <pre>{{video:333_intro.mp4}}
+{{video:bottle_spin.mp4|Bottle prototype}}</pre>
+    <div class="meta">AUTOPLAY · MUTED · LOOP · LAZY-PLAY</div>
+  </div>
+
+  <h3>슬라이더 — scroll-snap (기본)</h3>
+  <div class="token-card">
+    <div class="name"><code>{{slider:a.jpg|b.jpg|c.jpg|옵션}}</code></div>
+    <div class="lede">가로 스크롤/스와이프. 한 번에 한 장 보임. 옵션 <code>autoplay=true</code>, <code>caption=…</code>, <code>style=marquee</code>.</div>
+    <pre>{{slider:03.jpg|04.jpg|05.jpg}}
+{{slider:03.jpg|04.jpg|05.jpg|autoplay=true}}
+{{slider:03.jpg|04.jpg|05.jpg|autoplay=true|caption=Brand artifacts}}</pre>
+    <div class="meta">SCROLL-SNAP · OPT-IN AUTOPLAY (2.5s) · DOTS</div>
+  </div>
+
+  <h3>슬라이더 — marquee (양쪽 peek)</h3>
+  <div class="token-card">
+    <div class="name"><code>{{slider:...|style=marquee|autoplay=true}}</code></div>
+    <div class="lede">가운데 active 카드 + 양쪽 10% peek. 2.2초마다 한 칸씩 tick 으로 step. 호버해도 멈추지 않음. 알약 인디케이터.</div>
+    <pre>{{slider:03.jpg|04.jpg|05.jpg|06.jpg|07.jpg|autoplay=true|style=marquee}}</pre>
+    <div class="meta">STEPPED · CENTER + PEEK · PILL INDICATORS</div>
+  </div>
+
+  <h3>디스플레이 글자</h3>
+  <div class="token-card">
+    <div class="name"><code>{{letter:Nū}}</code></div>
+    <div class="lede">한 음절 디스플레이 letterform. Doto 800 30px, 페이지 텍스트 색상의 30% 알파로 가운데 정렬. 타이포 단락 끊는 용도.</div>
+    <pre>{{letter:Nū}}
+{{letter:Fik}}
+{{letter:333}}</pre>
+    <div class="meta">CENTER · 30% ALPHA · BREAK MARK</div>
+  </div>
+
+  <h3>회전 폴라로이드 클러스터</h3>
+  <div class="token-card">
+    <div class="name"><code>{{polaroids:a.jpg@-12,b.jpg,c.jpg@8}}</code></div>
+    <div class="lede">콤마로 구분된 사진 카드 묶음, 각 카드에 <code>@&lt;도&gt;</code> 로 회전 (양수/음수, 소수점 OK). 손으로 흩어놓은 듯한 느낌.</div>
+    <pre>{{polaroids:333_04.jpg@-12,333_01.jpg,333_05.jpg@7.79}}</pre>
+    <div class="meta">SCATTER · PER-CARD ROTATION · HOVER LIFT</div>
+  </div>
+
+  <h3>2-up 모킹업</h3>
+  <div class="token-card">
+    <div class="name"><code>{{pair:a.jpg|b.jpg}}</code></div>
+    <div class="lede">정확히 두 장. 풀블리드 (최대 840px) 안에서 좌우 균등 분할, 29px 간격. 페어 비교 샷에.</div>
+    <pre>{{pair:333_biz_mockup.jpg|333_mockup_02.jpg}}</pre>
+    <div class="meta">SIDE-BY-SIDE · NATURAL ASPECT</div>
+  </div>
+
+  <h3>풀블리드 스택</h3>
+  <div class="token-card">
+    <div class="name"><code>{{stack:a.jpg|b.jpg|c.jpg|d.jpg|indent=1,2}}</code></div>
+    <div class="lede">세로로 쌓인 풀블리드 이미지들, 40px gap. <code>indent=</code> 는 좌우 40px 들여쓸 인덱스 (0부터). 리듬 깨는 용도.</div>
+    <pre>{{stack:03.jpg|04.jpg|05.jpg|06.jpg}}
+{{stack:03.jpg|04.jpg|05.jpg|06.jpg|indent=1,2}}</pre>
+    <div class="meta">VERTICAL · OPTIONAL INDENT</div>
+  </div>
+
+  <h2 id="images">이미지 파일 워크플로우</h2>
+
+  <h3>파일 경로 규칙</h3>
+  <pre>images/projects/&lt;slug&gt;/&lt;filename&gt;
+        예: images/projects/333/333_01.jpg
+            images/projects/proof-of-retreat/por_01.jpg</pre>
+  <p>토큰에 적은 <strong>파일명</strong>이 그 폴더 안에 실제로 있어야 사이트에서 보임. sync 는 파일 자체를 다운로드하지 않음 — 경로 문자열만 적어둠.</p>
+
+  <h3>권장 사이즈</h3>
+  <ul>
+    <li><strong>Cover</strong>: 1200×1200 정사각형 (메인 갤러리에서 1:1 crop 됨), 800KB ~ 1.5MB</li>
+    <li><strong>본문 이미지</strong>: 긴 변 최대 2400px, JPG quality 70~80, 파일당 500KB ~ 1.5MB</li>
+    <li><strong>비디오</strong>: 1080p mp4, h.264, 2MB 이내 권장</li>
+  </ul>
+
+  <h3>압축 권장</h3>
+  <p>원본 8MB+ JPG 그대로 푸시하면 페이지 로딩이 느려짐. macOS 에선 <code>sips -Z 2400 -s formatOptions 70 input.jpg --out output.jpg</code> 한 줄로 ~800KB 까지 줄어듬.</p>
+
+  <h3>커밋 & 푸시</h3>
+  <pre>git add images/projects/&lt;slug&gt;/*
+git commit -m "Add &lt;slug&gt; cover and body images"
+git push origin v2</pre>
+
+  <h2 id="example">실제 적용 예시 (333)</h2>
+  <p>333 프로젝트의 노션 본문 작성 예 — 이대로 paragraph 블록들 만들면 사이트에 그대로 렌더됨:</p>
+  <pre>{{letter:Nū}}
+
+A Korean restaurant where a bowl of samgyetang is served like a
+prescription for vitality. 333 takes the visual language of the
+Korean apothecary and reframes restorative food as something
+precise, generous, and open to everyone at the table.
+
+{{video:333_intro.mp4}}
+
+## The Triple Essence
+
+The name begins with a sound. In Korean, the number 3 is pronounced
+"Sam", and that single syllable opens into three meanings that
+together describe the whole brand.
+
+{{slider:333_03.jpg|333_04.jpg|333_05.jpg|333_06.jpg|333_07.jpg|autoplay=true|style=marquee}}
+
+{{letter:Fik}}
+
+{{slider:333_01.jpg|333_02.jpg|333_06.jpg|333_07.jpg|autoplay=true|style=marquee}}
+
+## Visual Story
+
+{{stack:333_03.jpg|333_04.jpg|333_05.jpg|333_06.jpg|indent=1,2}}</pre>
+  <p>DB row 의 <code>Tone</code> = <code>#906e47</code>, <code>Tone Text</code> = <code>#45300F</code> 로 설정.</p>
+
+  <h2 id="sync">동기화 트리거</h2>
+  <p>노션 변경 사항은 자동으로 즉시 반영 안 됨 — GitHub Actions 워크플로우가 돌아야 함.</p>
+
+  <h3>자동 (6시간마다)</h3>
+  <p>cron 으로 6시간마다 자동 실행. 급하지 않으면 그냥 기다림.</p>
+
+  <h3>수동 트리거</h3>
+  <ol>
+    <li>GitHub repo → <strong>Actions</strong> 탭</li>
+    <li>좌측에서 <strong>"Sync Notion → projects.json"</strong> 선택</li>
+    <li>오른쪽 <strong>"Run workflow"</strong> 버튼 → Branch: <code>v2</code> → Run</li>
+    <li>1–2분 뒤 완료 → <code>data/projects.json</code> 자동 commit + Vercel 자동 배포</li>
+  </ol>
+
+  <h3>변경 사항 확인</h3>
+  <p>sync 결과는 <code>data/projects.json</code> 의 새 commit (작성자 <code>github-actions[bot]</code>) 로 확인. 도메인 (<a href="https://www.nu-fik.com">nu-fik.com</a>) 은 그 commit 푸시 직후 자동 재배포됨.</p>
+
+  <h2 id="tips">자주 하는 실수</h2>
+  <ul>
+    <li><strong>토큰을 텍스트 중간에 섞음</strong> → paragraph 블록 한 줄에 토큰만 있어야 인식됨. "여기 이미지 → <code>{{img:...}}</code> ← 보여" 처럼 쓰면 그냥 문자열로 남음</li>
+    <li><strong>이미지 파일을 잊고 노션만 업데이트</strong> → JSON 에는 경로 들어가지만 사이트에서 broken image. 노션 + 이미지 파일 + sync 트리거 3종 세트 항상 같이</li>
+    <li><strong>Published 체크 누락</strong> → sync 는 <code>Published: true</code> 만 가져옴. 임시 row 만들 땐 unchecked 로 두면 안전</li>
+    <li><strong>Slug 에 대문자/공백/특수문자</strong> → sync 가 skip 함 (<code>^[a-z0-9-]+$</code> 만 허용). "Cha Cha Cha" → <code>cha-cha-cha</code></li>
+    <li><strong>파일명 대소문자 오타</strong> → 토큰 안 파일명과 폴더의 실제 파일명이 정확히 일치해야 함. Mac 에선 대소문자 무시되지만 Linux 서버에선 구분됨</li>
+    <li><strong>슬라이더에 파일 1개만</strong> → 슬라이드 안 됨. 2개 이상 필요. 1개면 그냥 <code>{{img:...}}</code></li>
+    <li><strong>Tone 에 색이름</strong> ("red", "blue") → hex 만 허용. <code>#ff0000</code> 처럼 적어야 함</li>
+  </ul>
+
+  <p class="subtitle" style="text-align:center; margin-top:48px; margin-bottom:0;">
+    추가 디테일은 <a href="handoff.html#content-tokens">handoff.html → Notion content tokens</a> 섹션에.<br>
+    슬라이더 변형 UI 비교는 <a href="slider-demo.html">slider-demo.html</a> 에서.
+  </p>
+
+</div>
+
+</body>
+</html>

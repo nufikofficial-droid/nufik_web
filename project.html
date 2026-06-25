@@ -25,6 +25,8 @@
       --dot:          rgba(123,123,123,0.18);
       --txt-strong:   #090909;
       --radius:       10px;
+      --media-radius: 5px;     /* radius for images / sliders / mockup frames */
+      --media-max:    840px;   /* hard cap on full-bleed media — matches .nav-capsule max width */
     }
 
     /* Denim fabric texture (shared bg layer 1) */
@@ -120,6 +122,7 @@
       min-height: 100%;
       background: var(--ink);
       color: var(--txt);
+      overflow-x: hidden;
     }
 
 
@@ -131,8 +134,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 120px 28px 40px;
-      gap: 40px;
+      padding: 0 0 40px;
+      gap: 80px;
       z-index: 10;
       opacity: 0;
       transform: translateY(14px);
@@ -219,8 +222,24 @@
       border-top: 1px solid color-mix(in srgb, var(--line) 25%, transparent);
       margin: 3rem 0;
     }
+    /* Single image / video — full-bleed by default (breaks out of .proj-body
+       column to 100vw with 0 horizontal margin, capped at --media-max on
+       wide screens). Add the .inline variant (rendered when the token is
+       {{img-inline:...}}) to keep it boxed inside the body column. */
     .pb-media {
-      margin: 0;            /* image-to-image gap = 0 */
+      margin: 0;
+      width: min(100vw, var(--media-max));
+      max-width: none;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .pb-media.inline {
+      width: 100%;
+      position: static;
+      left: auto;
+      transform: none;
+      margin: 0;
     }
     .pb-media img,
     .pb-media video {
@@ -228,6 +247,7 @@
       height: auto;
       display: block;
       background: var(--ink);
+      border-radius: var(--media-radius);
     }
 
     /* ── Image slider (Notion {{slider:a.jpg, b.jpg, ...}} token) ──
@@ -235,7 +255,11 @@
        Each slide takes full container width; dots reflect active slide. */
     .pb-slider-wrap {
       margin: 0;
-      width: 100%;
+      width: min(100vw, var(--media-max));
+      max-width: none;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
     .pb-slider {
       display: flex;
@@ -259,6 +283,7 @@
       width: 100%;
       height: auto;
       display: block;
+      border-radius: var(--media-radius);
       user-select: none;
       -webkit-user-drag: none;
     }
@@ -283,6 +308,69 @@
       background: rgba(9,9,9,0.7);
       transform: scale(1.4);
     }
+
+    /* ── Stepped marquee variant (slider style=marquee) ──
+       Active frame sits centered with the prev/next peeking on both sides.
+       JS drives discrete steps every 2.2s; CSS transition gives the "tock". */
+    .pb-marquee-wrap {
+      margin: 3rem 0;
+      width: min(100vw, var(--media-max));
+      max-width: none;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .pb-marquee-stage {
+      width: 100%;
+      overflow: hidden;
+    }
+    .pb-marquee-track {
+      display: flex;
+      align-items: center;          /* mixed-height slides center-align vertically */
+      width: max-content;
+      gap: 16px;
+      padding: 0;
+      transition: transform 380ms cubic-bezier(0.65, 0.05, 0.36, 1);
+      will-change: transform;
+    }
+    .pb-marquee-slide {
+      flex: 0 0 auto;
+      /* 83.3% of stage width → leaves ~10% peek on each side */
+      width: min(83.3vw, calc(var(--media-max) * 0.833));
+      border-radius: var(--media-radius);
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .pb-marquee-slide img {
+      width: 100%;
+      height: auto;                 /* preserve each image's natural aspect ratio */
+      display: block;
+    }
+    .pb-marquee-pills {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 18px;
+    }
+    .pb-marquee-pill {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid color-mix(in srgb, var(--txt-strong) 50%, transparent);
+      transition:
+        width 320ms cubic-bezier(0.22,1,0.36,1),
+        border-radius 320ms ease,
+        background 320ms ease,
+        border-color 320ms ease;
+    }
+    .pb-marquee-pill.active {
+      width: 18px;
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--txt-strong) 50%, transparent);
+      border-color: color-mix(in srgb, var(--txt-strong) 50%, transparent);
+    }
+
     .pb-caption {
       font-family: lumios-typewriter-used, sans-serif;
       font-size: 9px;
@@ -306,17 +394,18 @@
        {{pair}}, {{stack}}. They opt out of .proj-body's column width by
        breaking out via negative margins where appropriate. */
 
-    /* {{letter:Nū}} — single oversized display letterform, soft-light on bg */
+    /* {{letter:Nū}} — single oversized display letterform.
+       Matches the nav font (Doto 800) at display scale, in the per-project
+       text color at 30% alpha so it reads as a quiet typographic break. */
     .pb-letter {
-      font-family: "acumin-pro-condensed", sans-serif;
-      font-weight: 700;
-      font-size: clamp(60px, 11vw, 140px);
-      line-height: 0.95;
+      font-family: "Doto", sans-serif;
+      font-weight: 800;
+      font-size: 30px;
+      line-height: 1.2;
       letter-spacing: 0;
       text-transform: uppercase;
-      color: var(--txt-strong);
+      color: color-mix(in srgb, var(--txt-strong) 30%, transparent);
       text-align: center;
-      mix-blend-mode: soft-light;
       margin: 4rem 0 2rem;
     }
 
@@ -334,8 +423,7 @@
     .pb-polaroid {
       flex: 0 0 auto;
       width: clamp(180px, 28vw, 340px);
-      aspect-ratio: 541 / 765;
-      border-radius: var(--radius);
+      border-radius: var(--media-radius);
       overflow: hidden;
       background: var(--ink);
       box-shadow: 0 8px 24px rgba(0,0,0,0.18);
@@ -344,8 +432,7 @@
     }
     .pb-polaroid img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
     }
     .pb-polaroid:hover { transform: scale(1.02) rotate(var(--rot, 0deg)) translateY(-4px); }
@@ -353,26 +440,26 @@
     /* {{pair:a.jpg|b.jpg}} — two large mockups side by side with right overflow */
     .pb-pair {
       display: flex;
+      align-items: flex-start;        /* uneven heights top-align */
       gap: 29px;
       margin: 3rem 0;
-      width: calc(100vw - 56px);
+      width: min(calc(100vw - 56px), var(--media-max));
       max-width: none;
-      margin-left: calc(50% - 50vw + 28px);
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
       overflow: visible;
     }
     .pb-pair-frame {
-      flex: 1 0 auto;
-      width: 70vw;
-      max-width: 1400px;
-      aspect-ratio: 1400 / 933;
-      border-radius: var(--radius);
+      flex: 1 1 0;
+      min-width: 0;
+      border-radius: var(--media-radius);
       overflow: hidden;
       background: var(--ink);
     }
     .pb-pair-frame img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
     }
 
@@ -383,22 +470,22 @@
       flex-direction: column;
       gap: 40px;
       margin: 3rem 0;
-      width: calc(100vw - 56px);
+      width: min(calc(100vw - 56px), var(--media-max));
       max-width: none;
-      margin-left: calc(50% - 50vw + 28px);
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
     .pb-stack-frame {
       width: 100%;
-      border-radius: var(--radius);
+      border-radius: var(--media-radius);
       overflow: hidden;
       background: var(--ink);
-      aspect-ratio: 2123 / 1415;
     }
     .pb-stack-frame.indented { width: calc(100% - 80px); margin: 0 40px; }
     .pb-stack-frame img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
     }
     .content.visible {
@@ -406,22 +493,22 @@
       transform: translateY(0);
     }
 
-    /* === Hero (cover image at top, nav-width) === */
+    /* === Hero (cover image at top, full-bleed) ===
+       Full-viewport width, no border, no radius. Bottom fades to transparent
+       via a linear-gradient mask so the page tone (--ink) shows through and
+       the eye glides into the title block below. */
     .proj-hero {
-      width: min(840px, calc(100vw - 56px));
-      aspect-ratio: 16 / 10;
-      background: rgba(255,255,255,0.4);
-      border: 1px solid rgba(255,255,255,0.9);
-      border-radius: var(--radius);     /* 10px, same as nav-capsule + gallery items */
+      width: 100vw;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      -webkit-mask-image: linear-gradient(to bottom, #000 75%, transparent 100%);
+              mask-image: linear-gradient(to bottom, #000 75%, transparent 100%);
     }
     .proj-cover {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
     }
     .proj-cover-label {
@@ -491,27 +578,33 @@
       line-height: 1.7;
       color: var(--txt);
     }
-    /* Back button — compact pill, minimal hover */
+    /* Back button — compact pill at 30% fill, text follows per-project tone */
     .back-btn {
+      position: fixed;
+      top: calc(28px + env(safe-area-inset-top));
+      left: 28px;
+      z-index: 100;
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      align-self: flex-start;
       padding: 8px 16px;
-      background: #ffffff;
-      border: 1px solid rgba(255,255,255,1);
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: var(--radius);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       font-family: "Doto", sans-serif;
       font-weight: 800;
       font-size: 12px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #7B7B7B;
+      color: var(--txt-strong);
       text-decoration: none;
-      transition: background 200ms ease;
+      transition: background 200ms ease, border-color 200ms ease;
     }
     .back-btn:hover {
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.5);
+      border-color: rgba(255, 255, 255, 0.8);
     }
 
 
@@ -532,15 +625,15 @@
 
       /* project layout: mobile */
       .content {
-        padding: 90px 20px 40px;
-        gap: 24px;
+        padding: 0 0 40px;
+        gap: 48px;
       }
       .proj-hero {
-        width: 100%;
+        width: 100vw;
         aspect-ratio: 16 / 11;
       }
       .proj-info {
-        width: 100%;
+        width: calc(100% - 40px);
         grid-template-columns: 1fr;
         gap: 20px;
       }
@@ -551,13 +644,13 @@
         column-gap: 16px;
         row-gap: 1.4rem;
       }
-      .proj-meta-cluster > .proj-meta-group:nth-child(3),
-      .proj-meta-cluster > .back-btn {
+      .proj-meta-cluster > .proj-meta-group:nth-child(3) {
         grid-column: 1 / -1;
       }
-      /* Back button sits on its own row but keeps its intrinsic width */
-      .proj-meta-cluster > .back-btn {
-        justify-self: start;
+      /* Back button: keep top-left on mobile too, just tighter offset */
+      .back-btn {
+        top: calc(20px + env(safe-area-inset-top));
+        left: 20px;
       }
       .proj-body {
         padding: 32px 0 100px;
@@ -653,6 +746,13 @@
     if (project.tone) {
       document.documentElement.style.setProperty('--ink', project.tone);
     }
+    // Per-project text tone — overrides both --txt-strong (titles, headings)
+    // and --txt (body, meta) so every piece of text on the detail page
+    // inherits the project's chosen color in one shot.
+    if (project.toneText) {
+      document.documentElement.style.setProperty('--txt-strong', project.toneText);
+      document.documentElement.style.setProperty('--txt', project.toneText);
+    }
 
     // Hero (title, cover, meta)
     document.title = `${project.name} — Nūfik`;
@@ -726,7 +826,7 @@
       }
       case 'image': {
         const wrap = document.createElement('figure');
-        wrap.className = 'pb-media';
+        wrap.className = 'pb-media' + (b.inline ? ' inline' : '');
         const img = document.createElement('img');
         img.src = b.src;
         img.alt = b.caption || '';
@@ -801,6 +901,95 @@
         return wrap;
       }
       case 'slider': {
+        // style=marquee → stepped center-and-peek marquee (V3d behavior)
+        if (b.style === 'marquee') {
+          const wrap = document.createElement('div');
+          wrap.className = 'pb-marquee-wrap';
+          const stage = document.createElement('div');
+          stage.className = 'pb-marquee-stage';
+          const track = document.createElement('div');
+          track.className = 'pb-marquee-track';
+
+          const frames = b.frames || [];
+          const total = frames.length;
+          // 3 batches so active sits centered with real frames peeking both sides
+          for (let batch = 0; batch < 3; batch++) {
+            frames.forEach(f => {
+              const slide = document.createElement('div');
+              slide.className = 'pb-marquee-slide';
+              const img = document.createElement('img');
+              img.src = f.src;
+              img.alt = f.caption || '';
+              img.loading = 'lazy';
+              img.decoding = 'async';
+              slide.appendChild(img);
+              track.appendChild(slide);
+            });
+          }
+          stage.appendChild(track);
+          wrap.appendChild(stage);
+
+          const pillsBox = document.createElement('div');
+          pillsBox.className = 'pb-marquee-pills';
+          for (let k = 0; k < total; k++) {
+            const pill = document.createElement('span');
+            pill.className = 'pb-marquee-pill' + (k === 0 ? ' active' : '');
+            pillsBox.appendChild(pill);
+          }
+          wrap.appendChild(pillsBox);
+
+          const slides = track.querySelectorAll('.pb-marquee-slide');
+          const pills = pillsBox.querySelectorAll('.pb-marquee-pill');
+          const STEP_MS = 2200;
+          const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+          const slideStep = () => slides[0].offsetWidth + 16;
+          let i = total;
+
+          const centerAt = (idx, useTransition) => {
+            const stageCenter = stage.offsetWidth / 2;
+            const slideW = slides[0].offsetWidth;
+            const activeCenter = idx * slideStep() + slideW / 2;
+            track.style.transition = useTransition
+              ? 'transform 380ms cubic-bezier(0.65, 0.05, 0.36, 1)'
+              : 'none';
+            track.style.transform = `translateX(${stageCenter - activeCenter}px)`;
+          };
+          const setActivePill = (idx) => {
+            const u = (idx - total + total) % total;
+            pills.forEach((p, k) => p.classList.toggle('active', k === u));
+          };
+
+          requestAnimationFrame(() => centerAt(i, false));
+
+          let autoTimer = null;
+          const startAuto = () => {
+            if (autoTimer || total < 2 || reduced.matches) return;
+            autoTimer = setInterval(() => {
+              i++;
+              centerAt(i, true);
+              setActivePill(i);
+              if (i >= total * 2) {
+                setTimeout(() => {
+                  i = total;
+                  centerAt(i, false);
+                }, 420);
+              }
+            }, STEP_MS);
+          };
+          const stopAuto = () => {
+            if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+          };
+          const io = new IntersectionObserver(entries => {
+            for (const e of entries) {
+              if (e.isIntersecting) startAuto(); else stopAuto();
+            }
+          }, { threshold: 0.4 });
+          io.observe(stage);
+
+          window.addEventListener('resize', () => centerAt(i, false));
+          return wrap;
+        }
+
         const wrap = document.createElement('div');
         wrap.className = 'pb-slider-wrap';
         const slider = document.createElement('div');

@@ -352,7 +352,7 @@
     transform: translateX(-50%); z-index: 3;
   }
 
-  /* ─── V3d: Continuous marquee — never stops, smooth linear scroll ─── */
+  /* ─── V3d: Stepped marquee — JS-driven tick-tick-tick, never pauses ─── */
   .slider.continuous {
     aspect-ratio: auto;
     background: transparent; border: 0; border-radius: 0;
@@ -368,10 +368,10 @@
   }
   .slider.continuous .slider-track {
     width: max-content;
-    transition: none;
     gap: 16px;
     padding: 0;
-    animation: continuous-scroll 28s linear infinite;
+    transition: transform 380ms cubic-bezier(0.65, 0.05, 0.36, 1);
+    will-change: transform;
   }
   .slider.continuous .slider-slide {
     flex: 0 0 auto;
@@ -381,19 +381,35 @@
     overflow: hidden;
     border: 1px solid rgba(255,255,255,0.7);
   }
-  @keyframes continuous-scroll {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  .slider.continuous:hover .slider-track { animation-play-state: paused; }
-  .slider.continuous .slider-dots {
-    position: relative;
-    margin-top: 16px;
-    transform: none;
-    left: auto; bottom: auto;
+  /* Hover does NOT pause — keeps stepping regardless */
+
+  /* Pill-shaped pagination — wider rounded rectangles instead of dots */
+  .slider-pills {
+    display: flex;
     justify-content: center;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 0;
   }
-  .slider.continuous .slider-dots .slider-dot { cursor: default; }
+  .slider-pill {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--txt-strong) 50%, transparent);
+    padding: 0;
+    transition:
+      width 320ms cubic-bezier(0.22,1,0.36,1),
+      border-radius 320ms ease,
+      background 320ms ease,
+      border-color 320ms ease;
+  }
+  .slider-pill.active {
+    width: 18px;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--txt-strong) 50%, transparent);
+    border-color: color-mix(in srgb, var(--txt-strong) 50%, transparent);
+  }
 
   /* ─── V4: snap row — scroll-snap, native swipe, peek next ─── */
   .slider.snap-row {
@@ -632,22 +648,29 @@
     </div>
   </section>
 
-  <!-- V3d: Continuous marquee -->
+  <!-- V3d: Stepped marquee -->
   <section class="group">
-    <h2>V3d — Continuous marquee</h2>
+    <h2>V3d — Stepped marquee</h2>
     <div class="meta-row">
-      <span>Autoplay</span><span>No dwell</span><span>Linear scroll</span><span>Hover pauses</span><span>Loops seamlessly</span>
+      <span>Autoplay</span><span>Stepped (no smooth scroll)</span><span>No hover pause</span><span>Pill indicators</span><span>Loops seamlessly</span>
     </div>
-    <p>Never stops — frames flow continuously from right to left like a billboard ticker. Multiple frames visible at once. Frames are doubled in the DOM for a seamless wrap. Best for ambient detail shots (patterns, textures, repetition) where reading any single frame doesn't matter.</p>
+    <p>Steps frame-by-frame with a brief settling ease — tick · tick · tick — like a flipboard or stepping motor. Never pauses, even on hover. Pill-shaped indicators below mark the current frame (active pill widens). Frames are doubled in the DOM so the wraparound is invisible.</p>
     <div class="slider continuous" id="v3d">
       <div class="slider-stage">
         <div class="slider-track">
+          <!-- left padding batch — fills the visible peek on the left side -->
           <div class="slider-slide"><div class="placeholder">Slide 1</div></div>
           <div class="slider-slide"><div class="placeholder b">Slide 2</div></div>
           <div class="slider-slide"><div class="placeholder c">Slide 3</div></div>
           <div class="slider-slide"><div class="placeholder d">Slide 4</div></div>
           <div class="slider-slide"><div class="placeholder e">Slide 5</div></div>
-          <!-- duplicated for seamless wrap -->
+          <!-- main batch — active frames step through here -->
+          <div class="slider-slide"><div class="placeholder">Slide 1</div></div>
+          <div class="slider-slide"><div class="placeholder b">Slide 2</div></div>
+          <div class="slider-slide"><div class="placeholder c">Slide 3</div></div>
+          <div class="slider-slide"><div class="placeholder d">Slide 4</div></div>
+          <div class="slider-slide"><div class="placeholder e">Slide 5</div></div>
+          <!-- right padding batch — fills the visible peek on the right + wrap target -->
           <div class="slider-slide"><div class="placeholder">Slide 1</div></div>
           <div class="slider-slide"><div class="placeholder b">Slide 2</div></div>
           <div class="slider-slide"><div class="placeholder c">Slide 3</div></div>
@@ -655,6 +678,7 @@
           <div class="slider-slide"><div class="placeholder e">Slide 5</div></div>
         </div>
       </div>
+      <div class="slider-pills" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -865,7 +889,71 @@
   // V3c Vertical — slides up via translateY on the column track
   autoAdvance('v3c', { dwell: 2000, mode: 'translateY' });
 
-  // V3d Continuous marquee — pure CSS animation, hover pause via :hover { animation-play-state }
+  /* V3d Stepped marquee — JS steps one frame at a time, never pauses.
+     Track has 3 batches of slides (left padding / main / right padding) so
+     the active frame is centered in the stage AND there are real frames
+     peeking on both sides. After stepping through the main batch, jumps
+     invisibly back to the same frame in the main batch's start. */
+  (function () {
+    const root = document.getElementById('v3d');
+    if (!root) return;
+    const stage = root.querySelector('.slider-stage');
+    const track = root.querySelector('.slider-track');
+    const slides = root.querySelectorAll('.slider-slide');
+    const total = slides.length / 3; // 3 batches → originals count
+
+    // Build pills (one per unique frame)
+    const pillsBox = root.querySelector('.slider-pills');
+    for (let k = 0; k < total; k++) {
+      const pill = document.createElement('span');
+      pill.className = 'slider-pill' + (k === 0 ? ' active' : '');
+      pillsBox.appendChild(pill);
+    }
+    const pills = root.querySelectorAll('.slider-pill');
+
+    const STEP_MS = 2200;
+    const slideStep = () => slides[0].offsetWidth + 16; // includes gap
+
+    // i is a DOM index into `slides`. Start at the main batch's first frame
+    // (after the left padding batch) so left peek shows the previous frame.
+    let i = total;
+
+    function centerAt(idx, useTransition) {
+      const stageCenter = stage.offsetWidth / 2;
+      const slideW = slides[0].offsetWidth;
+      const activeCenter = idx * slideStep() + slideW / 2;
+      track.style.transition = useTransition
+        ? 'transform 380ms cubic-bezier(0.65, 0.05, 0.36, 1)'
+        : 'none';
+      track.style.transform = `translateX(${stageCenter - activeCenter}px)`;
+    }
+
+    function setActivePill(idx) {
+      const u = (idx - total) % total; // unique index within the originals
+      pills.forEach((p, k) => p.classList.toggle('active', k === u));
+    }
+
+    // Place the active frame in the center immediately (no animation)
+    requestAnimationFrame(() => centerAt(i, false));
+
+    function step() {
+      i++;
+      centerAt(i, true);
+      setActivePill(i);
+      if (i >= total * 2) {
+        // Just landed on the right padding batch's first frame. Snap back to
+        // the same content in the main batch (no transition, invisible jump).
+        setTimeout(() => {
+          i = total;
+          centerAt(i, false);
+        }, 420);
+      }
+    }
+
+    setInterval(step, STEP_MS);
+    // Recompute on resize so centering stays correct
+    window.addEventListener('resize', () => centerAt(i, false));
+  })();
 
   /* V4 is native scroll — no JS needed */
 

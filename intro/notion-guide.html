@@ -223,6 +223,28 @@
     color: rgba(123,123,123,0.85);
     text-transform: uppercase;
   }
+  /* ASCII layout sketch — visual reference for layout-style tokens */
+  .ascii {
+    font-family: "Special Elite", "Courier New", monospace;
+    font-size: 11px;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--txt-strong) 60%, transparent);
+    background: rgba(255,255,255,0.35);
+    border: 1px dashed rgba(123,123,123,0.35);
+    border-radius: 4px;
+    padding: 12px 14px;
+    margin: 0 0 10px;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .ascii-label {
+    font-family: "Doto", monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(123,123,123,0.7);
+    margin: 0 0 4px;
+  }
 
   .toc {
     background: rgba(255,255,255,0.4);
@@ -467,6 +489,12 @@
     <div class="name"><code>{{polaroids:a.jpg@-12,b.jpg,c.jpg@8}}</code></div>
     <div class="lede">콤마로 구분된 사진 카드 묶음, 각 카드에 <code>@&lt;도&gt;</code> 로 회전 (양수/음수, 소수점 OK). 손으로 흩어놓은 듯한 느낌.</div>
     <pre>{{polaroids:333_04.jpg@-12,333_01.jpg,333_05.jpg@7.79}}</pre>
+    <div class="ascii-label">Layout</div>
+    <div class="ascii"> ┌─────┐           ┌─────┐
+ │     │  ┌─────┐  │     │
+ │ -12°│  │  0° │  │  8° │
+ │     │  │     │  │     │
+ └─────┘  └─────┘  └─────┘</div>
     <div class="meta">SCATTER · PER-CARD ROTATION · HOVER LIFT</div>
   </div>
 
@@ -475,6 +503,12 @@
     <div class="name"><code>{{pair:a.jpg|b.jpg}}</code></div>
     <div class="lede">정확히 두 장. 풀블리드 (최대 840px) 안에서 좌우 균등 분할, 29px 간격. 페어 비교 샷에.</div>
     <pre>{{pair:333_biz_mockup.jpg|333_mockup_02.jpg}}</pre>
+    <div class="ascii-label">Layout</div>
+    <div class="ascii">┌──────────────┐ ┌──────────────┐
+│              │ │              │
+│   image A    │ │   image B    │
+│              │ │              │
+└──────────────┘ └──────────────┘</div>
     <div class="meta">SIDE-BY-SIDE · NATURAL ASPECT</div>
   </div>
 
@@ -484,7 +518,25 @@
     <div class="lede">세로로 쌓인 풀블리드 이미지들, 40px gap. <code>indent=</code> 는 좌우 40px 들여쓸 인덱스 (0부터). 리듬 깨는 용도.</div>
     <pre>{{stack:03.jpg|04.jpg|05.jpg|06.jpg}}
 {{stack:03.jpg|04.jpg|05.jpg|06.jpg|indent=1,2}}</pre>
+    <div class="ascii-label">Layout (with indent=1,2)</div>
+    <div class="ascii">┌──────────────────────────────┐
+│         image 0 (full)       │
+└──────────────────────────────┘
+    ┌──────────────────────┐
+    │  image 1 (indented)  │
+    └──────────────────────┘
+    ┌──────────────────────┐
+    │  image 2 (indented)  │
+    └──────────────────────┘
+┌──────────────────────────────┐
+│         image 3 (full)       │
+└──────────────────────────────┘</div>
     <div class="meta">VERTICAL · OPTIONAL INDENT</div>
+  </div>
+
+  <div class="callout">
+    <p><strong>슬라이더 vs polaroids / pair / stack</strong> — 모두 이미지 여러 장을 다루지만 축이 다름. <strong>슬라이더</strong>는 한 번에 한 장만 보이고 시간으로 넘어감 (시간 축). <strong>polaroids / pair / stack</strong>은 여러 장이 동시에 한 화면에 펼쳐짐 (공간 축).</p>
+    <p>용도 차이: <strong>polaroids</strong> = 캐주얼한 사진 모음 손맛, <strong>pair</strong> = 두 장 직접 비교, <strong>stack</strong> = 시퀀스/카탈로그처럼 죽 나열.</p>
   </div>
 
   <h2 id="images">이미지 파일 워크플로우</h2>

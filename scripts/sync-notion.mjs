@@ -132,7 +132,9 @@ function parseToken(text, slug) {
     };
   }
 
-  // Slider — pipe-separated frames + optional key=value options
+  // Slider — pipe-separated frames + optional key=value options.
+  // Each frame may optionally end in @<degrees> for per-frame rotation
+  // (used by style=polaroid; ignored by other styles).
   const sm = text.match(SLIDER_RE);
   if (sm) {
     const parts = sm[1].split('|').map(s => s.trim()).filter(Boolean);
@@ -143,6 +145,14 @@ function parseToken(text, slug) {
       if (eq > 0 && !p.includes('/') && !/\.[a-z0-9]+$/i.test(p)) {
         opts[p.slice(0, eq).trim()] = p.slice(eq + 1).trim();
       } else {
+        const at = p.lastIndexOf('@');
+        if (at > 0) {
+          const rot = parseFloat(p.slice(at + 1));
+          if (!Number.isNaN(rot)) {
+            frames.push({ src: `images/projects/${slug}/${p.slice(0, at).trim()}`, rotation: rot });
+            continue;
+          }
+        }
         frames.push({ src: `images/projects/${slug}/${p}` });
       }
     }

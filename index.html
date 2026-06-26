@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#E7E7E7">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Nūfik — Branding, defined by sensibility</title>
 
   <!-- Fonts: Doto (Google) for UI, Special Elite for meta, Typekit for Acumin -->
@@ -200,7 +199,7 @@
     /* ── Nav capsule (top center on desktop) ── */
     .nav-capsule {
       position: fixed;
-      top: 28px;
+      top: calc(28px + env(safe-area-inset-top));
       left: 50%;
       transform: translateX(-50%);
       width: min(840px, calc(100% - 56px));
@@ -259,7 +258,7 @@
       .slide-meta {
         position: fixed;
         left: 20px;
-        top: 80px;
+        top: calc(80px + env(safe-area-inset-top));
         bottom: auto;
         transform: none;
         width: calc(100% - 40px);
@@ -281,7 +280,7 @@
       /* Nav bar at bottom on mobile (Figma 232:946) */
       .nav-capsule {
         top: auto;
-        bottom: 20px;
+        bottom: calc(20px + env(safe-area-inset-bottom));
         width: calc(100% - 40px);
         gap: 20px;
         padding: 10px 20px;

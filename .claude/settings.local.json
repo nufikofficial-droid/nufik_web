@@ -10,7 +10,13 @@
       "Bash(gh auth:*)",
       "Bash(brew install:*)",
       "Bash(git pull:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git -C /Users/nuralee/nufik_web status)",
+      "Bash(git -C /Users/nuralee/nufik_web add 404.html about.html contact.html index.html project.html intro/ src/Biz_01.png src/Biz_02.png src/denim_texture.jpg src/pixel-text-animation.html 'src/MacBook Air - 80.png' 'src/MacBook Air - 84.png' 'src/MacBook Air - 85.png')",
+      "Bash(git -C /Users/nuralee/nufik_web status --short)",
+      "mcp__plugin_figma_figma__get_design_context",
+      "Bash(git -C /Users/nuralee/nufik_web commit -m ' *)",
+      "Bash(git -C /Users/nuralee/nufik_web push origin v2)"
     ]
   }
 }

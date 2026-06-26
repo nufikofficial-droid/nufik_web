@@ -104,18 +104,6 @@
           1,
           2
         ]
-      },
-      {
-        "type": "paragraph",
-        "text": "</new_str>"
-      },
-      {
-        "type": "paragraph",
-        "text": "<allow_deleting_content>true</allow_deleting_content>"
-      },
-      {
-        "type": "paragraph",
-        "text": "</invoke>"
       }
     ]
   },

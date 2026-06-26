@@ -13,13 +13,12 @@
       "Spatial"
     ],
     "order": 95,
-    "tone": null,
-    "toneText": null,
+    "tone": "#906e47",
+    "toneText": "#45300F",
     "content": [
       {
-        "type": "heading",
-        "level": 1,
-        "text": "333 - Sam Sam Sam"
+        "type": "letter",
+        "text": "Nū"
       },
       {
         "type": "paragraph",
@@ -39,59 +38,84 @@
       },
       {
         "type": "paragraph",
-        "text": "The name begins with a sound. In Korean, the number 3 is pronounced \"Sam\", and that single syllable opens into three meanings that together describe the whole brand."
+        "text": "The name begins with a sound. In Korean, the number 3 is pronounced \"Sam\", and that single syllable opens into three meanings that together describe the whole brand — insam, samgyetang, and sam-sam-o-o (root, bowl, gathering)."
+      },
+      {
+        "type": "slider",
+        "frames": [
+          {
+            "src": "images/projects/333/333_03.jpg"
+          },
+          {
+            "src": "images/projects/333/333_04.jpg"
+          },
+          {
+            "src": "images/projects/333/333_05.jpg"
+          },
+          {
+            "src": "images/projects/333/333_06.jpg"
+          },
+          {
+            "src": "images/projects/333/333_07.jpg"
+          }
+        ],
+        "caption": "",
+        "autoplay": true,
+        "style": "marquee"
+      },
+      {
+        "type": "letter",
+        "text": "Fik"
+      },
+      {
+        "type": "slider",
+        "frames": [
+          {
+            "src": "images/projects/333/333_01.jpg"
+          },
+          {
+            "src": "images/projects/333/333_02.jpg"
+          },
+          {
+            "src": "images/projects/333/333_06.jpg"
+          },
+          {
+            "src": "images/projects/333/333_07.jpg"
+          }
+        ],
+        "caption": "",
+        "autoplay": true,
+        "style": "marquee"
       },
       {
         "type": "heading",
-        "level": 3,
-        "text": "인삼 / Insam"
+        "level": 2,
+        "text": "Visual Story"
+      },
+      {
+        "type": "stack",
+        "images": [
+          "images/projects/333/333_03.jpg",
+          "images/projects/333/333_04.jpg",
+          "images/projects/333/333_05.jpg",
+          "images/projects/333/333_06.jpg"
+        ],
+        "indent": [
+          1,
+          2
+        ]
       },
       {
         "type": "paragraph",
-        "text": "\"Sam\" first points to insam, ginseng, the legendary root of vitality. It is the essential ingredient that brings deep nourishment and quiet energy, the source from which everything else grows."
-      },
-      {
-        "type": "heading",
-        "level": 3,
-        "text": "삼계탕 / Samgyetang"
+        "text": "</new_str>"
       },
       {
         "type": "paragraph",
-        "text": "At the centre sits samgyetang, a soul-warming ginseng chicken soup. 333 serves it as a wholesome, halal-friendly meal: one bowl that connects everyone gathered at the table."
-      },
-      {
-        "type": "heading",
-        "level": 3,
-        "text": "삼삼오오 / Sam-Sam-O-O"
+        "text": "<allow_deleting_content>true</allow_deleting_content>"
       },
       {
         "type": "paragraph",
-        "text": "The same sound carries into a cultural expression, \"sam-sam-o-o\", which describes the gentle sight of people coming together in small, friendly groups to share a joyful moment. It is the feeling the restaurant is built around."
-      },
-      {
-        "type": "image",
-        "src": "images/projects/333/333_03.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/333/333_04.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/333/333_05.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/333/333_06.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/333/333_07.jpg",
-        "caption": ""
+        "text": "</invoke>"
       }
     ]
   },

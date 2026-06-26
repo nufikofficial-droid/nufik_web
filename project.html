@@ -29,7 +29,7 @@
       --media-max:    840px;   /* hard cap on full-bleed media — matches .nav-capsule max width */
     }
 
-    /* Denim fabric texture (shared bg layer 1) */
+    /* Denim fabric texture — softer on the detail page */
     .denim-texture {
       position: fixed;
       inset: 0;
@@ -39,7 +39,7 @@
       background-size: 256px 256px;
       background-repeat: repeat;
       mix-blend-mode: soft-light;
-      opacity: 0.9;
+      opacity: 0.3;
     }
 
     /* Background dot grid (shared with index) */
@@ -53,7 +53,7 @@
       background-position: 0 0;
     }
 
-    /* Bottom blur SVG (shared bg layer 3) */
+    /* Bottom blur SVG — detail page uses color-burn for a subtler print feel */
     .bg-blur {
       position: fixed;
       bottom: 0;
@@ -63,7 +63,8 @@
       min-width: 1280px;
       height: auto;
       pointer-events: none;
-      opacity: 0.7;
+      opacity: 0.3;
+      mix-blend-mode: color-burn;
       z-index: 3;
     }
 
@@ -185,14 +186,14 @@
       margin: 2rem 0 0.8rem;
     }
 
-    /* Body — Source Serif 15px */
+    /* Body — Source Serif 18px */
     .pb-paragraph {
       font-family: "Source Serif 4", "Source Serif Pro", Georgia, serif;
       font-weight: 400;
       font-style: normal;
-      font-size: 15px;
+      font-size: 18px;
       letter-spacing: 0;
-      line-height: 1.7;
+      line-height: 2.0;
       color: var(--txt);
       margin: 0 0 1.2rem;
     }
@@ -463,17 +464,25 @@
       transform: translateX(-50%);
       box-sizing: border-box;
     }
+    /* The card is a layout-only flex row. The rotation/slide-in animation
+       lives on .pb-polaroid-photo so .pb-polaroid-caption can stay upright
+       on the opposite side. */
     .pb-polaroid {
       flex: 0 0 auto;
       width: clamp(280px, 55vw, 600px);
       align-self: center;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .pb-polaroid-photo {
+      flex: 0 0 auto;
+      width: 100%;
       border-radius: var(--media-radius);
       overflow: hidden;
-      background: transparent;
       transform-origin: center;
       opacity: 0;
-      /* Initial state: tiny offset + 3° less rotation than final, so the
-         entry tweak is subtle (no big slide, just a gentle settle). */
       transform: translateX(var(--slide-from, -40px)) rotate(calc(var(--rot, 0deg) - 3deg));
       transition:
         transform 1100ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -481,30 +490,84 @@
       transition-delay: var(--enter-delay, 0ms);
       will-change: transform, opacity;
     }
-    .pb-polaroid.is-visible {
+    .pb-polaroid.is-visible .pb-polaroid-photo {
       opacity: 1;
       transform: translateX(0) rotate(var(--rot, 0deg));
     }
-    .pb-polaroid img {
+    .pb-polaroid-photo img {
       width: 100%;
       height: auto;
       display: block;
     }
-    .pb-polaroid.is-visible:hover {
+    .pb-polaroid.is-visible:hover .pb-polaroid-photo {
       transform: translateX(0) rotate(var(--rot, 0deg)) translateY(-6px);
       transition-duration: 280ms;
     }
 
-    @media (min-width: 701px) {
-      .pb-polaroid:nth-child(odd)  { align-self: flex-start; --slide-from: -40px; }
-      .pb-polaroid:nth-child(even) { align-self: flex-end;   --slide-from:  40px; }
+    /* Caption styling — typewriter tone matches the rest of the body */
+    .pb-polaroid-caption {
+      font-family: "Special Elite", lumios-typewriter-used, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--txt);
+      max-width: 220px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 700ms ease 200ms, transform 700ms ease 200ms;
     }
+    .pb-polaroid.is-visible .pb-polaroid-caption {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Desktop layout — caption sits in the column's opposite empty space.
+       Odd cards align left → caption goes to the right of the photo (text-align:left).
+       Even cards align right → caption goes to the LEFT of the photo (text-align:right).
+       We reorder via flex-direction on the .pb-polaroid card itself. */
+    @media (min-width: 701px) {
+      .pb-polaroid {
+        width: clamp(280px, 55vw, 600px);
+      }
+      .pb-polaroid-photo {
+        width: 100%;
+        max-width: 100%;
+      }
+      /* Odd: card aligned left (flex-start), caption on its right */
+      .pb-polaroid:nth-child(odd) {
+        align-self: flex-start;
+        --slide-from: -40px;
+        flex-direction: row;
+        text-align: left;
+      }
+      /* Even: card aligned right (flex-end), caption on its LEFT */
+      .pb-polaroid:nth-child(even) {
+        align-self: flex-end;
+        --slide-from: 40px;
+        flex-direction: row-reverse;
+        text-align: right;
+      }
+      /* When a card has a caption, shrink the photo so the caption fits in
+         the same row beside it (instead of overflowing). */
+      .pb-polaroid.has-caption .pb-polaroid-photo { width: 70%; }
+      .pb-polaroid.has-caption .pb-polaroid-caption { flex: 1 1 auto; }
+    }
+
     @media (max-width: 700px) {
       .pb-polaroids { gap: 56px; padding: 30px 16px; }
       .pb-polaroid {
         width: 86vw;
         align-self: center;
         --slide-from: -24px;
+        /* Stack vertically: photo on top, caption below */
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .pb-polaroid-photo { width: 100%; }
+      .pb-polaroid-caption {
+        text-align: center;
+        max-width: 90%;
+        font-size: 13px;
       }
     }
 
@@ -926,12 +989,24 @@
           card.className = 'pb-polaroid';
           card.style.setProperty('--rot', `${it.rotation || 0}deg`);
           card.style.setProperty('--enter-delay', `${i * 120}ms`);
+          if (it.caption) card.classList.add('has-caption');
+
+          const photo = document.createElement('div');
+          photo.className = 'pb-polaroid-photo';
           const img = document.createElement('img');
           img.src = it.src;
-          img.alt = '';
+          img.alt = it.caption || '';
           img.loading = 'lazy';
           img.decoding = 'async';
-          card.appendChild(img);
+          photo.appendChild(img);
+          card.appendChild(photo);
+
+          if (it.caption) {
+            const cap = document.createElement('figcaption');
+            cap.className = 'pb-polaroid-caption';
+            cap.textContent = it.caption;
+            card.appendChild(cap);
+          }
           wrap.appendChild(card);
         });
         // Slide-in + rotate on first viewport entry; respects reduced motion.

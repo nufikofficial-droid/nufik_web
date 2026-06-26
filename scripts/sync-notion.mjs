@@ -109,6 +109,8 @@ function richToText(rich) {
 //   {{slider:a.jpg|b.jpg|c.jpg|autoplay=true}}     scroll-snap carousel (options: caption=, autoplay=true, style=marquee)
 //   {{letter:Nū}}                                  oversized display letter (typographic break)
 //   {{polaroids:a.jpg@-12,b.jpg@0,c.jpg@8}}        rotated photo cluster (rotation in degrees after @)
+//   {{polaroids:a.jpg@-6|Behind the scenes,b.jpg|Studio shot,c.jpg@3}}
+//                                                   each card may carry an optional |caption
 //   {{pair:a.jpg|b.jpg}}                           two large mockups side by side, slight right overflow
 //   {{stack:a.jpg|b.jpg|c.jpg|d.jpg|indent=1,2}}   full-bleed vertical stack; indent= lists 0-based
 //                                                   frame indices that should sit inset 40px each side
@@ -170,18 +172,37 @@ function parseToken(text, slug) {
   const lt = text.match(LETTER_RE);
   if (lt) return { type: 'letter', text: lt[1].trim() };
 
-  // Polaroids — comma-separated; each item is "filename" or "filename@rotation"
+  // Polaroids — comma-separated cards. Each card can carry:
+  //   • a rotation     →  filename@<deg>     e.g. a.jpg@-6
+  //   • a caption      →  filename|<text>    e.g. a.jpg|Behind the scenes
+  //   • both, any order:  a.jpg@-6|caption  /  a.jpg|caption@-6
   const pl = text.match(POLAROIDS_RE);
   if (pl) {
     const items = pl[1].split(',').map(s => s.trim()).filter(Boolean).map(item => {
-      const at = item.lastIndexOf('@');
+      let filename = item;
+      let rotation = 0;
+      let caption = '';
+
+      // Pull off |caption if present (caption may itself contain @, so split first)
+      const pipe = filename.indexOf('|');
+      if (pipe >= 0) {
+        caption = filename.slice(pipe + 1).trim();
+        filename = filename.slice(0, pipe).trim();
+      }
+      // Then peel off @rotation from the (now caption-free) filename portion
+      const at = filename.lastIndexOf('@');
       if (at > 0) {
-        const rot = parseFloat(item.slice(at + 1));
+        const rot = parseFloat(filename.slice(at + 1));
         if (!Number.isNaN(rot)) {
-          return { src: `images/projects/${slug}/${item.slice(0, at).trim()}`, rotation: rot };
+          rotation = rot;
+          filename = filename.slice(0, at).trim();
         }
       }
-      return { src: `images/projects/${slug}/${item}`, rotation: 0 };
+      return {
+        src: `images/projects/${slug}/${filename}`,
+        rotation,
+        caption
+      };
     });
     if (!items.length) return null;
     return { type: 'polaroids', items };

@@ -25,6 +25,23 @@
         "text": "A Korean restaurant where a bowl of samgyetang is served like a prescription for vitality. 333 takes the visual language of the Korean apothecary (한약방) and reframes restorative food as something precise, generous, and open to everyone at the table."
       },
       {
+        "type": "polaroids",
+        "items": [
+          {
+            "src": "images/projects/333/intro_01.png",
+            "rotation": -6
+          },
+          {
+            "src": "images/projects/333/intro_02.png",
+            "rotation": 0
+          },
+          {
+            "src": "images/projects/333/intro_03.png",
+            "rotation": 3
+          }
+        ]
+      },
+      {
         "type": "video",
         "src": "images/projects/333/333_intro.mp4",
         "loop": true,

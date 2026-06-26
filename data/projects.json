@@ -15,9 +15,8 @@
     "order": 95,
     "content": [
       {
-        "type": "heading",
-        "level": 1,
-        "text": "333 - Sam Sam Sam"
+        "type": "paragraph",
+        "text": "{{letter:Nū}}"
       },
       {
         "type": "paragraph",
@@ -37,59 +36,28 @@
       },
       {
         "type": "paragraph",
-        "text": "The name begins with a sound. In Korean, the number 3 is pronounced \"Sam\", and that single syllable opens into three meanings that together describe the whole brand."
-      },
-      {
-        "type": "heading",
-        "level": 3,
-        "text": "인삼 / Insam"
+        "text": "The name begins with a sound. In Korean, the number 3 is pronounced \"Sam\", and that single syllable opens into three meanings that together describe the whole brand — insam, samgyetang, and sam-sam-o-o (root, bowl, gathering)."
       },
       {
         "type": "paragraph",
-        "text": "\"Sam\" first points to insam, ginseng, the legendary root of vitality. It is the essential ingredient that brings deep nourishment and quiet energy, the source from which everything else grows."
-      },
-      {
-        "type": "heading",
-        "level": 3,
-        "text": "삼계탕 / Samgyetang"
+        "text": "{{slider:333_03.jpg|333_04.jpg|333_05.jpg|333_06.jpg|333_07.jpg|autoplay=true|style=marquee}}"
       },
       {
         "type": "paragraph",
-        "text": "At the centre sits samgyetang, a soul-warming ginseng chicken soup. 333 serves it as a wholesome, halal-friendly meal: one bowl that connects everyone gathered at the table."
-      },
-      {
-        "type": "heading",
-        "level": 3,
-        "text": "삼삼오오 / Sam-Sam-O-O"
+        "text": "{{letter:Fik}}"
       },
       {
         "type": "paragraph",
-        "text": "The same sound carries into a cultural expression, \"sam-sam-o-o\", which describes the gentle sight of people coming together in small, friendly groups to share a joyful moment. It is the feeling the restaurant is built around."
+        "text": "{{slider:333_01.jpg|333_02.jpg|333_06.jpg|333_07.jpg|autoplay=true|style=marquee}}"
       },
       {
-        "type": "image",
-        "src": "images/projects/333/333_03.jpg",
-        "caption": ""
+        "type": "heading",
+        "level": 2,
+        "text": "Visual Story"
       },
       {
-        "type": "image",
-        "src": "images/projects/333/333_04.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/333/333_05.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/333/333_06.jpg",
-        "caption": ""
-      },
-      {
-        "type": "image",
-        "src": "images/projects/333/333_07.jpg",
-        "caption": ""
+        "type": "paragraph",
+        "text": "{{stack:333_03.jpg|333_04.jpg|333_05.jpg|333_06.jpg|indent=1,2}}"
       }
     ]
   },

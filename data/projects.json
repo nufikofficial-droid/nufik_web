@@ -29,15 +29,18 @@
         "items": [
           {
             "src": "images/projects/333/intro_01.png",
-            "rotation": -6
+            "rotation": -6,
+            "caption": ""
           },
           {
             "src": "images/projects/333/intro_02.png",
-            "rotation": 0
+            "rotation": 0,
+            "caption": ""
           },
           {
             "src": "images/projects/333/intro_03.png",
-            "rotation": 3
+            "rotation": 3,
+            "caption": ""
           }
         ]
       },

@@ -29,15 +29,18 @@
         "items": [
           {
             "src": "images/projects/333/intro_01.png",
-            "rotation": -6
+            "rotation": -6,
+            "caption": "Long before air conditioning, Korea met the summer heat with heat of its own."
           },
           {
             "src": "images/projects/333/intro_02.png",
-            "rotation": 0
+            "rotation": 0,
+            "caption": "At the centre of it was samgyetang. One hot bowl to outlast the summer, and restore the body."
           },
           {
             "src": "images/projects/333/intro_03.png",
-            "rotation": 3
+            "rotation": 3,
+            "caption": "With a few precious herbs added, a meal became a remedy. So I decided to build the restaurant like an apothecary."
           }
         ]
       },

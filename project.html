@@ -521,9 +521,9 @@
     }
 
     /* Desktop layout — caption sits in the column's opposite empty space.
-       Odd cards align left → caption goes to the right of the photo (text-align:left).
-       Even cards align right → caption goes to the LEFT of the photo (text-align:right).
-       We reorder via flex-direction on the .pb-polaroid card itself. */
+       Odd cards keep the photo on the left, even cards on the right (zig-zag).
+       Captioned cards span the full column width so the caption can occupy the
+       whole empty area beside the photo and center itself within it. */
     @media (min-width: 701px) {
       .pb-polaroid {
         width: clamp(280px, 55vw, 600px);
@@ -532,24 +532,34 @@
         width: 100%;
         max-width: 100%;
       }
-      /* Odd: card aligned left (flex-start), caption on its right */
+      /* Odd: photo on the left, caption fills the empty space on its right */
       .pb-polaroid:nth-child(odd) {
         align-self: flex-start;
         --slide-from: -40px;
         flex-direction: row;
-        text-align: left;
       }
-      /* Even: card aligned right (flex-end), caption on its LEFT */
+      /* Even: photo on the right, caption fills the empty space on its left */
       .pb-polaroid:nth-child(even) {
         align-self: flex-end;
         --slide-from: 40px;
         flex-direction: row-reverse;
-        text-align: right;
       }
-      /* When a card has a caption, shrink the photo so the caption fits in
-         the same row beside it (instead of overflowing). */
-      .pb-polaroid.has-caption .pb-polaroid-photo { width: 70%; }
-      .pb-polaroid.has-caption .pb-polaroid-caption { flex: 1 1 auto; }
+      /* Captioned cards stretch across the full column; the photo keeps a fixed
+         width and the caption takes the remaining space, centering its text
+         within that whole empty area. */
+      .pb-polaroid.has-caption {
+        width: 100%;
+        align-self: stretch;
+      }
+      .pb-polaroid.has-caption .pb-polaroid-photo {
+        flex: 0 0 clamp(280px, 38vw, 420px);
+        width: clamp(280px, 38vw, 420px);
+      }
+      .pb-polaroid.has-caption .pb-polaroid-caption {
+        flex: 1 1 auto;
+        max-width: none;
+        text-align: center;
+      }
     }
 
     @media (max-width: 700px) {

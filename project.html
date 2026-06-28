@@ -524,7 +524,7 @@
        Odd cards keep the photo on the left, even cards on the right (zig-zag).
        Captioned cards span the full column width so the caption can occupy the
        whole empty area beside the photo and center itself within it. */
-    @media (min-width: 701px) {
+    @media (min-width: 901px) {
       .pb-polaroid {
         width: clamp(280px, 55vw, 600px);
       }
@@ -552,8 +552,12 @@
         align-self: stretch;
       }
       .pb-polaroid.has-caption .pb-polaroid-photo {
-        flex: 0 0 clamp(280px, 38vw, 420px);
-        width: clamp(280px, 38vw, 420px);
+        /* Sized against the padded column (~50% of it), not the viewport, and
+           allowed to shrink so the photo + caption never overflow past the
+           column's left padding on narrower desktop widths. */
+        flex: 0 1 clamp(220px, 42%, 420px);
+        width: clamp(220px, 42%, 420px);
+        min-width: 0;
       }
       .pb-polaroid.has-caption .pb-polaroid-caption {
         flex: 1 1 auto;
@@ -562,7 +566,7 @@
       }
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 900px) {
       .pb-polaroids { gap: 56px; padding: 30px 16px; }
       .pb-polaroid {
         width: 86vw;

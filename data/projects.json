@@ -44,7 +44,7 @@
       },
       {
         "type": "paragraph",
-        "text": "{{slider:333_03.jpg|333_04.jpg|333_05.jpg|333_06.jpg|333_07.jpg|autoplay=true|style=marquee}}"
+        "text": "{{slider:333_03.jpg|333_04.jpg|333_05.jpg|autoplay=true|style=marquee}}"
       },
       {
         "type": "paragraph",
@@ -52,7 +52,7 @@
       },
       {
         "type": "paragraph",
-        "text": "{{slider:333_01.jpg|333_02.jpg|333_06.jpg|333_07.jpg|autoplay=true|style=marquee}}"
+        "text": "{{slider:333_07.jpg|333_06.jpg|autoplay=true|style=marquee}}"
       },
       {
         "type": "heading",

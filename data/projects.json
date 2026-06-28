@@ -71,12 +71,6 @@
           },
           {
             "src": "images/projects/333/333_05.jpg"
-          },
-          {
-            "src": "images/projects/333/333_06.jpg"
-          },
-          {
-            "src": "images/projects/333/333_07.jpg"
           }
         ],
         "caption": "",
@@ -91,16 +85,10 @@
         "type": "slider",
         "frames": [
           {
-            "src": "images/projects/333/333_01.jpg"
-          },
-          {
-            "src": "images/projects/333/333_02.jpg"
+            "src": "images/projects/333/333_07.jpg"
           },
           {
             "src": "images/projects/333/333_06.jpg"
-          },
-          {
-            "src": "images/projects/333/333_07.jpg"
           }
         ],
         "caption": "",

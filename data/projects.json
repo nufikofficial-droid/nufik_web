@@ -30,16 +30,31 @@
           {
             "src": "images/projects/333/intro_01.png",
             "rotation": -6,
+            "caption": "Long before air conditioning"
+          },
+          {
+            "src": "images/projects/333/Korea met the summer heat with heat of its own.",
+            "rotation": 0,
             "caption": ""
           },
           {
             "src": "images/projects/333/intro_02.png",
+            "rotation": 0,
+            "caption": "At the centre of it was samgyetang. One hot bowl to outlast the summer"
+          },
+          {
+            "src": "images/projects/333/and restore the body.",
             "rotation": 0,
             "caption": ""
           },
           {
             "src": "images/projects/333/intro_03.png",
             "rotation": 3,
+            "caption": "With a few precious herbs added"
+          },
+          {
+            "src": "images/projects/333/a meal became a remedy. So I decided to build the restaurant like an apothecary.",
+            "rotation": 0,
             "caption": ""
           }
         ]
@@ -71,12 +86,6 @@
           },
           {
             "src": "images/projects/333/333_05.jpg"
-          },
-          {
-            "src": "images/projects/333/333_06.jpg"
-          },
-          {
-            "src": "images/projects/333/333_07.jpg"
           }
         ],
         "caption": "",
@@ -91,16 +100,10 @@
         "type": "slider",
         "frames": [
           {
-            "src": "images/projects/333/333_01.jpg"
-          },
-          {
-            "src": "images/projects/333/333_02.jpg"
+            "src": "images/projects/333/333_07.jpg"
           },
           {
             "src": "images/projects/333/333_06.jpg"
-          },
-          {
-            "src": "images/projects/333/333_07.jpg"
           }
         ],
         "caption": "",

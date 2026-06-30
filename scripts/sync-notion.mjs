@@ -111,6 +111,8 @@ function richToText(rich) {
 //   {{polaroids:a.jpg@-12,b.jpg@0,c.jpg@8}}        rotated photo cluster (rotation in degrees after @)
 //   {{polaroids:a.jpg@-6|Behind the scenes,b.jpg|Studio shot,c.jpg@3}}
 //                                                   each card may carry an optional |caption
+//                                                   (captions may contain commas — cards are
+//                                                    split only at the next filename.ext boundary)
 //   {{pair:a.jpg|b.jpg}}                           two large mockups side by side, slight right overflow
 //   {{stack:a.jpg|b.jpg|c.jpg|d.jpg|indent=1,2}}   full-bleed vertical stack; indent= lists 0-based
 //                                                   frame indices that should sit inset 40px each side
@@ -176,14 +178,24 @@ function parseToken(text, slug) {
   //   • a rotation     →  filename@<deg>     e.g. a.jpg@-6
   //   • a caption      →  filename|<text>    e.g. a.jpg|Behind the scenes
   //   • both, any order:  a.jpg@-6|caption  /  a.jpg|caption@-6
+  //
+  // The card separator is a comma, but captions routinely contain commas
+  // ("Long before air conditioning, Korea met the summer heat…"). Splitting
+  // naively on every comma tears such captions apart and turns the tail into a
+  // bogus filename. So we split on a comma ONLY when it begins a NEW card —
+  // i.e. the next non-space text is a filename ending in an image extension
+  // (optionally followed by @rotation, then end / | / ,). A comma inside a
+  // caption is followed by prose, never that pattern, so it stays put.
   const pl = text.match(POLAROIDS_RE);
   if (pl) {
-    const items = pl[1].split(',').map(s => s.trim()).filter(Boolean).map(item => {
+    const CARD_START = /,\s*(?=[^,|]+?\.(?:jpe?g|png|webp|gif|avif)(?:@-?\d+(?:\.\d+)?)?\s*(?:\||,|$))/i;
+    const items = pl[1].split(CARD_START).map(s => s.trim()).filter(Boolean).map(item => {
       let filename = item;
       let rotation = 0;
       let caption = '';
 
-      // Pull off |caption if present (caption may itself contain @, so split first)
+      // Pull off |caption if present (caption may itself contain @ or commas,
+      // so split on the first pipe before touching anything else)
       const pipe = filename.indexOf('|');
       if (pipe >= 0) {
         caption = filename.slice(pipe + 1).trim();
